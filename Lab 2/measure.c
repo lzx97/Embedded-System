@@ -1,0 +1,3 @@
+void measure(void *measureStruct) {
+    
+}
