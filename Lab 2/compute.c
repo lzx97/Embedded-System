@@ -1,3 +1,3 @@
 void compute(void *computeStruct) {
-    
+     
 }
