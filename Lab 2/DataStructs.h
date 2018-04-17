@@ -3,14 +3,14 @@
 
 #include "bool.h"
 
-typedef struct MeasureStruct {
+typedef struct {
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
 } MeasureData;
 
-typedef struct ComputeStruct {
+typedef struct {
     // Raw
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
@@ -23,29 +23,37 @@ typedef struct ComputeStruct {
     unsigned int *prCorrected;
 } ComputeData;
 
-typedef struct DisplayStruct {
+typedef struct {
     unsigned int *tempCorrected;
     unsigned int *sysPressCorrected;
     unsigned int *diasCorrected;
     unsigned int *prCorrected;
     unsigned short *batteryState;
     Bool *bpHigh;
+    Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
+    unsigned char *bpOutOfRange;
+    unsigned char *tempOutOfRange;
+    unsigned char *pulseOutOfRange;
 } DisplayData;
 
-typedef struct WarningAlarmStruct {
+typedef struct {
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned short *batteryState;
     Bool *bpHigh;
+    Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
+    unsigned char *bpOutOfRange;
+    unsigned char *tempOutOfRange;
+    unsigned char *pulseOutOfRange; 
 } WarningAlarmData;
 
-typedef struct StatusStruct {
+typedef struct {
     unsigned short *batteryState;
 } StatusData;
 
@@ -53,5 +61,10 @@ typedef struct StatusStruct {
     // None for this lab
     // may be used for future labs
 } SchedulerData;*/ 
+
+typedef struct {
+    void *taskDataPtr;
+    void (*taskPtr)(void*);
+} TCB;
 
 #endif
