@@ -1,7 +1,7 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
-#include "bool.h"
+#include "Bool.h"
 
 typedef struct MeasureStruct {
     unsigned int *temperatureRaw;
@@ -17,17 +17,17 @@ typedef struct ComputeStruct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     // Corrected
-    unsigned int *tempCorrected;
-    unsigned int *sysPressCorrected;
-    unsigned int *diasCorrected;
-    unsigned int *prCorrected;
+    unsigned char *tempCorrected;
+    unsigned char *sysPressCorrected;
+    unsigned char *diasCorrected;
+    unsigned char *prCorrected;
 } ComputeData;
 
 typedef struct DisplayStruct {
-    unsigned int *tempCorrected;
-    unsigned int *sysPressCorrected;
-    unsigned int *diasCorrected;
-    unsigned int *prCorrected;
+    unsigned char *tempCorrected;
+    unsigned char *sysPressCorrected;
+    unsigned char *diasCorrected;
+    unsigned char *prCorrected;
     unsigned short *batteryState;
     Bool *bpHigh;
     Bool *tempHigh;
@@ -40,6 +40,9 @@ typedef struct WarningAlarmStruct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned short *batteryState;
+    unsigned char bpOutOfRange;
+    unsigned char tempOutOfRange;
+    unsigned char pulseOutOfRange;
     Bool *bpHigh;
     Bool *tempHigh;
     Bool *pulseLow;
@@ -52,6 +55,6 @@ typedef struct StatusStruct {
 /* typedef struct SchedulerStruct {
     // None for this lab
     // may be used for future labs
-} SchedulerData;*/ 
+} SchedulerData;*/
 
 #endif
