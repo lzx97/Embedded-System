@@ -20,6 +20,7 @@ void setup() {
     unsigned char pulseOutOfRange = 0;
 
     Bool bpHigh = FALSE;
+    Bool bpLow = FALSE;
     Bool tempHigh = FALSE;
     Bool pulseLow = FALSE;
 
@@ -33,21 +34,72 @@ void setup() {
     ComputeData cData;
     DisplayData dData;
     WarningAlarmData wData;
-    StatusData sData;
+    StatusData stData;
 
     TCB* taskQueue[5];
 
-    void (measure)(void*);
-    void (compute)(void*);
-    void (display)(void*);
-    void (status)(void*);
-    void (annunciate)(void*);
+    mData.diastolicPressRaw = &diastolicPressRaw;
+    mData.systolicPressRaw = &systolicPressRaw;
+    mData.pulseRateRaw = &pulseRateRaw;
+    mData.temperatureRaw = &temperatureRaw;
+
+    cData.diastolicPressRaw = diastolicPressRaw;
+    cData.systolicPressRaw = systolicPressRaw;
+    cData.pulseRateRaw = pulseRateRaw;
+    cData.temperatureRaw = temperatureRaw;
+    cData.diasCorrected = diasCorrected;
+    cData.sysPressCorrected = sysPressCorrected;
+    cData.prCorrected = prCorrected;
+    cData.tempCorrected = tempCorrected;
+
+    dData.diasCorrected = diasCorrected;
+    dData.sysPressCorrected = sysPressCorrected;
+    dData.prCorrected = prCorrected;
+    dData.tempCorrected = tempCorrected;
+    dData.bpHigh = bpHigh;
+    dData.bpLow = bpLow;
+    dData.tempHigh = tempHigh;
+    dData.pulseLow = pulseLow;
+    dData.bpOutOfRange = bpOutOfRange;
+    dData.pulseOutOfRange = pulseOutOfRange;
+    dData.tempOutOfRange = tempOutOfRange;
+
+    wData.diastolicPressRaw = diastolicPressRaw;
+    wData.systolicPressRaw = systolicPressRaw;
+    wData.pulseRateRaw = pulseRateRaw;
+    wData.temperatureRaw = temperatureRaw;
+    wData.bpOutOfRange = bpOutOfRange;
+    wData.pulseOutOfRange = pulseOutOfRange;
+    wData.tempOutOfRange = tempOutOfRange;
+    wData.batteryState = batteryState;
+    wData.bpHigh = bpHigh;
+    wData.bpLow = bpLow;
+    wData.tempHigh = tempHigh;
+    wData.pulseLow = pulseLow;
+
+    stData.batteryState = batteryState;
 
 
+    // fucntions assigned to taskPtrs are undefined for now
+    // need to include "measure.h" "compute.h" etc.
+    // create .h header file for each .c file may be tedious 
+    // I'm thinking merge all five tasks fucntion together into one tasks.c?
+    MeasureTCB.taskPtr = measure;
+    MeasureTCB.taskDataPtr = (void*)&mData;
 
-    // HOW DO YOU INITIALIZE TCB?????
+    ComputeTCB.taskPtr = compute;
+    ComputeTCB.taskDataPtr = (void*)&cData;
 
-    //TCB taskQueue[5]; // Make a queue of TCB structs
+    DisplayTCB.taskPtr = display;
+    DisplayTCB.taskDataPtr = (void*)&dData;
+
+    WarningAlarmTCB.taskPtr = annuniciate;
+    WarningAlarmTCB.taskDataPtr = (void*)&wData;
+    
+    StatusTCB.taskPtr = status;
+    StatusTCB.taskDataPtr = (void*)&stData;
+    
+
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;
     taskQueue[2] = &DisplayTCB;
