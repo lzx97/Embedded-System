@@ -1,6 +1,8 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
+#include "bool.h"
+
 typedef struct MeasureStruct {
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
@@ -27,6 +29,9 @@ typedef struct DisplayStruct {
     unsigned int *diasCorrected;
     unsigned int *prCorrected;
     unsigned short *batteryState;
+    Bool *bpHigh;
+    Bool *tempHigh;
+    Bool *pulseLow;
 } DisplayData;
 
 typedef struct WarningAlarmStruct {
@@ -35,6 +40,9 @@ typedef struct WarningAlarmStruct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned short *batteryState;
+    Bool *bpHigh;
+    Bool *tempHigh;
+    Bool *pulseLow;
 } WarningAlarmData;
 
 typedef struct StatusStruct {
