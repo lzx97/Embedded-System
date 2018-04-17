@@ -35,8 +35,8 @@ void setup() {
     void* taskDataPtr;
     } TCB;
 
-
-    struct TCB MeasureTCB = {.myTask = (*measure), .taskDataPtr = *MeasureData};
+    // HOW DO YOU INITIALIZE TCB?????
+    struct TCB MeasureTCB = {.myTask = &measure, .taskDataPtr = MeasureData};
     struct TCB ComputeTCB;
     struct TCB DisplayTCB;
     struct TCB WarningAlarmTCB;
