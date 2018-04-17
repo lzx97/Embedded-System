@@ -1,7 +1,7 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
-#include "bool.h"
+#include "Bool.h"
 
 typedef struct {
     unsigned int *temperatureRaw;
@@ -17,10 +17,10 @@ typedef struct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     // Corrected
-    unsigned int *tempCorrected;
-    unsigned int *sysPressCorrected;
-    unsigned int *diasCorrected;
-    unsigned int *prCorrected;
+    unsigned char *tempCorrected;
+    unsigned char *sysPressCorrected;
+    unsigned char *diasCorrected;
+    unsigned char *prCorrected;
 } ComputeData;
 
 typedef struct {
@@ -44,6 +44,9 @@ typedef struct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned short *batteryState;
+    unsigned char bpOutOfRange;
+    unsigned char tempOutOfRange;
+    unsigned char pulseOutOfRange;
     Bool *bpHigh;
     Bool *bpLow;
     Bool *tempHigh;
@@ -60,7 +63,7 @@ typedef struct {
 /* typedef struct SchedulerStruct {
     // None for this lab
     // may be used for future labs
-} SchedulerData;*/ 
+} SchedulerData;*/
 
 typedef struct {
     void *taskDataPtr;
