@@ -3,6 +3,7 @@
 int numOfCall = 0;
 Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
+Bool reverse = FALSE;
 
 void measure(void *measureStruct) {
      numOfCall++;
@@ -12,7 +13,7 @@ void measureTemp(unsigned int *temperature) {
     // cases:   0-15
     //          15-50
     //          50+
-    if (*temperature <= 50) {
+    if (!reverse) {
         if (numOfCall % 2 == 0) {
             *temperature += 2;
         }
@@ -28,7 +29,7 @@ void measureTemp(unsigned int *temperature) {
             *temperature += 1;
         }
     }
-}   
+}  
 
 void measureSysPres(unsigned int *sysPres) {
     if (numOfCall == 0 || diaMeasureComplete) {
