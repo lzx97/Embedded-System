@@ -23,31 +23,36 @@ void setup() {
     Bool tempHigh = FALSE;
     Bool pulseLow = FALSE;
 
+    TCB MeasureTCB;
+    TCB ComputeTCB;
+    TCB DisplayTCB;
+    TCB WarningAlarmTCB;
+    TCB StatusTCB;
+
+    MeasureData mData;
+    ComputeData cData;
+    DisplayData dData;
+    WarningAlarmData wData;
+    StatusData sData;
+
+    TCB* taskQueue[5];
+
     void (measure)(void*);
     void (compute)(void*);
     void (display)(void*);
     void (status)(void*);
     void (annunciate)(void*);
 
-    // Define / initialize TCB structs somewhere here
-    typedef struct TCB {
-    void (*myTask)(void*);
-    void* taskDataPtr;
-    } TCB;
+
 
     // HOW DO YOU INITIALIZE TCB?????
-    struct TCB MeasureTCB = {.myTask = &measure, .taskDataPtr = MeasureData};
-    struct TCB ComputeTCB;
-    struct TCB DisplayTCB;
-    struct TCB WarningAlarmTCB;
-    struct TCB StatusTCB;
 
-    TCB taskQueue[5]; // Make a queue of TCB structs
-    taskQueue[0] = MeasureTCB;
-    taskQueue[1] = ComputeTCB;
-    taskQueue[2] = DisplayTCB;
-    taskQueue[3] = WarningAlarmTCB;
-    taskQueue[4] = StatusTCB;
+    //TCB taskQueue[5]; // Make a queue of TCB structs
+    taskQueue[0] = &MeasureTCB;
+    taskQueue[1] = &ComputeTCB;
+    taskQueue[2] = &DisplayTCB;
+    taskQueue[3] = &WarningAlarmTCB;
+    taskQueue[4] = &StatusTCB;
 
 }
 
