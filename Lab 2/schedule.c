@@ -13,6 +13,6 @@ void schedule(void *taskQueue){
 
     // Update time and turnCounter
     turnCounter = (turnCounter + 1) % sizeof(taskQueue); // Loops from 0,1,2,3,4,5,0,1,...
-    timeDelay(delayTime); // Choose delayTime such that it takes one second for timeDelay
     globalTime++;
+    timeDelay(delayTime); // Choose delayTime such that it takes one second for timeDelay
 }
