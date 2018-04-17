@@ -17,17 +17,17 @@ typedef struct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     // Corrected
-    unsigned char *tempCorrected;
-    unsigned char *sysPressCorrected;
-    unsigned char *diasCorrected;
-    unsigned char *prCorrected;
+    unsigned char **tempCorrected;
+    unsigned char **sysPressCorrected;
+    unsigned char **diasCorrected;
+    unsigned char **prCorrected;
 } ComputeData;
 
 typedef struct {
-    unsigned int *tempCorrected;
-    unsigned int *sysPressCorrected;
-    unsigned int *diasCorrected;
-    unsigned int *prCorrected;
+    unsigned char **tempCorrected;
+    unsigned char **sysPressCorrected;
+    unsigned char **diasCorrected;
+    unsigned char **prCorrected;
     unsigned short *batteryState;
     Bool *bpHigh;
     Bool *bpLow;
