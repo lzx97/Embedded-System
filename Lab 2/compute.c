@@ -1,6 +1,7 @@
 #include <math.h>
 #include "DataStructs.h"
 
+// Set cData values to chars
 void compute(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
     *(cData->tempCorrected) = (int) floor(5 + 0.75 * (*(cData->temperatureRaw)));

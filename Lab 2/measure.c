@@ -1,17 +1,31 @@
 #include "Bool.h"
+#include "DataStructs.h"
 // Move this to the TCB struct
 // int numOfCall = 0; use globalTime instead
-Bool sysMeasureComplete = FALSE; // Put these variables inside the TCB structs, initialize in main
-Bool diaMeasureComplete = FALSE;
-Bool tempIncrease = TRUE;
-Bool bpIncrease = TRUE;
+// Bool sysMeasureComplete = FALSE; // Put these variables inside the TCB structs, initialize in main
+// Bool diaMeasureComplete = FALSE;
+// Bool tempIncrease = TRUE;
+// Bool bpIncrease = TRUE;
 // WHERE DO WE GET THE VARIABLES FROM? What's the point of having a datastruct??
+unsigned int *measureInterval = 5;
+void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls);
+void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls);
+void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls);
+void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *numOfMeasureCalls);
 
 
-void measure(void *measureStruct, unsigned int *numOfMeasureCalls) {
-     *numOfMeasureCalls++;
+// Problems: 'Bool's are expected to be 'enum Bool *'
+// numOfMeasureCalls
+void measure(void *measureStruct) {
+    MeasureData *mData = (MeasureData*) measureStruct;
+    if ((*mData->globalTime % *measureInterval) == 0){
+        measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
+        measureSysPres(mData->systolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+        measureDiaPres(mData->diastolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+        measurePulseRate(mData->pulseRateRaw, mData->bpIncrease, mData->numOfMeasureCalls);
+        mData->numOfMeasureCalls++;
+    }
 }
-
 
 // Do we really need to use all variables like this?
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {

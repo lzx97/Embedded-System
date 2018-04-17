@@ -47,52 +47,52 @@ void setup() {
     TCB* taskQueue[5];
 
     // Should we use & or no?
+    mData.globalTime = &globalTime;
     mData.diastolicPressRaw = &diastolicPressRaw;
     mData.systolicPressRaw = &systolicPressRaw;
     mData.pulseRateRaw = &pulseRateRaw;
     mData.temperatureRaw = &temperatureRaw;
-    mData.sysMeasureComplete = &mData.sysMeasureComplete;
-    mData.diaMeasureComplete = diaMeasureComplete;
-    mData.tempIncrease = tempIncrease;
-    mData.bpIncrease = bpIncrease;
-    mData.numOfMeasureCalls = numOfMeasureCalls;
+    mData.sysMeasureComplete = &sysMeasureComplete;
+    mData.diaMeasureComplete = &diaMeasureComplete;
+    mData.tempIncrease = &tempIncrease;
+    mData.bpIncrease = &bpIncrease;
+    mData.numOfMeasureCalls = &numOfMeasureCalls;
 
-    cData.diastolicPressRaw = diastolicPressRaw;
-    cData.systolicPressRaw = systolicPressRaw;
-    cData.pulseRateRaw = pulseRateRaw;
-    cData.temperatureRaw = temperatureRaw;
-    cData.diasCorrected = diasCorrected;
-    cData.sysPressCorrected = sysPressCorrected;
-    cData.prCorrected = prCorrected;
-    cData.tempCorrected = tempCorrected;
+    cData.diastolicPressRaw = &diastolicPressRaw;
+    cData.systolicPressRaw = &systolicPressRaw;
+    cData.pulseRateRaw = &pulseRateRaw;
+    cData.temperatureRaw = &temperatureRaw;
+    cData.diasCorrected = &diasCorrected;
+    cData.sysPressCorrected = &sysPressCorrected;
+    cData.prCorrected = &prCorrected;
+    cData.tempCorrected = &tempCorrected;
 
-    dData.diasCorrected = diasCorrected;
-    dData.sysPressCorrected = sysPressCorrected;
-    dData.prCorrected = prCorrected;
-    dData.tempCorrected = tempCorrected;
-    dData.bpHigh = bpHigh;
-    dData.bpLow = bpLow;
-    dData.tempHigh = tempHigh;
-    dData.pulseLow = pulseLow;
-    dData.bpOutOfRange = bpOutOfRange;
-    dData.pulseOutOfRange = pulseOutOfRange;
-    dData.tempOutOfRange = tempOutOfRange;
+    dData.diasCorrected = &diasCorrected;
+    dData.sysPressCorrected = &sysPressCorrected;
+    dData.prCorrected = &prCorrected;
+    dData.tempCorrected = &tempCorrected;
+    dData.bpHigh = &bpHigh;
+    dData.bpLow = &bpLow;
+    dData.tempHigh = &tempHigh;
+    dData.pulseLow = &pulseLow;
+    dData.bpOutOfRange = &bpOutOfRange;
+    dData.pulseOutOfRange = &pulseOutOfRange;
+    dData.tempOutOfRange = &tempOutOfRange;
 
-    wData.diastolicPressRaw = diastolicPressRaw;
-    wData.systolicPressRaw = systolicPressRaw;
-    wData.pulseRateRaw = pulseRateRaw;
-    wData.temperatureRaw = temperatureRaw;
-    wData.bpOutOfRange = bpOutOfRange;
-    wData.pulseOutOfRange = pulseOutOfRange;
-    wData.tempOutOfRange = tempOutOfRange;
-    wData.batteryState = batteryState;
-    wData.bpHigh = bpHigh;
-    wData.bpLow = bpLow;
-    wData.tempHigh = tempHigh;
-    wData.pulseLow = pulseLow;
+    wData.diastolicPressRaw = &diastolicPressRaw;
+    wData.systolicPressRaw = &systolicPressRaw;
+    wData.pulseRateRaw = &pulseRateRaw;
+    wData.temperatureRaw = &temperatureRaw;
+    wData.bpOutOfRange = &bpOutOfRange;
+    wData.pulseOutOfRange = &pulseOutOfRange;
+    wData.tempOutOfRange = &tempOutOfRange;
+    wData.batteryState = &batteryState;
+    wData.bpHigh = &bpHigh;
+    wData.bpLow = &bpLow;
+    wData.tempHigh = &tempHigh;
+    wData.pulseLow = &pulseLow;
 
-    stData.batteryState = batteryState;
-
+    stData.batteryState = &batteryState;
 
     // fucntions assigned to taskPtrs are undefined for now
     // need to include "measure.h" "compute.h" etc.

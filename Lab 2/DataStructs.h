@@ -59,9 +59,9 @@ typedef struct {
     Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
-    unsigned char *bpOutOfRange;
-    unsigned char *tempOutOfRange;
-    unsigned char *pulseOutOfRange;
+    //unsigned char *bpOutOfRange;
+    //unsigned char *tempOutOfRange;
+    //unsigned char *pulseOutOfRange;
 } WarningAlarmData;
 
 typedef struct {
