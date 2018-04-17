@@ -3,7 +3,15 @@
 #include "DataStructs.h"
 
 
+
 void setup() {
+    unsigned int globalTime = 0;
+    Bool sysMeasureComplete = FALSE;
+    Bool diaMeasureComplete = FALSE;
+    Bool tempIncrease = TRUE;
+    Bool bpIncrease = TRUE;
+    unsigned int numOfMeasureCalls = 0;
+
     unsigned int temperatureRaw = 75;
     unsigned int systolicPressRaw = 80;
     unsigned int diastolicPressRaw = 80;
@@ -38,10 +46,16 @@ void setup() {
 
     TCB* taskQueue[5];
 
+    // Should we use & or no?
     mData.diastolicPressRaw = &diastolicPressRaw;
     mData.systolicPressRaw = &systolicPressRaw;
     mData.pulseRateRaw = &pulseRateRaw;
     mData.temperatureRaw = &temperatureRaw;
+    mData.sysMeasureComplete = &mData.sysMeasureComplete;
+    mData.diaMeasureComplete = diaMeasureComplete;
+    mData.tempIncrease = tempIncrease;
+    mData.bpIncrease = bpIncrease;
+    mData.numOfMeasureCalls = numOfMeasureCalls;
 
     cData.diastolicPressRaw = diastolicPressRaw;
     cData.systolicPressRaw = systolicPressRaw;
@@ -82,7 +96,7 @@ void setup() {
 
     // fucntions assigned to taskPtrs are undefined for now
     // need to include "measure.h" "compute.h" etc.
-    // create .h header file for each .c file may be tedious 
+    // create .h header file for each .c file may be tedious
     // I'm thinking merge all five tasks fucntion together into one tasks.c?
     MeasureTCB.taskPtr = measure;
     MeasureTCB.taskDataPtr = (void*)&mData;
@@ -95,10 +109,10 @@ void setup() {
 
     WarningAlarmTCB.taskPtr = annuniciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
-    
+
     StatusTCB.taskPtr = status;
     StatusTCB.taskDataPtr = (void*)&stData;
-    
+
 
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;

@@ -1,16 +1,22 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
-
 #include "Bool.h"
 
 typedef struct {
+    unsigned int *globalTime;
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
+    Bool sysMeasureComplete;
+    Bool diaMeasureComplete;
+    Bool tempIncrease;
+    Bool bpIncrease;
+    unsigned int numOfMeasureCalls;
 } MeasureData;
 
 typedef struct {
+    unsigned int *globalTime;
     // Raw
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
@@ -24,6 +30,7 @@ typedef struct {
 } ComputeData;
 
 typedef struct {
+    unsigned int *globalTime;
     unsigned char **tempCorrected;
     unsigned char **sysPressCorrected;
     unsigned char **diasCorrected;
@@ -39,6 +46,7 @@ typedef struct {
 } DisplayData;
 
 typedef struct {
+    unsigned int *globalTime;
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
@@ -53,10 +61,11 @@ typedef struct {
     Bool *pulseLow;
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
-    unsigned char *pulseOutOfRange; 
+    unsigned char *pulseOutOfRange;
 } WarningAlarmData;
 
 typedef struct {
+    unsigned int *globalTime;
     unsigned short *batteryState;
 } StatusData;
 
