@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdio.h>
 #include "DataStructs.h"
 
@@ -35,17 +34,17 @@ void compute(void *computeStruct) {
     if ((*cData->globalTime % measureInterval) != 0){
         return;
     }
-    int temp = (int) floor(5 + 0.75 * (*(cData->temperatureRaw)));
-    int systolicPres = (int) floor(9 + 2 * (*cData->systolicPressRaw));
-    int diastolicPres = (int) floor(6 + 1.5 * (*cData->diastolicPressRaw));
-    int pr = (int) floor(8 + 3 * (*cData->pulseRateRaw));
+    double temp = 5 + 0.75 * (*(cData->temperatureRaw));
+    unsigned int systolicPres = (unsigned int) 9 + 2 * (*cData->systolicPressRaw);
+    unsigned int diastolicPres = (unsigned int) 6 + 1.5 * (*cData->diastolicPressRaw);
+    unsigned int pr = (unsigned int) 8 + 3 * (*cData->pulseRateRaw);
 
-    *(cData->tempNumeric) = (double) temp;
-    *(cData->sysNumeric) = (unsigned int) systolicPres;
-    *(cData->diasNumeric) = (unsigned int) diastolicPres;
-    *(cData->pulseNumeric) = (unsigned int) pr;
+    *(cData->tempNumeric) = temp;
+    *(cData->sysNumeric) = systolicPres;
+    *(cData->diasNumeric) = diastolicPres;
+    *(cData->pulseNumeric) = pr;
 
-    sprintf(*(cData->tempCorrected), "%d", temp);
+    sprintf(*(cData->tempCorrected), "%f", temp);
     sprintf(*(cData->sysPressCorrected), "%d", systolicPres);
     sprintf(*(cData->diasCorrected), "%d", diastolicPres);
     sprintf(*(cData->prCorrected), "%d", pr);
