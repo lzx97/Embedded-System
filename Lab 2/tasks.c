@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include "DataStructs.h"
 
-#include "Bool.h"
-#include "DataStructs.h"
+
+
+
 // Move this to the TCB struct
 // int numOfCall = 0; use globalTime instead
 // Bool sysMeasureComplete = FALSE; // Put these variables inside the TCB structs, initialize in main
@@ -12,6 +13,7 @@
 // Bool bpIncrease = TRUE;
 // WHERE DO WE GET THE VARIABLES FROM? What's the point of having a datastruct??
 unsigned int measureInterval = 5;
+unsigned int globalCounter = 0;
 
 
 // Problems: 'Bool's are expected to be 'enum Bool *'
@@ -50,25 +52,33 @@ void display(void *displayStruct) {
         return;
     }
     // print low and high presure
+    tft.setTextColor(*(dData->bpLow) ? RED : GREEN);
     tft.printf("%s ", dData->diasCorrected);
+    tft.setTextColor(*(dData->bpHigh) ? RED : GREEN);
     tft.printf("%s\n", dData->sysPressCorrected);
     
     // print temp
+    tft.setTextColor(*(dData->tempHigh) ? RED : GREEN);
     tft.printf("%s ", dData->tempCorrected);
     // print pr
+    tft.setTextColor(*(dData->pulseLow) ? RED : GREEN);
     tft.printf("%s ", dData->prCorrected);
     // print battery
+    tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
     tft.printf("%d ", dData->batteryState);
     // 
 }
 
 void annuciate(void *warningAlarmStruct) {
     WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
-    if (*(wData->temperatureRaw))
+    if (*(wData->temperatureRaw)) 
 }
 
 void status(void *statusStruct) {
     StatusData *sData = (StatusData*) statusStruct;
+    if ((*sData->globalTime % measureInterval) != 0){
+        return;
+    }
     *(sData->batteryState) -= 1;
 }
 
@@ -76,12 +86,16 @@ void schedule(void *taskQueue) {
     TCB *tasks[5] = (TCB*) taskQueue;
 
     (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
-    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
-    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+    (*(tasks[1]->taskPtr))(tasks[1]->taskDataPtr);
+    (*(tasks[2]->taskPtr))(tasks[2]->taskDataPtr);
+    (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
+    (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
+
+    delay(10000);
+    globalCounter++;
 
 
-
-    if (counter == 0) {
+    /*if (counter == 0) {
         // measure
         (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
         (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
@@ -94,7 +108,7 @@ void schedule(void *taskQueue) {
         count = 0;
     }
 
-    counter++;
+    counter++;*/
 }
 
 
@@ -183,6 +197,16 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
     }
     if (!*bpIncrease && *pulseRate < 15){
         *bpIncrease = TRUE;
+    }
+}
+
+/* Delay for X milliseconds */
+void delay(unsigned long time) {
+    volatile int i, j;
+    for (i = 0; i <= time; i++) {
+        for (j = 0; j <= time; j++) {
+            // empty
+        }
     }
 }
 

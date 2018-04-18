@@ -1,3 +1,0 @@
-void annuciate(void *warningAlarmStruct) {
-    
-}
