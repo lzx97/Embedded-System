@@ -32,6 +32,7 @@ void setup() {
     Bool bpLow = FALSE;
     Bool tempHigh = FALSE;
     Bool pulseLow = FALSE;
+    Bool batteryLow = FALSE;
 
     TCB MeasureTCB;
     TCB ComputeTCB;
@@ -79,6 +80,7 @@ void setup() {
     dData.bpOutOfRange = &bpOutOfRange;
     dData.pulseOutOfRange = &pulseOutOfRange;
     dData.tempOutOfRange = &tempOutOfRange;
+    dData.batteryLow = &batteryLow;
 
     wData.diastolicPressRaw = &diastolicPressRaw;
     wData.systolicPressRaw = &systolicPressRaw;
@@ -92,6 +94,7 @@ void setup() {
     wData.bpLow = &bpLow;
     wData.tempHigh = &tempHigh;
     wData.pulseLow = &pulseLow;
+    wData.batteryLow = &batteryLow;
 
     stData.batteryState = &batteryState;
 
@@ -113,7 +116,7 @@ void setup() {
 
     StatusTCB.taskPtr = status;
     StatusTCB.taskDataPtr = (void*)&stData;
-    
+
 
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;
