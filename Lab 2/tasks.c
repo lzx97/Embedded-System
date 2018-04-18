@@ -194,11 +194,11 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
 }
 
 /* Delay for X milliseconds */
-void delay_ms(unsigned long time_in_ms) {
+void delay_ms(unsigned int time_in_ms) {
     volatile int i, j;
     for (i = 0; i <= 31; i++) { // 32767
-        for (j = 0; j <= time; j++) {
-            // empty
+        for (j = 0; j <= time_in_ms; j++) {
+
         }
     }
 }

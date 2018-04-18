@@ -9,11 +9,11 @@ typedef struct {
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
-    Bool sysMeasureComplete;
-    Bool diaMeasureComplete;
-    Bool tempIncrease;
-    Bool bpIncrease;
-    unsigned int numOfMeasureCalls;
+    Bool *sysMeasureComplete;
+    Bool *diaMeasureComplete;
+    Bool *tempIncrease;
+    Bool *bpIncrease;
+    unsigned int *numOfMeasureCalls;
 } MeasureData;
 
 typedef struct {

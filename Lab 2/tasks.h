@@ -1,3 +1,5 @@
+#ifndef TASKS_H
+#define TASKS_H
 #include <math.h>
 #include <stdio.h>
 #include "DataStructs.h"
@@ -12,4 +14,6 @@ void display(void *displayStruct);
 void annuciate(void *warningAlarmStruct);
 void status(void *statusStruct);
 void schedule(void *taskQueue);
-void delay_ms(unsigned long time_in_ms)
+void delay_ms(unsigned int time_in_ms);
+
+#endif

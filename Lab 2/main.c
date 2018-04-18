@@ -4,7 +4,6 @@
 #include "tasks.h"
 
 
-
 void setup(void) {
     unsigned int globalTime = 0;
     Bool sysMeasureComplete = FALSE;
@@ -152,11 +151,10 @@ void setup(void) {
     taskQueue[2] = &DisplayTCB;
     taskQueue[3] = &WarningAlarmTCB;
     taskQueue[4] = &StatusTCB;
-
 }
 
 
 void loop(void) {
-        schedule();
+    schedule(taskQueue);
 }
 
