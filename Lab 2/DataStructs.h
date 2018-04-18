@@ -81,10 +81,12 @@ typedef struct {
     unsigned short *batteryState;
 } StatusData;
 
-/* typedef struct SchedulerStruct {
+/*
+typedef struct SchedulerStruct {
     // None for this lab
     // may be used for future labs
-} SchedulerData;*/
+} SchedulerData;
+*/
 
 typedef struct {
     void *taskDataPtr;

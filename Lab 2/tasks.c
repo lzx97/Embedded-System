@@ -5,19 +5,19 @@
 // unsigned int measureInterval = 5;
 // unsigned int globalCounter = 0;
 
-
 // Problems: 'Bool's are expected to be 'enum Bool *'
 // numOfMeasureCalls
-void measure(void *measureStruct) {
+
+void measure(void *measureStruct){
     MeasureData *mData = (MeasureData*) measureStruct;
     if ((*mData->globalTime % measureInterval) != 0){
         return;
     }
     measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
-    measureSysPres(mData->systolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
-    measureDiaPres(mData->diastolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+    measureSysPres(mData->systolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+    measureDiaPres(mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
     measurePulseRate(mData->pulseRateRaw, mData->bpIncrease, mData->numOfMeasureCalls);
-    mData->numOfMeasureCalls++;
+    (*(mData->numOfMeasureCalls))++;
 }
 
 void compute(void *computeStruct) {
@@ -102,22 +102,6 @@ void schedule(void *taskQueue) {
 
     delay_ms(10000);
     (*globalTime)++;
-
-
-    /*if (counter == 0) {
-        // measure
-        (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
-        (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
-    }
-    else if (count == 1) {
-        // execute compute
-    }
-    // >= 5 case
-    else {
-        count = 0;
-    }
-
-    counter++;*/
 }
 
 
@@ -210,7 +194,7 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
 }
 
 /* Delay for X milliseconds */
-void delay_ms(unsigned long time) {
+void delay_ms(unsigned long time_in_ms) {
     volatile int i, j;
     for (i = 0; i <= 31; i++) { // 32767
         for (j = 0; j <= time; j++) {

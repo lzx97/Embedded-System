@@ -5,7 +5,7 @@
 
 
 
-void setup() {
+void setup(void) {
     unsigned int globalTime = 0;
     Bool sysMeasureComplete = FALSE;
     Bool diaMeasureComplete = FALSE;
@@ -156,8 +156,7 @@ void setup() {
 }
 
 
-void loop() {
-    //while(1){
+void loop(void) {
         schedule();
-    //}
 }
+
