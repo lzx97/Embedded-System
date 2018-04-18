@@ -113,7 +113,7 @@ void setup() {
 
     StatusTCB.taskPtr = status;
     StatusTCB.taskDataPtr = (void*)&stData;
-
+    
 
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;
