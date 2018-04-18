@@ -2,11 +2,8 @@
 #include <stdio.h>
 #include "DataStructs.h"
 #include "tasks.h"
-//#define setup main
 
-
-void main(void) {
-
+int main(void) {
     unsigned int globalTime = 0;
     Bool sysMeasureComplete = FALSE;
     Bool diaMeasureComplete = FALSE;
@@ -59,7 +56,7 @@ void main(void) {
     StatusData stData;
 
 
-    // Add variables to respective structs
+    // Add variables to measure struct
     mData.globalTime = &globalTime;
     mData.measureInterval = &measureInterval;
     mData.diastolicPressRaw = &diastolicPressRaw;
@@ -72,6 +69,7 @@ void main(void) {
     mData.bpIncrease = &bpIncrease;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
 
+    // Add variables to compute struct
     cData.globalTime = &globalTime;
     cData.diastolicPressRaw = &diastolicPressRaw;
     cData.computeInterval = &computeInterval;
@@ -126,24 +124,24 @@ void main(void) {
     stData.statusInterval = &statusInterval;
     stData.batteryState = &batteryState;
 
-
     // fucntions assigned to taskPtrs are undefined for now
     // need to include "measure.h" "compute.h" etc.
     // create .h header file for each .c file may be tedious
     // I'm thinking merge all five tasks fucntion together into one tasks.c?
-    MeasureTCB.taskPtr = &measure;
+
+    MeasureTCB.taskPtr = &measurefun;
     MeasureTCB.taskDataPtr = (void*)&mData;
 
-    ComputeTCB.taskPtr = &compute;
+    ComputeTCB.taskPtr = &computefun;
     ComputeTCB.taskDataPtr = (void*)&cData;
 
-    DisplayTCB.taskPtr = &display;
+    DisplayTCB.taskPtr = &displayfun;
     DisplayTCB.taskDataPtr = (void*)&dData;
 
-    WarningAlarmTCB.taskPtr = &annuciate;
+    WarningAlarmTCB.taskPtr = &annuciatefun;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
 
-    StatusTCB.taskPtr = &status;
+    StatusTCB.taskPtr = &statusfun;
     StatusTCB.taskDataPtr = (void*)&stData;
 
     TCB* taskQueue[5];
@@ -154,8 +152,8 @@ void main(void) {
     taskQueue[3] = &WarningAlarmTCB;
     taskQueue[4] = &StatusTCB;
 
-    schedule(taskQueue);
-
+    schedulefun(taskQueue);
+    return 0;
 }
 
 /*

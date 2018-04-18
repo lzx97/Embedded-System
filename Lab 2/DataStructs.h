@@ -1,5 +1,6 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
+#include <stdio.h>
 #include "Bool.h"
 
 typedef struct {

@@ -8,9 +8,9 @@
 // Problems: 'Bool's are expected to be 'enum Bool *'
 // numOfMeasureCalls
 
-void measure(void *measureStruct){
+void measurefun(void *measureStruct){
     MeasureData *mData = (MeasureData*) measureStruct;
-    if ((*mData->globalTime % measureInterval) != 0){
+    if ((*mData->globalTime % (*mData->measureInterval)) != 0){
         return;
     }
     measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
@@ -20,9 +20,9 @@ void measure(void *measureStruct){
     (*(mData->numOfMeasureCalls))++;
 }
 
-void compute(void *computeStruct) {
+void computefun(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
-    if ((*cData->globalTime % measureInterval) != 0){
+    if ((*cData->globalTime % *cData->computeInterval) != 0){
         return;
     }
     double temp = 5 + 0.75 * (*(cData->temperatureRaw));
@@ -41,9 +41,9 @@ void compute(void *computeStruct) {
     sprintf(*(cData->prCorrected), "%d", pr);
 }
 
-void display(void *displayStruct) {
+void displayfun(void *displayStruct) {
     DisplayData *dData = (DisplayData*) displayStruct;
-    if ((*dData->globalTime % measureInterval) != 0){
+    if ((*dData->globalTime % *dData->displayInterval) != 0){
         return;
     }
 
@@ -68,8 +68,12 @@ void display(void *displayStruct) {
     //
 }
 
-void annuciate(void *warningAlarmStruct) {
+void annuciatefun(void *warningAlarmStruct) {
         WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
+
+        if ((*wData->globalTime % *wData->warningInterval) != 0){
+        return;
+        }
         // Battery
         *(wData->batteryLow) = (((*(wData->batteryState)) < 40) ?  TRUE : FALSE);
         // syst
@@ -83,15 +87,15 @@ void annuciate(void *warningAlarmStruct) {
 }
 
 
-void status(void *statusStruct) {
+void statusfun(void *statusStruct) {
     StatusData *sData = (StatusData*) statusStruct;
-    if ((*sData->globalTime % measureInterval) != 0){
+    if ((*sData->globalTime % *sData->statusInterval) != 0){
         return;
     }
     *(sData->batteryState) -= 1;
 }
 
-void schedule(void *taskQueue) {
+void schedulefun(void *taskQueue) {
     while(1){
         TCB *tasks[5] = (TCB*) taskQueue;
 
@@ -204,5 +208,6 @@ void delay_ms(unsigned int time_in_ms) {
         }
     }
 }
+
 
 
