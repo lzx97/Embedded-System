@@ -18,7 +18,7 @@ void setup() {
     unsigned int diastolicPressRaw = 80;
     unsigned int pulseRateRaw = 50;
 
-    unsigned int tempNumeric = 0;
+    double tempNumeric = 0;
     unsigned int sysNumeric = 0;
     unsigned int diasNumeric = 0;
     unsigned int pulseNumeric = 0;

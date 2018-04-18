@@ -27,10 +27,10 @@ typedef struct {
     unsigned char **sysPressCorrected;
     unsigned char **diasCorrected;
     unsigned char **prCorrected;
-    unsigned int tempNumeric;
-    unsigned int sysNumeric;
-    unsigned int diasNumeric;
-    unsigned int pulseNumeric;
+    double *tempNumeric;
+    unsigned int *sysNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *pulseNumeric;
 } ComputeData;
 
 typedef struct {
@@ -65,10 +65,10 @@ typedef struct {
     Bool *tempOff;
     Bool *pulseOff;
     Bool *batteryLow;
-    unsigned int tempNumeric;
-    unsigned int sysNumeric;
-    unsigned int diasNumeric;
-    unsigned int pulseNumeric;
+    double *tempNumeric;
+    unsigned int *sysNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *pulseNumeric;
 } WarningAlarmData;
 
 typedef struct {

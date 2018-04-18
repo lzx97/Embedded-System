@@ -40,9 +40,9 @@ void compute(void *computeStruct) {
     int diastolicPres = (int) floor(6 + 1.5 * (*cData->diastolicPressRaw));
     int pr = (int) floor(8 + 3 * (*cData->pulseRateRaw));
 
-    *(cData->tempNumeric) = (unsigned int) temp;
+    *(cData->tempNumeric) = (double) temp;
     *(cData->sysNumeric) = (unsigned int) systolicPres;
-    *(cData->diaNumeric) = (unsigned int) diastolicPres;
+    *(cData->diasNumeric) = (unsigned int) diastolicPres;
     *(cData->pulseNumeric) = (unsigned int) pr;
 
     sprintf(*(cData->tempCorrected), "%d", temp);
@@ -63,10 +63,10 @@ void display(void *displayStruct) {
     tft.printf("%s\n", dData->sysPressCorrected);
 
     // print temp
-    tft.setTextColor(*(dData->tempHigh) ? RED : GREEN);
+    tft.setTextColor(*(dData->tempOff) ? RED : GREEN);
     tft.printf("%s ", dData->tempCorrected);
     // print pr
-    tft.setTextColor(*(dData->pulseLow) ? RED : GREEN);
+    tft.setTextColor(*(dData->pulseOff) ? RED : GREEN);
     tft.printf("%s ", dData->prCorrected);
     // print battery
     tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
@@ -77,13 +77,14 @@ void display(void *displayStruct) {
 void annuciate(void *warningAlarmStruct) {
         WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
         // Battery
-        *(wData->batteryLow) = ((*(wData->batteryState)) < 40) ?  TRUE : FALSE);
+        *(wData->batteryLow) = (((*(wData->batteryState)) < 40) ?  TRUE : FALSE);
         // syst
-        *(wData->bpHigh) = ((*(wData->sysNumeric)) > 120 ? TRUE : FALSE);
+        *(wData->bpHigh) = (((*(wData->sysNumeric)) > 120) ? TRUE : FALSE);
         // dias
-        *(wData->bpLow) = ((*(wData->diasNumeric)) < 80 ? TRUE : FALSE);
+        *(wData->bpLow) = (((*(wData->diasNumeric)) < 80) ? TRUE : FALSE);
         // pulserate
-        *(wData->pulseOff) = ((*(wData->pulseNumeric)) < 60 || (*(wData->pulseNumeric)) > 100 ? TRUE : FALSE);
+        *(wData->pulseOff) = ((((*(wData->pulseNumeric)) < 60) || ((*(wData->pulseNumeric)) > 100)) ? TRUE : FALSE);
+        // Temperature
 
 }
 
