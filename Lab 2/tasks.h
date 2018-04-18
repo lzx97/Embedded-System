@@ -12,3 +12,4 @@ void display(void *displayStruct);
 void annuciate(void *warningAlarmStruct);
 void status(void *statusStruct);
 void schedule(void *taskQueue);
+void delay(unsigned long time)
