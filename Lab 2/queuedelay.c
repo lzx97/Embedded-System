@@ -1,9 +1,10 @@
 /* Delay for X milliseconds */
 
-void timeDelay(unsigned long delay1){
-    volatile int c, d;
-    for (c = 1; c <= 32767; c++)
-        for (d = 1; d <= delay1; d++){
+void delay(unsigned long time) {
+    volatile int i, j;
+    for (i = 0; i <= time; i++) {
+        for (j = 0; j <= time; j++) {
+            // empty
         }
     }
 }

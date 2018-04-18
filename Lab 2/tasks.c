@@ -11,24 +11,28 @@
 // Bool tempIncrease = TRUE;
 // Bool bpIncrease = TRUE;
 // WHERE DO WE GET THE VARIABLES FROM? What's the point of having a datastruct??
-unsigned int *measureInterval = 5;
+unsigned int measureInterval = 5;
 
 
 // Problems: 'Bool's are expected to be 'enum Bool *'
 // numOfMeasureCalls
 void measure(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
-    if ((*mData->globalTime % *measureInterval) == 0){
-        measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
-        measureSysPres(mData->systolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
-        measureDiaPres(mData->diastolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
-        measurePulseRate(mData->pulseRateRaw, mData->bpIncrease, mData->numOfMeasureCalls);
-        mData->numOfMeasureCalls++;
+    if ((*mData->globalTime % measureInterval) != 0){
+        return;
     }
+    measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
+    measureSysPres(mData->systolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+    measureDiaPres(mData->diastolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+    measurePulseRate(mData->pulseRateRaw, mData->bpIncrease, mData->numOfMeasureCalls);
+    mData->numOfMeasureCalls++;
 }
 
 void compute(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
+    if ((*cData->globalTime % measureInterval) != 0){
+        return;
+    }
     int temp = (int) floor(5 + 0.75 * (*(cData->temperatureRaw)));
     int systolicPres = (int) floor(9 + 2 * (*cData->systolicPressRaw));
     int diastolicPres = (int) floor(6 + 1.5 * (*cData->diastolicPressRaw));
@@ -42,7 +46,9 @@ void compute(void *computeStruct) {
 
 void display(void *displayStruct) {
     DisplayData *dData = (DisplayData*) displayStruct;
-
+    if ((*dData->globalTime % measureInterval) != 0){
+        return;
+    }
     // print low and high presure
     tft.printf("%s ", dData->diasCorrected);
     tft.printf("%s\n", dData->sysPressCorrected);
@@ -57,13 +63,40 @@ void display(void *displayStruct) {
 }
 
 void annuciate(void *warningAlarmStruct) {
-    
+    WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
+    if (*(wData->temperatureRaw))
 }
 
 void status(void *statusStruct) {
     StatusData *sData = (StatusData*) statusStruct;
     *(sData->batteryState) -= 1;
 }
+
+void schedule(void *taskQueue) {
+    TCB *tasks[5] = (TCB*) taskQueue;
+
+    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+
+
+
+    if (counter == 0) {
+        // measure
+        (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+        (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+    }
+    else if (count == 1) {
+        // execute compute
+    }
+    // >= 5 case
+    else {
+        count = 0;
+    }
+
+    counter++;
+}
+
 
 // Do we really need to use all variables like this?
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {
