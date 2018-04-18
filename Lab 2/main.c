@@ -18,6 +18,11 @@ void setup() {
     unsigned int diastolicPressRaw = 80;
     unsigned int pulseRateRaw = 50;
 
+    unsigned int tempNumeric = 0;
+    unsigned int sysNumeric = 0;
+    unsigned int diasNumeric = 0;
+    unsigned int pulseNumeric = 0;
+
     unsigned char *tempCorrected = NULL;
     unsigned char *sysPressCorrected = NULL;
     unsigned char *diasCorrected = NULL;
@@ -48,7 +53,7 @@ void setup() {
 
     TCB* taskQueue[5];
 
-    // Should we use & or no?
+    // Add variables to respective structs
     mData.globalTime = &globalTime;
     mData.diastolicPressRaw = &diastolicPressRaw;
     mData.systolicPressRaw = &systolicPressRaw;
@@ -68,6 +73,10 @@ void setup() {
     cData.sysPressCorrected = &sysPressCorrected;
     cData.prCorrected = &prCorrected;
     cData.tempCorrected = &tempCorrected;
+    cData.tempNumeric = &tempNumeric;
+    cData.sysNumeric = &sysNumeric;
+    cData.diasNumeric = &diasNumeric;
+    cData.pulseNumeric = &pulseNumeric;
 
     dData.diasCorrected = &diasCorrected;
     dData.sysPressCorrected = &sysPressCorrected;
@@ -95,6 +104,10 @@ void setup() {
     wData.tempHigh = &tempHigh;
     wData.pulseLow = &pulseLow;
     wData.batteryLow = &batteryLow;
+    wData.tempNumeric = &tempNumeric;
+    wData.sysNumeric = &sysNumeric;
+    wData.diasNumeric = &diasNumeric;
+    wData.pulseNumeric = &pulseNumeric;
 
     stData.batteryState = &batteryState;
 

@@ -27,6 +27,10 @@ typedef struct {
     unsigned char **sysPressCorrected;
     unsigned char **diasCorrected;
     unsigned char **prCorrected;
+    unsigned int tempNumeric;
+    unsigned int sysNumeric;
+    unsigned int diasNumeric;
+    unsigned int pulseNumeric;
 } ComputeData;
 
 typedef struct {
@@ -40,6 +44,7 @@ typedef struct {
     Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
+    Bool *batteryLow;
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
@@ -59,6 +64,11 @@ typedef struct {
     Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
+    Bool *batteryLow;
+    unsigned int tempNumeric;
+    unsigned int sysNumeric;
+    unsigned int diasNumeric;
+    unsigned int pulseNumeric;
 } WarningAlarmData;
 
 typedef struct {
