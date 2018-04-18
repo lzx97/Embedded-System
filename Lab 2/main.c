@@ -13,6 +13,12 @@ void setup() {
     Bool bpIncrease = TRUE;
     unsigned int numOfMeasureCalls = 0;
 
+    unsigned int measureInterval = 5;
+    unsigned int computeInterval = 5;
+    unsigned int displayInterval = 5;
+    unsigned int warningInterval = 1;
+    unsigned int statusInterval = 5;
+
     unsigned int temperatureRaw = 75;
     unsigned int systolicPressRaw = 80;
     unsigned int diastolicPressRaw = 80;
@@ -55,6 +61,7 @@ void setup() {
 
     // Add variables to respective structs
     mData.globalTime = &globalTime;
+    mData.measureInterval = &measureInterval;
     mData.diastolicPressRaw = &diastolicPressRaw;
     mData.systolicPressRaw = &systolicPressRaw;
     mData.pulseRateRaw = &pulseRateRaw;
@@ -65,7 +72,9 @@ void setup() {
     mData.bpIncrease = &bpIncrease;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
 
+    cData.globalTime = &globalTime;
     cData.diastolicPressRaw = &diastolicPressRaw;
+    cData.computeInterval = &computeInterval;
     cData.systolicPressRaw = &systolicPressRaw;
     cData.pulseRateRaw = &pulseRateRaw;
     cData.temperatureRaw = &temperatureRaw;
@@ -78,6 +87,8 @@ void setup() {
     cData.diasNumeric = &diasNumeric;
     cData.pulseNumeric = &pulseNumeric;
 
+    dData.globalTime = &globalTime;
+    dData.displayInterval = &displayInterval;
     dData.diasCorrected = &diasCorrected;
     dData.sysPressCorrected = &sysPressCorrected;
     dData.prCorrected = &prCorrected;
@@ -91,6 +102,8 @@ void setup() {
     dData.tempOutOfRange = &tempOutOfRange;
     dData.batteryLow = &batteryLow;
 
+    wData.globalTime = &globalTime;
+    wData.warningInterval = &warningInterval;
     wData.diastolicPressRaw = &diastolicPressRaw;
     wData.systolicPressRaw = &systolicPressRaw;
     wData.pulseRateRaw = &pulseRateRaw;
@@ -109,7 +122,10 @@ void setup() {
     wData.diasNumeric = &diasNumeric;
     wData.pulseNumeric = &pulseNumeric;
 
+    stData.globalTime = &globalTime;
+    stData.statusInterval = &statusInterval;
     stData.batteryState = &batteryState;
+
 
     // fucntions assigned to taskPtrs are undefined for now
     // need to include "measure.h" "compute.h" etc.
@@ -142,6 +158,6 @@ void setup() {
 
 void loop() {
     //while(1){
-        ssschedule();
+        schedule();
     //}
 }

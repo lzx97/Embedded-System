@@ -1,18 +1,9 @@
 #include <stdio.h>
 #include "DataStructs.h"
+#include "tasks.h"
 
-
-
-
-// Move this to the TCB struct
-// int numOfCall = 0; use globalTime instead
-// Bool sysMeasureComplete = FALSE; // Put these variables inside the TCB structs, initialize in main
-// Bool diaMeasureComplete = FALSE;
-// Bool tempIncrease = TRUE;
-// Bool bpIncrease = TRUE;
-// WHERE DO WE GET THE VARIABLES FROM? What's the point of having a datastruct??
-unsigned int measureInterval = 5;
-unsigned int globalCounter = 0;
+// unsigned int measureInterval = 5;
+// unsigned int globalCounter = 0;
 
 
 // Problems: 'Bool's are expected to be 'enum Bool *'
@@ -55,6 +46,10 @@ void display(void *displayStruct) {
     if ((*dData->globalTime % measureInterval) != 0){
         return;
     }
+
+    tft.fillScreen(BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(0, 0);
     // print low and high presure
     tft.setTextColor(*(dData->bpLow) ? RED : GREEN);
     tft.printf("%s ", dData->diasCorrected);
@@ -105,8 +100,8 @@ void schedule(void *taskQueue) {
     (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
     (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
 
-    delay(10000);
-    globalCounter++;
+    delay_ms(10000);
+    (*globalTime)++;
 
 
     /*if (counter == 0) {
@@ -215,9 +210,9 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
 }
 
 /* Delay for X milliseconds */
-void delay(unsigned long time) {
+void delay_ms(unsigned long time) {
     volatile int i, j;
-    for (i = 0; i <= time; i++) {
+    for (i = 0; i <= 31; i++) { // 32767
         for (j = 0; j <= time; j++) {
             // empty
         }

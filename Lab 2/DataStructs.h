@@ -4,6 +4,7 @@
 
 typedef struct {
     unsigned int *globalTime;
+    unsigned int *measureInterval;
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
@@ -17,6 +18,7 @@ typedef struct {
 
 typedef struct {
     unsigned int *globalTime;
+    unsigned int *computeInterval;
     // Raw
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
@@ -35,6 +37,7 @@ typedef struct {
 
 typedef struct {
     unsigned int *globalTime;
+    unsigned int *displayInterval;
     unsigned char **tempCorrected;
     unsigned char **sysPressCorrected;
     unsigned char **diasCorrected;
@@ -52,6 +55,8 @@ typedef struct {
 
 typedef struct {
     unsigned int *globalTime;
+    unsigned int *statusInterval;
+    unsigned int *warningInterval;
     unsigned int *temperatureRaw;
     unsigned int *systolicPressRaw;
     unsigned int *diastolicPressRaw;
