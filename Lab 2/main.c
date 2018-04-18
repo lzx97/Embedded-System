@@ -1,6 +1,7 @@
 #include "Bool.h"
 #include <stdio.h>
 #include "DataStructs.h"
+#include "tasks.h"
 
 
 
@@ -107,7 +108,7 @@ void setup() {
     DisplayTCB.taskPtr = display;
     DisplayTCB.taskDataPtr = (void*)&dData;
 
-    WarningAlarmTCB.taskPtr = annuniciate;
+    WarningAlarmTCB.taskPtr = annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
 
     StatusTCB.taskPtr = status;
