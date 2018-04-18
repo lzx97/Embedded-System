@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include "DataStructs.h"
 #include "tasks.h"
+//#define setup main
 
 
-void setup(void) {
+void main(void) {
+
     unsigned int globalTime = 0;
     Bool sysMeasureComplete = FALSE;
     Bool diaMeasureComplete = FALSE;
@@ -56,7 +58,6 @@ void setup(void) {
     WarningAlarmData wData;
     StatusData stData;
 
-    TCB* taskQueue[5];
 
     // Add variables to respective structs
     mData.globalTime = &globalTime;
@@ -113,7 +114,7 @@ void setup(void) {
     wData.batteryState = &batteryState;
     wData.bpHigh = &bpHigh;
     wData.bpLow = &bpLow;
-    wData.tempHigh = &tempHigh;
+    wData.tempOff = &tempOff;
     wData.pulseOff = &pulseOff;
     wData.batteryLow = &batteryLow;
     wData.tempNumeric = &tempNumeric;
@@ -130,31 +131,35 @@ void setup(void) {
     // need to include "measure.h" "compute.h" etc.
     // create .h header file for each .c file may be tedious
     // I'm thinking merge all five tasks fucntion together into one tasks.c?
-    MeasureTCB.taskPtr = measure;
+    MeasureTCB.taskPtr = &measure;
     MeasureTCB.taskDataPtr = (void*)&mData;
 
-    ComputeTCB.taskPtr = compute;
+    ComputeTCB.taskPtr = &compute;
     ComputeTCB.taskDataPtr = (void*)&cData;
 
-    DisplayTCB.taskPtr = display;
+    DisplayTCB.taskPtr = &display;
     DisplayTCB.taskDataPtr = (void*)&dData;
 
-    WarningAlarmTCB.taskPtr = annuciate;
+    WarningAlarmTCB.taskPtr = &annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
 
-    StatusTCB.taskPtr = status;
+    StatusTCB.taskPtr = &status;
     StatusTCB.taskDataPtr = (void*)&stData;
 
+    TCB* taskQueue[5];
 
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;
     taskQueue[2] = &DisplayTCB;
     taskQueue[3] = &WarningAlarmTCB;
     taskQueue[4] = &StatusTCB;
+
+    schedule(taskQueue);
+
 }
 
-
+/*
 void loop(void) {
     schedule(taskQueue);
 }
-
+*/

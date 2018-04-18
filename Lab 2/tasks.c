@@ -92,16 +92,18 @@ void status(void *statusStruct) {
 }
 
 void schedule(void *taskQueue) {
-    TCB *tasks[5] = (TCB*) taskQueue;
+    while(1){
+        TCB *tasks[5] = (TCB*) taskQueue;
 
-    (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
-    (*(tasks[1]->taskPtr))(tasks[1]->taskDataPtr);
-    (*(tasks[2]->taskPtr))(tasks[2]->taskDataPtr);
-    (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
-    (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
+        (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
+        (*(tasks[1]->taskPtr))(tasks[1]->taskDataPtr);
+        (*(tasks[2]->taskPtr))(tasks[2]->taskDataPtr);
+        (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
+        (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
 
-    delay_ms(10000);
-    (*globalTime)++;
+        delay_ms(10000);
+        (*globalTime)++;
+    }
 }
 
 
@@ -196,7 +198,7 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
 /* Delay for X milliseconds */
 void delay_ms(unsigned int time_in_ms) {
     volatile int i, j;
-    for (i = 0; i <= 31; i++) { // 32767
+    for (i = 0; i <= 62; i++) { // 32767
         for (j = 0; j <= time_in_ms; j++) {
 
         }

@@ -79,6 +79,7 @@ typedef struct {
 typedef struct {
     unsigned int *globalTime;
     unsigned short *batteryState;
+    unsigned int *statusInterval;
 } StatusData;
 
 /*
