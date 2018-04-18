@@ -52,16 +52,13 @@ typedef struct {
     unsigned int *diastolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned short *batteryState;
-    unsigned char bpOutOfRange;
-    unsigned char tempOutOfRange;
-    unsigned char pulseOutOfRange;
+    unsigned char *bpOutOfRange;
+    unsigned char *tempOutOfRange;
+    unsigned char *pulseOutOfRange;
     Bool *bpHigh;
     Bool *bpLow;
     Bool *tempHigh;
     Bool *pulseLow;
-    //unsigned char *bpOutOfRange;
-    //unsigned char *tempOutOfRange;
-    //unsigned char *pulseOutOfRange;
 } WarningAlarmData;
 
 typedef struct {

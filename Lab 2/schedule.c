@@ -7,6 +7,7 @@ int globalTime;
 unsigned long delayTime;
 // Make a pointer to a global time variable (int that increases by one each loop)
 
+// Needs to access taskQueue, turnCounter, globalTime
 void schedule(void *taskQueue){
     funPtr = taskQueue[turnCounter]; // Find the next function pointer
     void (*funPtr)(void*);  // Call the corresponding function
