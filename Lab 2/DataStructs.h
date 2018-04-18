@@ -42,8 +42,8 @@ typedef struct {
     unsigned short *batteryState;
     Bool *bpHigh;
     Bool *bpLow;
-    Bool *tempHigh;
-    Bool *pulseLow;
+    Bool *tempOff;
+    Bool *pulseOff;
     Bool *batteryLow;
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
@@ -62,8 +62,8 @@ typedef struct {
     unsigned char *pulseOutOfRange;
     Bool *bpHigh;
     Bool *bpLow;
-    Bool *tempHigh;
-    Bool *pulseLow;
+    Bool *tempOff;
+    Bool *pulseOff;
     Bool *batteryLow;
     unsigned int tempNumeric;
     unsigned int sysNumeric;

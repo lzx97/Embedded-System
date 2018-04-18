@@ -35,8 +35,8 @@ void setup() {
 
     Bool bpHigh = FALSE;
     Bool bpLow = FALSE;
-    Bool tempHigh = FALSE;
-    Bool pulseLow = FALSE;
+    Bool tempOff = FALSE;
+    Bool pulseOff = FALSE;
     Bool batteryLow = FALSE;
 
     TCB MeasureTCB;
@@ -84,8 +84,8 @@ void setup() {
     dData.tempCorrected = &tempCorrected;
     dData.bpHigh = &bpHigh;
     dData.bpLow = &bpLow;
-    dData.tempHigh = &tempHigh;
-    dData.pulseLow = &pulseLow;
+    dData.tempOff = &tempOff;
+    dData.pulseOff = &pulseOff;
     dData.bpOutOfRange = &bpOutOfRange;
     dData.pulseOutOfRange = &pulseOutOfRange;
     dData.tempOutOfRange = &tempOutOfRange;
@@ -102,7 +102,7 @@ void setup() {
     wData.bpHigh = &bpHigh;
     wData.bpLow = &bpLow;
     wData.tempHigh = &tempHigh;
-    wData.pulseLow = &pulseLow;
+    wData.pulseOff = &pulseOff;
     wData.batteryLow = &batteryLow;
     wData.tempNumeric = &tempNumeric;
     wData.sysNumeric = &sysNumeric;

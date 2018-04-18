@@ -40,6 +40,11 @@ void compute(void *computeStruct) {
     int diastolicPres = (int) floor(6 + 1.5 * (*cData->diastolicPressRaw));
     int pr = (int) floor(8 + 3 * (*cData->pulseRateRaw));
 
+    *(cData->tempNumeric) = (unsigned int) temp;
+    *(cData->sysNumeric) = (unsigned int) systolicPres;
+    *(cData->diaNumeric) = (unsigned int) diastolicPres;
+    *(cData->pulseNumeric) = (unsigned int) pr;
+
     sprintf(*(cData->tempCorrected), "%d", temp);
     sprintf(*(cData->sysPressCorrected), "%d", systolicPres);
     sprintf(*(cData->diasCorrected), "%d", diastolicPres);
@@ -56,7 +61,7 @@ void display(void *displayStruct) {
     tft.printf("%s ", dData->diasCorrected);
     tft.setTextColor(*(dData->bpHigh) ? RED : GREEN);
     tft.printf("%s\n", dData->sysPressCorrected);
-    
+
     // print temp
     tft.setTextColor(*(dData->tempHigh) ? RED : GREEN);
     tft.printf("%s ", dData->tempCorrected);
@@ -66,13 +71,22 @@ void display(void *displayStruct) {
     // print battery
     tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
     tft.printf("%d ", dData->batteryState);
-    // 
+    //
 }
 
 void annuciate(void *warningAlarmStruct) {
-    WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
-    if (*(wData->temperatureRaw)) 
+        WarningAlarmData *wData = (WarningAlarmData*) warningAlarmStruct;
+        // Battery
+        *(wData->batteryLow) = ((*(wData->batteryState)) < 40) ?  TRUE : FALSE);
+        // syst
+        *(wData->bpHigh) = ((*(wData->sysNumeric)) > 120 ? TRUE : FALSE);
+        // dias
+        *(wData->bpLow) = ((*(wData->diasNumeric)) < 80 ? TRUE : FALSE);
+        // pulserate
+        *(wData->pulseOff) = ((*(wData->pulseNumeric)) < 60 || (*(wData->pulseNumeric)) > 100 ? TRUE : FALSE);
+
 }
+
 
 void status(void *statusStruct) {
     StatusData *sData = (StatusData*) statusStruct;
