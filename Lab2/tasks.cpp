@@ -158,7 +158,7 @@ void schedulefun(TCB **tasks) {
     (*(tasks[2]->taskPtr))(tasks[2]->taskDataPtr);
     (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
     (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
-    delay(50);
+    delay(100);
     //delay_ms(10000);
     globalCounter++;
 }
@@ -167,6 +167,12 @@ void schedulefun(TCB **tasks) {
 // MEASURE TEMP //
 //////////////////
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {
+    if (*tempIncrease && *temperature > 50){
+        *tempIncrease = FALSE;
+    }
+    if (!(*tempIncrease) && *temperature < 15){
+        *tempIncrease = TRUE;
+    }
     if (*tempIncrease) {
         if (*numOfMeasureCalls % 2 == 0) {
             *temperature += 2;
@@ -179,12 +185,6 @@ void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *nu
         } else {
             *temperature += 1;
         }
-    }
-    if (*tempIncrease && *temperature > 50){
-        *tempIncrease = FALSE;
-    }
-    if (!(*tempIncrease) && *temperature < 15){
-        *tempIncrease = TRUE;
     }
 }
 
@@ -225,6 +225,13 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *numOfMeasureCalls){
+     if (*bpIncrease && (*pulseRate > 40)){
+        *bpIncrease = FALSE;
+    }
+    if (!(*bpIncrease) && (*pulseRate < 15)){
+        *bpIncrease = TRUE;
+    }
+     
      if (*bpIncrease) {
         if (*numOfMeasureCalls % 2 == 0) {
             *pulseRate -= 1;
@@ -238,14 +245,8 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
             *pulseRate += 1;
         }
         else {
-            *pulseRate -= 2;
+            *pulseRate -= 3;
         }
-    }
-    if (*bpIncrease && (*pulseRate > 40)){
-        *bpIncrease = FALSE;
-    }
-    if (!(*bpIncrease) && (*pulseRate < 15)){
-        *bpIncrease = TRUE;
     }
 }
 

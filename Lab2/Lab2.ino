@@ -116,6 +116,7 @@ void setup(void) {
     dData.diastolicPressRaw = &diastolicPressRaw;
     dData.systolicPressRaw = &systolicPressRaw;
     dData.pulseRateRaw = &pulseRateRaw;
+    dData.temperatureRaw = &temperatureRaw;
 
 
     // Add values to warning/alarm struct
