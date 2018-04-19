@@ -116,6 +116,7 @@ void setup(void) {
     dData.diastolicPressRaw = &diastolicPressRaw;
     dData.systolicPressRaw = &systolicPressRaw;
     dData.pulseRateRaw = &pulseRateRaw;
+    dData.temperatureRaw = &temperatureRaw;
 
 
     // Add values to warning/alarm struct
@@ -171,13 +172,6 @@ void setup(void) {
 
 
 void loop(void) {
-    
-    Serial.println(F("START"));
-    Serial.println(*(((MeasureData*) (MeasureTCB.taskDataPtr))->temperatureRaw));
-    Serial.println(F("END"));
-    
-    
-
     schedulefun(taskQueue);
 }
 

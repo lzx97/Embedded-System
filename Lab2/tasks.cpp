@@ -94,12 +94,12 @@ void displayData(void *displayStruct) {
     // print low and high presure
     tft.setTextColor(*(dData->bpHigh) ? RED : GREEN);
     //tft.print(*(dData->sysNumeric));
-    tft.print(*(dData->systolicPressRaw));
+    tft.print(*(dData->sysNumeric));
     tft.setTextColor(WHITE);
     tft.print("/");
     tft.setTextColor(*(dData->bpLow) ? RED : GREEN);
     //tft.print(*(dData->diasNumeric));
-    tft.print(*(dData->diastolicPressRaw));
+    tft.print(*(dData->diasNumeric));
     tft.setTextColor(WHITE);
     //tft.write(80);
     tft.println(" mm Hg");
@@ -107,22 +107,22 @@ void displayData(void *displayStruct) {
     // print temp
     tft.setTextColor(*(dData->tempOff) ? RED : GREEN);
     //tft.print(*(dData->tempNumeric));
-    tft.print((float)*(dData->temperatureRaw), 1);
+    tft.print((float)*(dData->tempNumeric), 1);
     tft.setTextColor(WHITE);
     tft.print("C "); 
     
     // print pulserate
     tft.setTextColor(*(dData->pulseOff) ? RED : GREEN);
     //tft.print(*(dData->pulseNumeric));
-    tft.print(*(dData->pulseRateRaw));
+    tft.print(*(dData->pulseNumeric));
     tft.setTextColor(WHITE);
-    tft.print(" BPM "); 
+    tft.println(" BPM "); 
     
     // print battery
     tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
     tft.print(*(dData->batteryState));
     tft.setTextColor(WHITE);
-    tft.print("%"); 
+    tft.print(" Charges"); 
 }
 
 void annuciate(void *warningAlarmStruct) {
@@ -139,6 +139,7 @@ void annuciate(void *warningAlarmStruct) {
     // pulserate
     *(wData->pulseOff) = ((((*(wData->pulseNumeric)) < 60) || ((*(wData->pulseNumeric)) > 100)) ? TRUE : FALSE);
     // Temperature
+    *(wData->tempOff) = ((*(wData->tempNumeric) > 37.8) || (*(wData->tempNumeric) < 36.1)) ? TRUE : FALSE;
 }
 
 
@@ -158,7 +159,7 @@ void schedulefun(TCB **tasks) {
     (*(tasks[2]->taskPtr))(tasks[2]->taskDataPtr);
     (*(tasks[3]->taskPtr))(tasks[3]->taskDataPtr);
     (*(tasks[4]->taskPtr))(tasks[4]->taskDataPtr);
-    delay(50);
+    delay(100);
     //delay_ms(10000);
     globalCounter++;
 }
@@ -167,6 +168,12 @@ void schedulefun(TCB **tasks) {
 // MEASURE TEMP //
 //////////////////
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {
+    if (*tempIncrease && *temperature > 50){
+        *tempIncrease = FALSE;
+    }
+    if (!(*tempIncrease) && *temperature < 15){
+        *tempIncrease = TRUE;
+    }
     if (*tempIncrease) {
         if (*numOfMeasureCalls % 2 == 0) {
             *temperature += 2;
@@ -179,12 +186,6 @@ void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *nu
         } else {
             *temperature += 1;
         }
-    }
-    if (*tempIncrease && *temperature > 50){
-        *tempIncrease = FALSE;
-    }
-    if (!(*tempIncrease) && *temperature < 15){
-        *tempIncrease = TRUE;
     }
 }
 
@@ -225,6 +226,13 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *numOfMeasureCalls){
+     if (*bpIncrease && (*pulseRate > 40)){
+        *bpIncrease = FALSE;
+    }
+    if (!(*bpIncrease) && (*pulseRate < 15)){
+        *bpIncrease = TRUE;
+    }
+     
      if (*bpIncrease) {
         if (*numOfMeasureCalls % 2 == 0) {
             *pulseRate -= 1;
@@ -238,14 +246,8 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
             *pulseRate += 1;
         }
         else {
-            *pulseRate -= 2;
+            *pulseRate -= 3;
         }
-    }
-    if (*bpIncrease && (*pulseRate > 40)){
-        *bpIncrease = FALSE;
-    }
-    if (!(*bpIncrease) && (*pulseRate < 15)){
-        *bpIncrease = TRUE;
     }
 }
 
