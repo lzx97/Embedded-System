@@ -3,57 +3,64 @@
 #include "DataStructs.h"
 #include "tasks.h"
 
-int main(void) {
-    unsigned int globalTime = 0;
-    Bool sysMeasureComplete = FALSE;
-    Bool diaMeasureComplete = FALSE;
-    Bool tempIncrease = TRUE;
-    Bool bpIncrease = TRUE;
-    unsigned int numOfMeasureCalls = 0;
+TCB* taskQueue[5];
+TCB MeasureTCB;
+TCB ComputeTCB;
+TCB DisplayTCB;
+TCB WarningAlarmTCB;
+TCB StatusTCB;
 
-    unsigned int measureInterval = 5;
-    unsigned int computeInterval = 5;
-    unsigned int displayInterval = 5;
-    unsigned int warningInterval = 1;
-    unsigned int statusInterval = 5;
 
-    unsigned int temperatureRaw = 75;
-    unsigned int systolicPressRaw = 80;
-    unsigned int diastolicPressRaw = 80;
-    unsigned int pulseRateRaw = 50;
+unsigned int globalTime = 0;
+Bool sysMeasureComplete = FALSE;
+Bool diaMeasureComplete = FALSE;
+Bool tempIncrease = TRUE;
+Bool bpIncrease = TRUE;
+unsigned int numOfMeasureCalls = 0;
 
-    double tempNumeric = 0;
-    unsigned int sysNumeric = 0;
-    unsigned int diasNumeric = 0;
-    unsigned int pulseNumeric = 0;
+unsigned int measureInterval = 5;
+unsigned int computeInterval = 5;
+unsigned int displayInterval = 5;
+unsigned int warningInterval = 1;
+unsigned int statusInterval = 5;
 
-    unsigned char *tempCorrected = NULL;
-    unsigned char *sysPressCorrected = NULL;
-    unsigned char *diasCorrected = NULL;
-    unsigned char *prCorrected = NULL;
+unsigned int temperatureRaw = 75;
+unsigned int systolicPressRaw = 80;
+unsigned int diastolicPressRaw = 80;
+unsigned int pulseRateRaw = 50;
 
-    unsigned short batteryState = 200;
-    unsigned char bpOutOfRange = 0;
-    unsigned char tempOutOfRange = 0;
-    unsigned char pulseOutOfRange = 0;
+double tempNumeric = 0;
+unsigned int sysNumeric = 0;
+unsigned int diasNumeric = 0;
+unsigned int pulseNumeric = 0;
 
-    Bool bpHigh = FALSE;
-    Bool bpLow = FALSE;
-    Bool tempOff = FALSE;
-    Bool pulseOff = FALSE;
-    Bool batteryLow = FALSE;
+unsigned char *tempCorrected = NULL;
+unsigned char *sysPressCorrected = NULL;
+unsigned char *diasCorrected = NULL;
+unsigned char *prCorrected = NULL;
 
-    TCB MeasureTCB;
-    TCB ComputeTCB;
-    TCB DisplayTCB;
-    TCB WarningAlarmTCB;
-    TCB StatusTCB;
+unsigned short batteryState = 200;
+unsigned char bpOutOfRange = 0;
+unsigned char tempOutOfRange = 0;
+unsigned char pulseOutOfRange = 0;
 
-    MeasureData mData;
-    ComputeData cData;
-    DisplayData dData;
-    WarningAlarmData wData;
-    StatusData stData;
+Bool bpHigh = FALSE;
+Bool bpLow = FALSE;
+Bool tempOff = FALSE;
+Bool pulseOff = FALSE;
+Bool batteryLow = FALSE;
+
+MeasureData mData;
+ComputeData cData;
+DisplayData dData;
+WarningAlarmData wData;
+StatusData stData;
+    
+void setup(void) {
+    
+    setupDisplay();
+
+    
 
 
     // Add variables to measure struct
@@ -85,6 +92,7 @@ int main(void) {
     cData.diasNumeric = &diasNumeric;
     cData.pulseNumeric = &pulseNumeric;
 
+    // Add variables to display struct
     dData.globalTime = &globalTime;
     dData.displayInterval = &displayInterval;
     dData.diasCorrected = &diasCorrected;
@@ -99,7 +107,18 @@ int main(void) {
     dData.pulseOutOfRange = &pulseOutOfRange;
     dData.tempOutOfRange = &tempOutOfRange;
     dData.batteryLow = &batteryLow;
+    dData.tempNumeric = &tempNumeric;
+    dData.sysNumeric = &sysNumeric;
+    dData.diasNumeric = &diasNumeric;
+    dData.pulseNumeric = &pulseNumeric;
+    dData.batteryState = &batteryState;
+    dData.displayInterval = &measureInterval;
+    dData.diastolicPressRaw = &diastolicPressRaw;
+    dData.systolicPressRaw = &systolicPressRaw;
+    dData.pulseRateRaw = &pulseRateRaw;
 
+
+    // Add values to warning/alarm struct
     wData.globalTime = &globalTime;
     wData.warningInterval = &warningInterval;
     wData.diastolicPressRaw = &diastolicPressRaw;
@@ -120,44 +139,45 @@ int main(void) {
     wData.diasNumeric = &diasNumeric;
     wData.pulseNumeric = &pulseNumeric;
 
+    // Add data to status struct
     stData.globalTime = &globalTime;
     stData.statusInterval = &statusInterval;
     stData.batteryState = &batteryState;
 
-    // fucntions assigned to taskPtrs are undefined for now
-    // need to include "measure.h" "compute.h" etc.
-    // create .h header file for each .c file may be tedious
-    // I'm thinking merge all five tasks fucntion together into one tasks.c?
 
-    MeasureTCB.taskPtr = &measurefun;
+    // Initialize the TCBs
+    MeasureTCB.taskPtr = &measureData;
     MeasureTCB.taskDataPtr = (void*)&mData;
 
-    ComputeTCB.taskPtr = &computefun;
+    ComputeTCB.taskPtr = &computeData;
     ComputeTCB.taskDataPtr = (void*)&cData;
 
-    DisplayTCB.taskPtr = &displayfun;
+    DisplayTCB.taskPtr = &displayData;
     DisplayTCB.taskDataPtr = (void*)&dData;
 
-    WarningAlarmTCB.taskPtr = &annuciatefun;
+    WarningAlarmTCB.taskPtr = &annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
 
-    StatusTCB.taskPtr = &statusfun;
+    StatusTCB.taskPtr = &batteryStatus;
     StatusTCB.taskDataPtr = (void*)&stData;
 
-    TCB* taskQueue[5];
-
+    // Initialize the taskQueue
     taskQueue[0] = &MeasureTCB;
     taskQueue[1] = &ComputeTCB;
     taskQueue[2] = &DisplayTCB;
     taskQueue[3] = &WarningAlarmTCB;
     taskQueue[4] = &StatusTCB;
+}
+
+
+void loop(void) {
+    
+    Serial.println(F("START"));
+    Serial.println(*(((MeasureData*) (MeasureTCB.taskDataPtr))->temperatureRaw));
+    Serial.println(F("END"));
+    
+    
 
     schedulefun(taskQueue);
-    return 0;
 }
 
-/*
-void loop(void) {
-    schedule(taskQueue);
-}
-*/

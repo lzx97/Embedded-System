@@ -52,6 +52,14 @@ typedef struct {
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
+    double *tempNumeric;
+    unsigned int *sysNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *pulseNumeric;
+    unsigned int *temperatureRaw;
+    unsigned int *systolicPressRaw;
+    unsigned int *diastolicPressRaw;
+    unsigned int *pulseRateRaw;
 } DisplayData;
 
 typedef struct {
