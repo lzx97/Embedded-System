@@ -151,7 +151,7 @@ void batteryStatus(void *statusStruct) {
     *(sData->batteryState) -= 1;
 }
 
-void schedulefun(TCB **tasks) {
+void schedule(TCB **tasks) {
     Serial.print(F("GlobalCounter = "));
     Serial.println(globalCounter);
     (*(tasks[0]->taskPtr))(tasks[0]->taskDataPtr);
