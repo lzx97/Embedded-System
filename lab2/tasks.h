@@ -13,4 +13,4 @@ void annuciate(void *warningAlarmStruct);
 void batteryStatus(void *statusStruct);
 void schedule(TCB **tasks);
 void delay_ms(unsigned long time_in_ms);
-void setupDisplay(void);
+void setupDisplay(void); 
