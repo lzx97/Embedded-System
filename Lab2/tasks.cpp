@@ -94,12 +94,12 @@ void displayData(void *displayStruct) {
     // print low and high presure
     tft.setTextColor(*(dData->bpHigh) ? RED : GREEN);
     //tft.print(*(dData->sysNumeric));
-    tft.print(*(dData->systolicPressRaw));
+    tft.print(*(dData->sysNumeric));
     tft.setTextColor(WHITE);
     tft.print("/");
     tft.setTextColor(*(dData->bpLow) ? RED : GREEN);
     //tft.print(*(dData->diasNumeric));
-    tft.print(*(dData->diastolicPressRaw));
+    tft.print(*(dData->diasNumeric));
     tft.setTextColor(WHITE);
     //tft.write(80);
     tft.println(" mm Hg");
@@ -107,22 +107,22 @@ void displayData(void *displayStruct) {
     // print temp
     tft.setTextColor(*(dData->tempOff) ? RED : GREEN);
     //tft.print(*(dData->tempNumeric));
-    tft.print((float)*(dData->temperatureRaw), 1);
+    tft.print((float)*(dData->tempNumeric), 1);
     tft.setTextColor(WHITE);
     tft.print("C "); 
     
     // print pulserate
     tft.setTextColor(*(dData->pulseOff) ? RED : GREEN);
     //tft.print(*(dData->pulseNumeric));
-    tft.print(*(dData->pulseRateRaw));
+    tft.print(*(dData->pulseNumeric));
     tft.setTextColor(WHITE);
-    tft.print(" BPM "); 
+    tft.println(" BPM "); 
     
     // print battery
     tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
     tft.print(*(dData->batteryState));
     tft.setTextColor(WHITE);
-    tft.print("%"); 
+    tft.print(" Charges"); 
 }
 
 void annuciate(void *warningAlarmStruct) {
@@ -139,6 +139,7 @@ void annuciate(void *warningAlarmStruct) {
     // pulserate
     *(wData->pulseOff) = ((((*(wData->pulseNumeric)) < 60) || ((*(wData->pulseNumeric)) > 100)) ? TRUE : FALSE);
     // Temperature
+    *(wData->tempOff) = ((*(wData->tempNumeric) > 37.8) || (*(wData->tempNumeric) < 36.1)) ? TRUE : FALSE;
 }
 
 

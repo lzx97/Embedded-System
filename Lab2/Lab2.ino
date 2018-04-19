@@ -172,13 +172,6 @@ void setup(void) {
 
 
 void loop(void) {
-    
-    Serial.println(F("START"));
-    Serial.println(*(((MeasureData*) (MeasureTCB.taskDataPtr))->temperatureRaw));
-    Serial.println(F("END"));
-    
-    
-
     schedulefun(taskQueue);
 }
 
