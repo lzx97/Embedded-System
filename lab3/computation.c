@@ -21,6 +21,10 @@ void computePS(void *computeStruct) {
 }
 
 // SC part of the compute. Send data packet to call compute. 
-void computeSC() {
+void computeSC(void *computeStruct) {
+    // create char array to be sent to the PS
 
+
+    // transfer and receive 
+    com(char *data, void *dataStruct)
 }
