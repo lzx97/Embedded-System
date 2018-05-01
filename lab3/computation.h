@@ -1,1 +1,2 @@
-void computation(void *computeStruct);
+void computePS(void *computeStruct);
+void computeSC();
