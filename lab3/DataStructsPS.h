@@ -14,6 +14,9 @@ typedef struct {
     Bool *diaMeasureComplete;
     Bool *tempIncrease;
     Bool *bpIncrease;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
     unsigned int *numOfMeasureCalls;
 } MeasureDataPS;
 
@@ -34,6 +37,9 @@ typedef struct {
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
 } ComputeDataPS;
 /*
 typedef struct {
@@ -75,6 +81,8 @@ typedef struct {
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
     Bool *bpHigh;
+    Bool *bpAlarmHigh;
+    unsigned int *bpAlarmCount;
     Bool *bpLow;
     Bool *tempOff;
     Bool *pulseOff;
@@ -83,12 +91,16 @@ typedef struct {
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
 } WarningAlarmDataPS;
 
 typedef struct {
     unsigned int *globalTime;
     unsigned short *batteryState;
     unsigned int *statusInterval;
+
 } StatusDataPS;
 
 typedef struct {

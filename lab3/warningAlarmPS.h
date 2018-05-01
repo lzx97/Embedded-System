@@ -1,0 +1,1 @@
+void warningAlarmPS(void *warningAlarmStruct);
