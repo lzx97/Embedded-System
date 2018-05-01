@@ -1,5 +1,18 @@
 #include "DataStructs.h"
 
-void batteryStatus(void *statusStruct) {
+int globalCounter;
+
+void batteryStatusPS(void *statusStruct) {
     // TODO: modify lab2 code
+    StatusData *sData = (StatusData*) statusStruct;
+    if (globalCounter % 5 != 0){
+        return;
+    }
+    *(sData->batteryState) -= 1;
+}
+
+void batteryStateSC(void *statusStruct) {
+    // create char[]
+
+    // call com
 }
