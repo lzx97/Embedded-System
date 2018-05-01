@@ -2,7 +2,7 @@
 
 void measurement(void *measureStruct) {
     // TODO: modify lab 2 codes according to the new spec
-    MeasureData *mData = (MeasureData*) measureStruct;
+    MeasureDataPS *mData = (MeasureDataPS*) measureStruct;
     if ((globalCounter % (*(mData->measureInterval))) != 0){
         return;
     }
