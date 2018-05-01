@@ -7,7 +7,9 @@ typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
-    unsigned int *measurementSelection;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
     Bool *sysMeasureComplete;
     Bool *diaMeasureComplete;
     Bool *tempIncrease;
@@ -24,7 +26,9 @@ typedef struct {
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
     unsigned int *prCorrectedBuf;
-    unsigned int *measurementSelection;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
 } ComputeData;
 
 typedef struct {
@@ -71,12 +75,16 @@ typedef struct {
 
 typedef struct {
     // Specified by lab spec, more fields to be added
-    unsigned int *measurementSelection;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
     unsigned int *alarmAcknowledge; // type TBD
 } TFTData;
 
 typedef struct {
-    unsigned int *measurementSelection;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
     unsigned int *prCorrectedBuf;
@@ -84,7 +92,7 @@ typedef struct {
 
 typedef struct {
     unsigned short *batteryState;
-    
+
 } StatusData;
 
 // implemented as linked list

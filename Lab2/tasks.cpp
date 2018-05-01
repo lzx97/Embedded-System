@@ -171,7 +171,7 @@ void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *nu
     if (*tempIncrease && *temperature > 50){
         *tempIncrease = FALSE;
     }
-    if (!(*tempIncrease) && *temperature < 15){
+    if (!(*tempIncrease) && *temperature < 15){s
         *tempIncrease = TRUE;
     }
     if (*tempIncrease) {
