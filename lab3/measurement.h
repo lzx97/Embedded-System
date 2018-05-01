@@ -1,0 +1,1 @@
+void measurement(void *measureStruct);
