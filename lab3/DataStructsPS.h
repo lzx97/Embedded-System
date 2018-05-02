@@ -91,8 +91,8 @@ typedef struct {
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
-    Bool *tempSelection;
     Bool *bpSelection;
+    Bool *tempSelection;
     Bool *pulseSelection;
 } WarningAlarmDataPS;
 
