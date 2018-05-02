@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "DataStructs.h"
 
 int globalCounter;
@@ -22,9 +23,18 @@ void computePS(void *computeStruct) {
 
 // SC part of the compute. Send data packet to call compute. 
 void computeSC(void *computeStruct) {
-    // create char array to be sent to the PS
-
+    // create string to be sent to the PS
+    char start = 2;
+    char stop = 3;
+    char str[25];
+    str[0] = 'C';
+    str[1] = 'B'; // To be changed after implemented TFTKeypad
+    str[2] = 'T'; // To be changed after implemented TFTKeypad
+    str[3] = 'P'; // To be changed after implemented TFTKeypad
+    strcat(str, &start);
+    strcat(str, "Starting compute");
+    strcat(str, &stop);
 
     // transfer and receive 
-    com(char *data, void *dataStruct)
+    com(char *data, void *dataStruct);
 }

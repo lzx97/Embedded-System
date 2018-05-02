@@ -11,8 +11,19 @@ void batteryStatusPS(void *statusStruct) {
     *(sData->batteryState) -= 1;
 }
 
-void batteryStateSC(void *statusStruct) {
-    // create char[]
+void batteryStatusSC(void *statusStruct) {
+    // create string to be sent to the PS
+    char start = 2;
+    char stop = 3;
+    char str[25];
+    str[0] = 'M';
+    str[1] = 'A'; // To be changed after implemented TFTKeypad
+    str[2] = 'A'; // To be changed after implemented TFTKeypad
+    str[3] = 'A'; // To be changed after implemented TFTKeypad
+    strcat(str, &start);
+    strcat(str, "Starting status\n");
+    strcat(str, &stop);
 
-    // call com
+    // transfer and receive 
+    com(char *data, void *dataStruct);
 }
