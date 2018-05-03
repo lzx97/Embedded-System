@@ -1,6 +1,9 @@
 #include "Bool.h"
 #include "DataStructsPS.h"
+#include "measurePS.h"
 
+TCB* taskQueue[5];
+TCB measureTCB;
 
 /* Shared global variables for storing data */
 // Measure Data
@@ -98,10 +101,20 @@ void setup() {
   // StatusData fields
   sData.batteryState = &batteryState;
 
-  
+  measureTCB.taskPtr = &measurePS;
+  measureTCB.taskDataPtr = (void*)&mData;
+
+  taskQueue[0] = &measureTCB;
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  //void* mDataptr = (void*) &mData;
+   (*(taskQueue[0]->taskPtr))(taskQueue[0]->taskDataPtr);
+  /*Serial.println(*(mData.temperatureRaw));
+  Serial.println(*(mData.systolicPressRaw));
+  Serial.println(*(mData.diastolicPressRaw));
+  Serial.println(*(mData.pulseRateRaw));*/
+  Serial.println();
+  delay(1000);
 }

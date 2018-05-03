@@ -1,5 +1,8 @@
 #include "DataStructsPS.h"
 #include "Bool.h"
+#include <math.h>
+#include "measurePS.h"
+#include <arduino.h>
 
 int pin = 7; // pin to receive pulse rate input;
 
@@ -15,8 +18,8 @@ void measurePS(void *measureStruct) {
 
     // measure blood pressures
     if (*(mData->bpSelection)){
-        measureSysPres(mData->systolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
-        measureDiaPres(mData->diastolicPressRaw,mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+        measureSysPres(mData->systolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+        measureDiaPres(mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
     }
 
     // measure pulse rate
@@ -88,7 +91,7 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    int halfPeriod = pulseIn(pin, LOW);
+    int halfPeriod = pulseIn(pin, LOW, DEFAULT);
     float halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 

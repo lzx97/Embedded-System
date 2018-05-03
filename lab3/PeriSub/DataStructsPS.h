@@ -106,10 +106,10 @@ typedef struct SchedulerStruct {
     // may be used for future labs
 } SchedulerData;
 */
-/*
+
 typedef struct {
     void *taskDataPtr;
     void (*taskPtr)(void*);
 } TCB;
-*/
+
 #endif
