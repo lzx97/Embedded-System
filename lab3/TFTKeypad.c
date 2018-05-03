@@ -122,6 +122,7 @@ uint16_t buttoncolors[11] = {ILI9341_DARKGREY, ILI9341_DARKGREY, ILI9341_DARKGRE
 
 
 void TFTKeypad(void *keypadStruct) {
+    // CHECK HOW TO USE DIFFERENT SETS OF BUTTONS FOR DIFFERENT INTERFACES
 
         //DisplayData *dData = (DisplayData*) displayStruct;
         //if ((globalCounter % *(dData->displayInterval)) != 0){
@@ -129,10 +130,13 @@ void TFTKeypad(void *keypadStruct) {
     //};
     // TODO: implement
     // Run this in the never ending while loop and check for inputs
-    // If input detected: set screen to all black while loading the new view
+    // If event happened: Check if it was a change of mode //
+    // Yes: update mode,    No: Check the currently activated buttons (menu, annunciate)
+    // set screen to all black while loading the new view
+    // If not
 
     // Activate current mode {Menu, Annunciation, Exp1, Exp2}
-
+    if (statusChanged){}
     void drawDefaultMode();
     if (mode == "Menu"){
         displayMenu();

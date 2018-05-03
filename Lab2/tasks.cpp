@@ -88,7 +88,7 @@ void displayData(void *displayStruct) {
     if ((globalCounter % *(dData->displayInterval)) != 0){
         return;
     };
-    tft.fillScreen(BLACK);
+    tft.fillScreen(BLACK);s
     tft.setTextSize(2);
     tft.setCursor(0, 0);
     // print low and high presure
