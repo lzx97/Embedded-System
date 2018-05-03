@@ -91,9 +91,7 @@ typedef struct {
 } WarningAlarmDataPS;
 
 typedef struct {
-    unsigned int *globalTime;
     unsigned short *batteryState;
-    unsigned int *statusInterval;
 
 } StatusDataPS;
 
