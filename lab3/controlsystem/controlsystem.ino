@@ -1,6 +1,3 @@
-#include "DataStructs.h"
-#include <stdio.h>
-#include "DataStructs.h"
 // IMPORTANT: Elegoo_TFTLCD LIBRARY MUST BE SPECIFICALLY
 // CONFIGURED FOR EITHER THE TFT SHIELD OR THE BREAKOUT BOARD.
 // SEE RELEVANT COMMENTS IN Elegoo_TFTLCD.h FOR SETUP.
@@ -144,7 +141,7 @@ void setup(void) {
   } else if(identifier == 0x8357) {
     Serial.println(F("Found HX8357D LCD driver"));
   } else if(identifier==0x0101)
-  {
+  {     
       identifier=0x9341;
        Serial.println(F("Found 0x9341 LCD driver"));
   }else {
@@ -161,7 +158,7 @@ void setup(void) {
    tft.begin(identifier);
    tft.setRotation(0);
    drawDefaultMode();
-
+   
    Serial.print(F("THIS IS THE WIDTH"));
    Serial.print(tft.width());
    Serial.print(F("THIS IS THE HEIGHT"));
@@ -195,7 +192,7 @@ void drawMenu(){
   bpvar = ((bpon == 1) ? 0 : 3);
   tempvar = ((tempon == 1) ? 1 : 4);
   pulsevar = ((pulseon ==1) ? 2 : 5);
-
+  
   menubuttons[bpvar].initButton(&tft,  MENU_BUTTON_X,
                  MENU_BUTTON_Y,    // x, y, w, h, outline, fill, text
                   MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[bpvar], ILI9341_WHITE,
@@ -231,10 +228,10 @@ void loop(void) {
           drawMenu();
       } else if (mode ==2){
           drawAnnunciate();
-      }
-      pressed = 0;
-  }
-
+      } 
+      pressed = 0; 
+  } 
+  
    int dx;
    int dy;
    if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
@@ -249,7 +246,7 @@ void loop(void) {
     Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
    }
 
-
+   
   // go thru all the buttons, checking if they were pressed
   for (uint8_t b=0; b<4; b++) {
       if (buttons[b].contains(dx, dy)) {
@@ -289,13 +286,13 @@ void loop(void) {
       // Serial.print("Released: "); Serial.println(b);
       buttons[b].drawButton();  // draw normal
     }
-
+    
     if (buttons[b].justPressed()) {
         buttons[b].drawButton(true);  // draw invert!
-        buttons[b].press(false);
+        buttons[b].press(false);        
         if (b < 4) {
           mode = b+1; // Set mode to default 0 = Default, 1 = Menu, 2=Annunciate
-        }
+        }  
        delay(100);
     }
   }
@@ -305,7 +302,7 @@ void loop(void) {
              // Serial.print("Released: "); Serial.println(b);
              menubuttons[b].drawButton();  // draw normal
           }
-
+        
           if (menubuttons[b].justPressed()) {
               menubuttons[b].press(false);
               menubuttons[b].drawButton(true);  // draw invert!
@@ -327,17 +324,17 @@ void loop(void) {
           // Serial.print("Released: "); Serial.println(b);
           acknbuttons[0].drawButton();  // draw normal
       }
-
+  
       if (acknbuttons[0].justPressed()) {
           acknbuttons[0].press(false);
           acknbuttons[0].drawButton(true);  // draw invert!
           delay(100);
-      }
+      } 
   }
 }
 
 void drawAnnunciate(){
-    // create default mode buttonstft.setCursor(0, 0);
+  // create default mode buttonstft.setCursor(0, 0);
     // print low and high presure
     tft.setCursor(0, 150);
     tft.setTextColor(GREEN);
@@ -353,19 +350,19 @@ void drawAnnunciate(){
     tft.setTextColor(GREEN);
     tft.print("37.2");
     tft.setTextColor(WHITE);
-    tft.print("C ");
-
+    tft.print("C "); 
+    
     // print pulserate
     tft.setTextColor(RED);
     tft.print("200");
     tft.setTextColor(WHITE);
-    tft.println(" BPM ");
-
+    tft.println(" BPM "); 
+    
     // print battery
     tft.setTextColor(GREEN);
     tft.print("95");
     tft.setTextColor(WHITE);
-    tft.print(" %");
+    tft.print(" %"); 
 
   acknbuttons[0].initButton(&tft,  ACKN_BUTTON_X,
                  ACKN_BUTTON_Y,    // x, y, w, h, outline, fill, text
@@ -375,9 +372,8 @@ void drawAnnunciate(){
 }
 
 
-
-// Print something in the mini status bar with either flashstring
 /*
+// Print something in the mini status bar with either flashstring
 void status(const __FlashStringHelper *msg) {
   tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
   tft.setCursor(STATUS_X, STATUS_Y);
