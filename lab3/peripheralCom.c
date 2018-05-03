@@ -7,17 +7,18 @@ void communicationSC(char *data, void *dataStruct) {
     if (globalCounter % 5 == 0) {   // Every 5 second
         // Call measure/compute/batteryStatus
         if (data[0] == 'M' || data[0] == 'C' || data[0] == 'B') {  
-            int bytesent = Serial.write(data); // send
-            Serial.print(data[0]);
+            Serial.write(data); // send
         }
     }
+    // always call warningAlarm
     if (data[0] == 'W') {
-        int bytesent = Serial.write(data); // send
-        Serial.print(data[0]);
+        Serial.write(data); // send
     }
+
 
     // receive process
     // TODO: implement
+    
 }
 
 
