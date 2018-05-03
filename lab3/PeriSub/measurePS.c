@@ -1,6 +1,9 @@
 #include "DataStructsPS.h"
 #include "Bool.h"
 
+int pin = 7; // pin to receive pulse rate input;
+
+
 void measurePS(void *measureStruct) {
     // TODO: modify lab 2 codes according to the new spec
     MeasureDataPS *mData = (MeasureDataPS*) measureStruct;
@@ -18,7 +21,7 @@ void measurePS(void *measureStruct) {
 
     // measure pulse rate
     if (*(mData->pulseSelection)){
-        measurePulseRate(mData->pulseRateRaw, mData->bpIncrease, mData->numOfMeasureCalls);
+        measurePulseRate(mData->pulseRateRaw);
     }
 
     // increment simulation counter
@@ -84,8 +87,17 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
     }
 }
 
-void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *numOfMeasureCalls){
-     if (*bpIncrease && (*pulseRate > 40)){
+void measurePulseRate(unsigned int *pulseRate){
+    int halfPeriod = pulseIn(pin, LOW);
+    float halfPeriodInS = (1.0 * halfPeriod) / 1000000;
+    int pulse = (int) 1 / (2 * halfPeriodInS);
+
+    *pulseRate = pulse;
+    
+
+
+
+    /* if (*bpIncrease && (*pulseRate > 40)){
         *bpIncrease = FALSE;
     }
     if (!(*bpIncrease) && (*pulseRate < 15)){
@@ -107,5 +119,5 @@ void measurePulseRate(unsigned int *pulseRate, Bool *bpIncrease, unsigned int *n
         else {
             *pulseRate -= 3;
         }
-    }
+    }*/ 
 }
