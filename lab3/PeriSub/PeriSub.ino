@@ -86,7 +86,7 @@ void setup() {
   wData.bpOutOfRange = &bpOutOfRange;
   wData.tempOutOfRange = &tempOutOfRange;
   wData.pulseOutOfRange = &pulseOutOfRange;
-  wData.bpOff = &bpOff;
+  wData.bpHigh = &bpHigh;
   wData.tempOff = &tempOff;
   wData.pulseOff = &pulseOff;
   wData.batteryLow= &batteryLow;

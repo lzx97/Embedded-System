@@ -1,12 +1,11 @@
-#include "DataStructs.h"
+#include "DataStructsPS.h"
 
 void warningAlarm(void *warningAlarmStruct) {
     WarningAlarmDataPS *wData = (WarningAlarmDataPS*) warningAlarmStruct;
-    if ((globalCounter % *(wData->warningInterval)) != 0){
-    return;
-    }
-    // Battery
+    
+    // Set battery low signal
     *(wData->batteryLow) = (((*(wData->batteryState)) < 40) ?  TRUE : FALSE);
+
     if (*(wData->bpSelection)){
     // syst
     *(wData->bpHigh) = ((((*(wData->sysNumeric)) > 130) || (*(wData->sysNumeric) < 120)) ? TRUE : FALSE);
