@@ -3,6 +3,8 @@
 
 #include "Bool.h"
 
+#define PIN_IN 7
+
 void measurePS(void *measureStruct);
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls);
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, 

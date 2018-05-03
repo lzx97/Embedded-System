@@ -4,7 +4,6 @@
 #include "measurePS.h"
 #include <Arduino.h>
 
-int pin = 7; // pin to receive pulse rate input;
 
 
 void measurePS(void *measureStruct) {
@@ -91,10 +90,8 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    int halfPeriod = pulseIn(pin, LOW, 1);
-    //Serial.print("P/2 = ");
-    Serial.println(halfPeriod);
-    float halfPeriodInS = (1.0 * halfPeriod) / 1000000;
+    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
+    double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 
     *pulseRate = pulse;
