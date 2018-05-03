@@ -16,7 +16,7 @@ void batteryStatusSC(void *statusStruct) {
     char start = 2;
     char stop = 3;
     char str[25];
-    str[0] = 'M';
+    str[0] = 'B';
     str[1] = 'A'; // To be changed after implemented TFTKeypad
     str[2] = 'A'; // To be changed after implemented TFTKeypad
     str[3] = 'A'; // To be changed after implemented TFTKeypad

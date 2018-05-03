@@ -26,7 +26,7 @@ void computeSC(void *computeStruct) {
     // create string to be sent to the PS
     char start = 2;
     char stop = 3;
-    char str[25];
+    char str[30];
     str[0] = 'C';
     str[1] = 'B'; // To be changed after implemented TFTKeypad
     str[2] = 'T'; // To be changed after implemented TFTKeypad
