@@ -2,8 +2,18 @@
 
 // Don't forget to add functions to header file
 
-void scheduler(TCB **taskQueue) {
-    // TODO: re-implement as a dynamic scheduler
+void scheduler() {
+    TCB* curr = head;
+    while (curr != tail){
+        (curr->taskPtr))(curr->taskDataPtr);
+        curr = curr->next;
+    }
+    // While loop ends before tail is executed
+    // So we call it one last time to run through everything
+    (curr->taskPtr))(curr->taskDataPtr);
+    // Delay one second
+    delay(1000);
+    globalCounter++;
 }
 
 
@@ -43,16 +53,28 @@ void deleteNode(TCB* node) {
     return;
 }
 
-
-void insertNode(TCB* node) {
-    if(NULL == head){          //    If the head pointer is pointing to nothing
-      head = node;              //  set the head and tail pointers to point to this node
+// Do insert(TCBToInsert, TCBtoadd it to after)
+// So calling insert(compute, measure) adds compute after measure
+void insertNode(TCB* node, TCB* precNode) {
+    // Since C lacks default parameters,
+    // The user has to input NULL as 2nd arg if not specified
+    if (NULL == precNode){
+        precNode = tail;
+    }
+    if(NULL == head){               //  If the head pointer is pointing to nothing
+      head = node;                  //  set the head and tail pointers to point to this node
       tail = node;
-    } else {                     //  otherwise, head is not NULL, add the node to the end of the list
+    } else if (tail == precNode) {                        //  otherwise, head is not NULL, add the node to the end of the list
         tail->next = node;
-        node->prev = tail;    //  note that the tail pointer is still pointing
-                                //  to the prior last node at this point
-        tail = node;            //  update the tail pointer
+        node->prev = tail;          //  note that the tail pointer is still pointing
+                                    //  to the prior last node at this point
+        tail = node;                //  update the tail pointer
+    } else {
+        TCB* curr = precNode->next;
+        precNode->next = node;
+        curr->prev = node;
+        node->next=curr;
+        node->prev = precNode;
     }
     return;
 }

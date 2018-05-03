@@ -1,3 +1,5 @@
 #include "DataStructs.h"
 
-void scheduler(TCB **taskQueue);
+void scheduler();
+void deleteNode(TCB* node);
+void insertNode(TCB* node, TCB* precNode);
