@@ -2,7 +2,7 @@
 
 // Don't forget to add functions to header file
 
-void scheduler(TCB **taskQueue) {
+void scheduler() {
     TCB* curr = head;
     while (curr != tail){
         (curr->taskPtr))(curr->taskDataPtr);
@@ -53,7 +53,7 @@ void deleteNode(TCB* node) {
     return;
 }
 
-// Do something like insert(TCBToInsert, TCBtoadd it to after)
+// Do insert(TCBToInsert, TCBtoadd it to after)
 // So calling insert(compute, measure) adds compute after measure
 void insertNode(TCB* node, TCB* precNode) {
     // Since C lacks default parameters,
