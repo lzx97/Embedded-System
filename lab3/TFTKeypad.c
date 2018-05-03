@@ -1,10 +1,16 @@
 #include "DataStructs.h"
 #include <stdio.h>
 #include "DataStructs.h"
-//#include "tasks.h"
+// IMPORTANT: Elegoo_TFTLCD LIBRARY MUST BE SPECIFICALLY
+// CONFIGURED FOR EITHER THE TFT SHIELD OR THE BREAKOUT BOARD.
+// SEE RELEVANT COMMENTS IN Elegoo_TFTLCD.h FOR SETUP.
+//Technical support:goodtft@163.com
+//void drawDefaultMode();
 #include <Elegoo_GFX.h>    // Core graphics library
 #include <Elegoo_TFTLCD.h> // Hardware-specific library
-#include <TouchScreen.h> // Maybe remove this??
+#include <TouchScreen.h>
+void drawAnnunciate();
+void drawMenu();
 
 // The control pins for the LCD can be assigned to any digital or
 // analog pins...but we'll use the analog pins as this allows us to
@@ -13,10 +19,9 @@
 #define LCD_CD A2 // Command/Data goes to Analog 2
 #define LCD_WR A1 // LCD Write goes to Analog 1
 #define LCD_RD A0 // LCD Read goes to Analog 0
-#define LCD_RESET A4 // Can alternately just connect to Arduino's reset pin
 
-// For the Arduino Mega, use digital pins 22 through 29
-// (on the 2-row header at the end of the board).
+#define LCD_RESET A4 // Can alternately just connect to Arduino's reset pinheader at the end of the board).
+
 // Assign human-readable names to some common 16-bit color values:
 #define BLACK   0x0000
 #define BLUE    0x001F
@@ -38,7 +43,7 @@
 #define ILI9341_LIGHTGREY   0xC618      /* 192, 192, 192 */
 #define ILI9341_DARKGREY    0x7BEF      /* 128, 128, 128 */
 #define ILI9341_BLUE        0x001F      /*   0,   0, 255 */
-#define ILI9341_GREEN       0x07E0      /*   0, 255,   0 */
+#define ILI9341_GREEN       0x0440      /*   0, 255,   0 */
 #define ILI9341_CYAN        0x07FF      /*   0, 255, 255 */
 #define ILI9341_RED         0xF800      /* 255,   0,   0 */
 #define ILI9341_MAGENTA     0xF81F      /* 255,   0, 255 */
@@ -48,40 +53,31 @@
 #define ILI9341_GREENYELLOW 0xAFE5      /* 173, 255,  47 */
 #define ILI9341_PINK        0xF81F
 
-
 /******************* UI details */
-#define MODE_BUTTON_X 50
-#define MODE_BUTTON_Y 90
-#define MODE_BUTTON_W 80
-#define MODE_BUTTON_H 25
+int mode = 0; // 0 = Default, 1 = Menu, 2=Annunciate
+#define MODE_BUTTON_X 60
+#define MODE_BUTTON_Y 40
+#define MODE_BUTTON_W 90
+#define MODE_BUTTON_H 38
 #define MODE_BUTTON_SPACING_X 30
-#define MODE_BUTTON_SPACING_Y 8
+#define MODE_BUTTON_SPACING_Y 20
 #define MODE_BUTTON_TEXTSIZE 2
 
-#define MENU_BUTTON_X 50
-#define MENU_BUTTON_Y 90
-#define MENU_BUTTON_W 80
-#define MENU_BUTTON_H 25
+#define MENU_BUTTON_X 120
+#define MENU_BUTTON_Y 160
+#define MENU_BUTTON_W 200
+#define MENU_BUTTON_H 38
 #define MENU_BUTTON_SPACING_X 30
-#define MENU_BUTTON_SPACING_Y 8
-#define MENU_BUTTON_TEXTSIZE 2
+#define MENU_BUTTON_SPACING_Y 28
+#define MENU_BUTTON_TEXTSIZE 2.8
 
-#define ANNUNCIATE_BUTTON_X 50
-#define ANNUNCIATE_BUTTON_Y 90
-#define ANNUNCIATE_BUTTON_W 80
-#define ANNUNCIATE_BUTTON_H 25
-#define ANNUNCIATE_BUTTON_SPACING_X 30
-#define ANNUNCIATE_BUTTON_SPACING_Y 8
-#define ANNUNCIATE_BUTTON_TEXTSIZE 2
-
-// text box where numbers go
-#define TEXT_X 10
-#define TEXT_Y 10
-#define TEXT_W 300
-#define TEXT_H 50
-#define TEXT_TSIZE 3
-#define TEXT_TCOLOR ILI9341_MAGENTA
-// the data (phone #) we store in the textfield
+#define ACKN_BUTTON_X 120
+#define ACKN_BUTTON_Y 260
+#define ACKN_BUTTON_W 220
+#define ACKN_BUTTON_H 50
+#define ACKN_BUTTON_SPACING_X 30
+#define ACKN_BUTTON_SPACING_Y 8
+#define ACKN_BUTTON_TEXTSIZE 3
 
 #define YP A2  // must be an analog pin, use "An" notation!
 #define XM A3  // must be an analog pin, use "An" notation!
@@ -98,265 +94,29 @@
 #define STATUS_X 65
 #define STATUS_Y 10
 
+
+
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
-// If using the shield, all control and data lines are fixed, and
-// a simpler declaration can optionally be used:
-// Elegoo_TFTLCD tft;
 
-Elegoo_GFX_Button buttons[11];
-/* create 11 buttons
-0: Menu,  1: Annunciate
-2: Exp1,  3: Exp2,
-4: Bloodpressure ON, 5: Temperature ON
-6: Pulserate ON,  7: Bloodpressure OFF
-8: Temperature OFF,  9: Pulserate OFF
-10: Annunciate
-*/
+Elegoo_GFX_Button buttons[4];
+Elegoo_GFX_Button menubuttons[6];
+Elegoo_GFX_Button acknbuttons[1];
+/* create the buttons */
+// buttonlabels[num_buttons][length of array]
+char buttonlabels[4][20] = {"Menu", "Annunc.", "Exp1", "Exp2"};
+uint16_t buttoncolors[4] = {ILI9341_NAVY, ILI9341_NAVY, ILI9341_NAVY, ILI9341_NAVY};
 
-char buttonlabels[11][5] = {"Menu", "Annunciate", "Exp1", "Exp2", "Blood Pressure: ON", "Temperature: ON",
-                            "Pulserate: ON", "Blood Pressure: OFF", "Temperature: OFF", "Pulserate: OFF", "Annunciate"};
-uint16_t buttoncolors[11] = {ILI9341_DARKGREY, ILI9341_DARKGREY, ILI9341_DARKGREY, ILI9341_DARKGREY,
-                             ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_DARKGREY,
-                             ILI9341_DARKGREY, ILI9341_DARKGREY, ILI9341_GREEN};
+char menubuttonlabels[6][20] = {"BP: ON", "Temp: ON", "Pulse: ON", "BP: OFF", "Temp: OFF", "Pulse:OFF"};
+uint16_t menubuttoncolors[6] = {ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_DARKGREY,
+                             ILI9341_DARKGREY, ILI9341_DARKGREY};
 
+char acknbuttonlabels[1][20] = {"Acknowl."};
+uint16_t acknbuttoncolors[1] = {ILI9341_GREEN};
 
-void TFTKeypad(void *keypadStruct) {
-    // CHECK HOW TO USE DIFFERENT SETS OF BUTTONS FOR DIFFERENT INTERFACES
+uint16_t identifier; // global variable to be reached from all functions
 
-        //DisplayData *dData = (DisplayData*) displayStruct;
-        //if ((globalCounter % *(dData->displayInterval)) != 0){
-        //return;
-    //};
-    // TODO: implement
-    // Run this in the never ending while loop and check for inputs
-    // If event happened: Check if it was a change of mode //
-    // Yes: update mode,    No: Check the currently activated buttons (menu, annunciate)
-    // set screen to all black while loading the new view
-    // If not
-
-    // Activate current mode {Menu, Annunciation, Exp1, Exp2}
-    if (statusChanged){}
-    void drawDefaultMode();
-    if (mode == "Menu"){
-        displayMenu();
-    } else if (mode == "Annunciate"){
-        displayAnnunciate();
-    }
-
-}
-
-void displayMenu(void *keyPadStruct){
-    // draw bp
-    int bpButton, tempButton, pulseButton;
-    int printbuttons[3] = {bpButton, tempButton, pulseButton};
-    if (BpActive){
-        bpButton = 4;
-    } else {
-        bpButton = 7;
-    }
-    if (tempActive){
-        tempButton = 5;
-    } else {
-        tempButton = 8;
-    }
-    if (pulseActive){
-        pulseButton = 6;
-    } else {
-        pulseButton = 9;
-    }
-    for (int i = 0; i < 3; i++){
-    buttons[printbuttons[i]].initButton(&tft, MENU_BUTTON_X, MENU_BUTTON_Y,    // x, y, w, h, outline, fill, text
-                 MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, buttoncolors[printbuttons[i]],
-                 ILI9341_WHITE, buttonlabels[printbuttons[i]], MENU_BUTTON_TEXTSIZE);
-    buttons[printbuttons[i]].drawButton();
-    }
-
-
-}
-
-void displayAnnunciate(void *keyPadStruct) {
-    // Adds the menu up top
-    // Everything below should be the same as before
-    // ADD ANNUNCIATE!!
-    tft.setTextSize(2);
-    tft.setCursor(0, 80); // Change this to be halfway down, leaving enough space for the menus in the top
-    // print low and high presure
-    tft.setTextColor(*(dData->bpHigh) ? RED : GREEN);
-    //tft.print(*(dData->sysNumeric));
-    tft.print(*(dData->sysNumeric));
-    tft.setTextColor(WHITE);
-    tft.print("/");
-    tft.setTextColor(*(dData->bpLow) ? RED : GREEN);
-    //tft.print(*(dData->diasNumeric));
-    tft.print(*(dData->diasNumeric));
-    tft.setTextColor(WHITE);
-    //tft.write(80);
-    tft.println(" mm Hg");
-
-    // print temp
-    tft.setTextColor(*(dData->tempOff) ? RED : GREEN);
-    //tft.print(*(dData->tempNumeric));
-    tft.print((float)*(dData->tempNumeric), 1);
-    tft.setTextColor(WHITE);
-    tft.print("C ");
-
-    // print pulserate
-    tft.setTextColor(*(dData->pulseOff) ? RED : GREEN);
-    //tft.print(*(dData->pulseNumeric));
-    tft.print(*(dData->pulseNumeric));
-    tft.setTextColor(WHITE);
-    tft.println(" BPM ");
-
-    // print battery
-    tft.setTextColor(*(dData->batteryLow) ? RED : GREEN);
-    tft.print(*(dData->batteryState));
-    tft.setTextColor(WHITE);
-    tft.print(" Charges");
-
-    // Add annunciate button
-    buttons[10].initButton(&tft, ANNUNCIATE_BUTTON_X, ANNUNCIATE_BUTTON_Y,    // x, y, w, h, outline, fill, text
-                 ANNUNCIATE_BUTTON_W, ANNUNCIATE_BUTTON_H, ILI9341_WHITE, buttoncolors[10],
-                 ILI9341_WHITE, buttonlabels[10], ANNUNCIATE_BUTTON_TEXTSIZE);
-    buttons[10].drawButton();
-}
-
-
-
-
-// Print something in the mini status bar with either flashstring
-void status(const __FlashStringHelper *msg) {
-  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
-  tft.setCursor(STATUS_X, STATUS_Y);
-  tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(1);
-  tft.print(msg);
-}
-// or charstring
-void status(char *msg) {
-  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
-  tft.setCursor(STATUS_X, STATUS_Y);
-  tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(1);
-  tft.print(msg);
-}
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
-void loop(void) {
-  /*TSPoint p;
-  p = ts.getPoint();
-  */
-  digitalWrite(13, HIGH);
-  TSPoint p = ts.getPoint();
-  digitalWrite(13, LOW);
-
-  // if sharing pins, you'll need to fix the directions of the touchscreen pins
-  //pinMode(XP, OUTPUT);
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);
-  //pinMode(YM, OUTPUT);
-
-  // we have some minimum pressure we consider 'valid'
-  // pressure of 0 means no pressing!
-
- // p = ts.getPoint();
-  /*
-  if (ts.bufferSize()) {
-
-  } else {
-    // this is our way of tracking touch 'release'!
-    p.x = p.y = p.z = -1;
-  }*/
-
-  // Scale from ~0->4000 to tft.width using the calibration #'s
-  /*
-  if (p.z != -1) {
-    p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());
-    p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
-    Serial.print("("); Serial.print(p.x); Serial.print(", ");
-    Serial.print(p.y); Serial.print(", ");
-    Serial.print(p.z); Serial.println(") ");
-  }*/
-   if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
-    // scale from 0->1023 to tft.width
-    p.x = (tft.width() - map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
-    p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));//
-   }
-
-  // go thru all the buttons, checking if they were pressed
-  for (uint8_t b=0; b<15; b++) {
-    if (buttons[b].contains(p.x, p.y)) {
-      //Serial.print("Pressing: "); Serial.println(b);
-      buttons[b].press(true);  // tell the button it is pressed
-      //Serial.print(p.x);
-      //Serial.print(", ");
-      //Serial.println(p.y);
-    } else {
-      buttons[b].press(false);  // tell the button it is NOT pressed
-    }
-  }
-
-  // now we can ask the buttons if their state has changed
-  for (uint8_t b=0; b<15; b++) {
-    if (buttons[b].justReleased()) {
-      // Serial.print("Released: "); Serial.println(b);
-      buttons[b].drawButton();  // draw normal
-    }
-
-    if (buttons[b].justPressed()) {
-        buttons[b].drawButton(true);  // draw invert!
-
-        // if a numberpad button, append the relevant # to the textfield
-        if (b >= 3) {
-          if (textfield_i < TEXT_LEN) {
-            textfield[textfield_i] = buttonlabels[b][0];
-            textfield_i++;
-	    textfield[textfield_i] = 0; // zero terminate
-
-           // fona.playDTMF(buttonlabels[b][0]);
-          }
-        }
-
-        // clr button! delete char
-        if (b == 1) {
-
-          textfield[textfield_i] = 0;
-          if (textfield_i > 0) {
-            textfield_i--;
-            if(textfield_i < 0){
-                textfield_i = 0;
-            }
-            textfield[textfield_i] = ' ';
-          }
-        }
-
-        // update the current text field
-        Serial.println(textfield);
-        tft.setCursor(TEXT_X + 2, TEXT_Y+10);
-        tft.setTextColor(TEXT_TCOLOR, ILI9341_BLACK);
-        tft.setTextSize(TEXT_TSIZE);
-        tft.print(textfield);
-
-        // its always OK to just hang up
-        if (b == 0) {
-          status(F("Hanging up"));
-          //fona.hangUp();
-        }
-        // we dont really check that the text field makes sense
-        // just try to call
-        if (b == 2) {
-          status(F("Calling"));
-          Serial.print("Calling "); Serial.print(textfield);
-
-          //fona.callPhone(textfield);
-        }
-
-      delay(100); // UI debouncing
-    }
-  }
-
-}
-void setupDisplay(void) {
+void setup(void) {
   Serial.begin(9600);
   Serial.println(F("TFT LCD test"));
 
@@ -370,7 +130,7 @@ void setupDisplay(void) {
 
   tft.reset();
 
-  uint16_t identifier = tft.readID();
+  identifier = tft.readID();
   if(identifier == 0x9325) {
     Serial.println(F("Found ILI9325 LCD driver"));
   } else if(identifier == 0x9328) {
@@ -397,17 +157,20 @@ void setupDisplay(void) {
     Serial.println(F("Also if using the breakout, double-check that all wiring"));
     Serial.println(F("matches the tutorial."));
     identifier=0x9341;
-    drawDefaultMode();
   }
-  // create 'text field'
-  tft.drawRect(TEXT_X, TEXT_Y, TEXT_W, TEXT_H, ILI9341_WHITE);
+   tft.begin(identifier);
+   tft.setRotation(0);
+   drawDefaultMode();
+
+   Serial.print(F("THIS IS THE WIDTH"));
+   Serial.print(tft.width());
+   Serial.print(F("THIS IS THE HEIGHT"));
+   Serial.print(tft.height());
 }
 
-void drawDefaultMode(){
-  tft.begin(identifier);
-  tft.setRotation(1);
-  tft.fillScreen(BLACK);
 
+void drawDefaultMode(){
+  tft.fillScreen(BLACK);
   // create default mode buttons
   for (uint8_t row=0; row<2; row++) {
     for (uint8_t col=0; col<2; col++) {
@@ -419,3 +182,215 @@ void drawDefaultMode(){
     }
   }
 }
+int bpon = 1;
+int tempon = 1;
+int pulseon = 1;
+
+int bpvar = 0;
+int tempvar = 1;
+int pulsevar = 2;
+
+void drawMenu(){
+  // create default mode buttons
+  bpvar = ((bpon == 1) ? 0 : 3);
+  tempvar = ((tempon == 1) ? 1 : 4);
+  pulsevar = ((pulseon ==1) ? 2 : 5);
+
+  menubuttons[bpvar].initButton(&tft,  MENU_BUTTON_X,
+                 MENU_BUTTON_Y,    // x, y, w, h, outline, fill, text
+                  MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[bpvar], ILI9341_WHITE,
+                  menubuttonlabels[bpvar], MENU_BUTTON_TEXTSIZE);
+  menubuttons[bpvar].drawButton();
+
+  menubuttons[tempvar].initButton(&tft,  MENU_BUTTON_X,
+                 MENU_BUTTON_Y+MENU_BUTTON_H+MENU_BUTTON_SPACING_Y,    // x, y, w, h, outline, fill, text
+                  MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[tempvar], ILI9341_WHITE,
+                  menubuttonlabels[tempvar], MENU_BUTTON_TEXTSIZE);
+  menubuttons[tempvar].drawButton();
+
+  menubuttons[pulsevar].initButton(&tft,  MENU_BUTTON_X,
+                 MENU_BUTTON_Y+2*(MENU_BUTTON_H+MENU_BUTTON_SPACING_Y),    // x, y, w, h, outline, fill, text
+                  MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[pulsevar], ILI9341_WHITE,
+                  menubuttonlabels[pulsevar], MENU_BUTTON_TEXTSIZE);
+  menubuttons[pulsevar].drawButton();
+}
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
+int pressed = 1;
+
+void loop(void) {
+  //mode = 1;
+  TSPoint p = ts.getPoint();
+  digitalWrite(13, HIGH);
+  digitalWrite(13, LOW);
+  pinMode(XM, OUTPUT);
+  pinMode(YP, OUTPUT);
+  if (pressed == 1){
+      drawDefaultMode(); // MAYBE THIS IS WHY IT RESETS ON / OFF??
+      if (mode == 1){
+          drawMenu();
+      } else if (mode ==2){
+          drawAnnunciate();
+      }
+      pressed = 0;
+  }
+
+   int dx;
+   int dy;
+   if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
+    // scale from 0->1023 to tft.width
+    p.y = (map(p.y, TS_MINX, TS_MAXX, tft.width(), 0));
+    p.x = (tft.height()-map(p.x, TS_MINY, TS_MAXY, tft.height(), 0));//
+    // Mapping to match actual screen
+    dx = (unsigned int16_t) p.y;
+    dy = (unsigned int32_t) p.x;
+    dx = (unsigned int32_t) (dx-6)*232/210;
+    dy = (unsigned int32_t) (dy+5)*320/345;
+    Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
+   }
+
+
+  // go thru all the buttons, checking if they were pressed
+  for (uint8_t b=0; b<4; b++) {
+      if (buttons[b].contains(dx, dy)) {
+          Serial.print("Pressing: "); Serial.println(buttonlabels[b]);
+          buttons[b].press(true);  // tell the button it is pressed
+          Serial.print(dx);   Serial.print(", ");  Serial.println(dy);
+          pressed = 1;
+      } else {
+          buttons[b].press(false);  // tell the button it is NOT pressed
+      }
+  }
+  if (mode == 1){
+      for (uint8_t b=0; b<3; b++) {
+          if (menubuttons[b].contains(dx, dy)) {
+              Serial.print("Pressing: "); Serial.println(menubuttonlabels[b]);
+              menubuttons[b].press(true);  // tell the button it is pressed
+              Serial.print(dx);     Serial.print(", ");     Serial.println(dy);
+              pressed = 1;
+          } else {
+              menubuttons[b].press(false);  // tell the button it is NOT pressed
+          }
+      }
+  } else if (mode == 2){
+      if (acknbuttons[0].contains(dx, dy)) {
+          Serial.print("Pressing: "); Serial.println(acknbuttonlabels[0]);
+          acknbuttons[0].press(true);  // tell the button it is pressed
+          Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
+          pressed = 1;
+      } else {
+          acknbuttons[0].press(false);  // tell the button it is NOT pressed
+      }
+  }
+
+  // now we can ask the buttons if their state has changed
+  for (uint8_t b=0; b<4; b++) {
+    if (buttons[b].justReleased()) {
+      // Serial.print("Released: "); Serial.println(b);
+      buttons[b].drawButton();  // draw normal
+    }
+
+    if (buttons[b].justPressed()) {
+        buttons[b].drawButton(true);  // draw invert!
+        buttons[b].press(false);
+        if (b < 4) {
+          mode = b+1; // Set mode to default 0 = Default, 1 = Menu, 2=Annunciate
+        }
+       delay(100);
+    }
+  }
+  if (mode ==1){
+      for (uint8_t b=0; b<6; b++) {
+          if (menubuttons[b].justReleased()) {
+             // Serial.print("Released: "); Serial.println(b);
+             menubuttons[b].drawButton();  // draw normal
+          }
+
+          if (menubuttons[b].justPressed()) {
+              menubuttons[b].press(false);
+              menubuttons[b].drawButton(true);  // draw invert!
+              if (b == 0 || b == 3){
+                  bpon = ((bpon == 0) ? 1 : 0);
+              } else if (b == 1 || b == 4){
+                  tempon = ((tempon == 0) ? 1 : 0);
+              } else if (b == 2 || b == 5){
+                  pulseon = ((pulseon == 0) ? 1 : 0);
+              }
+              delay(100);
+              mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
+              //drawMenu();
+        }
+      }
+  }
+  if (mode == 2){
+      if (acknbuttons[0].justReleased()) {
+          // Serial.print("Released: "); Serial.println(b);
+          acknbuttons[0].drawButton();  // draw normal
+      }
+
+      if (acknbuttons[0].justPressed()) {
+          acknbuttons[0].press(false);
+          acknbuttons[0].drawButton(true);  // draw invert!
+          delay(100);
+      }
+  }
+}
+
+void drawAnnunciate(){
+    // create default mode buttonstft.setCursor(0, 0);
+    // print low and high presure
+    tft.setCursor(0, 150);
+    tft.setTextColor(GREEN);
+    tft.print("--");
+    tft.setTextColor(WHITE);
+    tft.print("/");
+    tft.setTextColor(GREEN);
+    tft.print("--");
+    tft.setTextColor(WHITE);
+    tft.println(" mm Hg");
+
+    // print temp
+    tft.setTextColor(GREEN);
+    tft.print("37.2");
+    tft.setTextColor(WHITE);
+    tft.print("C ");
+
+    // print pulserate
+    tft.setTextColor(RED);
+    tft.print("200");
+    tft.setTextColor(WHITE);
+    tft.println(" BPM ");
+
+    // print battery
+    tft.setTextColor(GREEN);
+    tft.print("95");
+    tft.setTextColor(WHITE);
+    tft.print(" %");
+
+  acknbuttons[0].initButton(&tft,  ACKN_BUTTON_X,
+                 ACKN_BUTTON_Y,    // x, y, w, h, outline, fill, text
+                  ACKN_BUTTON_W, ACKN_BUTTON_H, ILI9341_WHITE, acknbuttoncolors[0], ILI9341_WHITE,
+                  acknbuttonlabels[0], ACKN_BUTTON_TEXTSIZE);
+  acknbuttons[0].drawButton();
+}
+
+
+
+// Print something in the mini status bar with either flashstring
+/*
+void status(const __FlashStringHelper *msg) {
+  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
+  tft.setCursor(STATUS_X, STATUS_Y);
+  tft.setTextColor(ILI9341_WHITE);
+  tft.setTextSize(1);
+  tft.print(msg);
+}
+// or charstring
+void status(char *msg) {
+  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
+  tft.setCursor(STATUS_X, STATUS_Y);
+  tft.setTextColor(ILI9341_WHITE);
+  tft.setTextSize(1);
+  tft.print(msg);
+}
+*/
