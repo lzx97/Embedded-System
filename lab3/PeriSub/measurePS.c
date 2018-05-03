@@ -2,7 +2,7 @@
 #include "Bool.h"
 #include <math.h>
 #include "measurePS.h"
-#include <arduino.h>
+#include <Arduino.h>
 
 int pin = 7; // pin to receive pulse rate input;
 
@@ -91,7 +91,9 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    int halfPeriod = pulseIn(pin, LOW, DEFAULT);
+    int halfPeriod = pulseIn(pin, LOW, 1);
+    //Serial.print("P/2 = ");
+    Serial.println(halfPeriod);
     float halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 

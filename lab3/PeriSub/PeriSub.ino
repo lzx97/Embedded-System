@@ -1,9 +1,14 @@
-#include "Bool.h"
-#include "DataStructsPS.h"
-#include "measurePS.h"
+#ifdef __cplusplus
+  extern "C" {
+#endif
+    #include "Bool.h"
+    #include "measurePS.h"
+    #include "DataStructsPS.h"
+    #include "computePS.h"
+#ifdef __cplusplus
+  }
+#endif
 
-TCB* taskQueue[5];
-TCB measureTCB;
 
 /* Shared global variables for storing data */
 // Measure Data
@@ -15,9 +20,9 @@ Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
 Bool tempIncrease = FALSE; 
 Bool bpIncrease = FALSE;
-Bool tempSelection = FALSE;
-Bool bpSelection = FALSE;
-Bool pulseSelection = FALSE;
+Bool tempSelection = TRUE;
+Bool bpSelection = TRUE;
+Bool pulseSelection = TRUE;
 unsigned int numOfMeasureCalls = 0;
 
 // ComputeData
@@ -52,6 +57,8 @@ StatusDataPS sData;
 
 
 void setup() {
+  Serial.begin(9600);
+  
   // MeasureData fields
   mData.temperatureRaw = &temperatureRaw;
   mData.systolicPressRaw = &systolicPressRaw;
@@ -100,21 +107,16 @@ void setup() {
 
   // StatusData fields
   sData.batteryState = &batteryState;
-
-  measureTCB.taskPtr = &measurePS;
-  measureTCB.taskDataPtr = (void*)&mData;
-
-  taskQueue[0] = &measureTCB;
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //void* mDataptr = (void*) &mData;
-   (*(taskQueue[0]->taskPtr))(taskQueue[0]->taskDataPtr);
-  /*Serial.println(*(mData.temperatureRaw));
+  void* mDataPtr = (void*)&mData;
+  measurePS(mDataPtr);
+  Serial.println(*(mData.temperatureRaw));
   Serial.println(*(mData.systolicPressRaw));
   Serial.println(*(mData.diastolicPressRaw));
-  Serial.println(*(mData.pulseRateRaw));*/
-  Serial.println();
+  Serial.println(*(mData.pulseRateRaw));
+  Serial.println("Finished one cycle");
   delay(1000);
 }

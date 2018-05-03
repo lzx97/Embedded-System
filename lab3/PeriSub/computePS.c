@@ -1,4 +1,5 @@
 #include "DataStructsPs.h"
+#include <math.h>
 
 void computePS(void *computeStruct) {
     ComputeDataPS *cData = (ComputeDataPS*) computeStruct;
