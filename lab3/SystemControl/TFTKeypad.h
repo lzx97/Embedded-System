@@ -5,7 +5,7 @@
 void displayLoop(void *keyPadStruct);
 void setupDisplay(void *keyPadStruct);
 void drawDefaultMode(void *keyPadStruct);
-void displayMenu(void *keyPadStruct);
-void displayAnnunciate(void *keyPadStruct);
+void drawMenu(void *keyPadStruct);
+void drawAnnunciate(void *keyPadStruct);
 
 #endif

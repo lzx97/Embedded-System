@@ -3,19 +3,35 @@
 #include <stdio.h>
 #include "Bool.h"
 
+
+// implemented as linked list
+
 typedef struct {
+    // Raw
     unsigned int *temperatureRawBuf; 
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
+    /*
+    unsigned int *diastolicPressRaw;
+    unsigned int *systolicPressRaw;
+    unsigned int *pulseRateRaw;
+    unsigned int *temperatureRaw;
+    */
+    // Measurement seleciton
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+
+    // Variables to update values
     Bool *sysMeasureComplete;
     Bool *diaMeasureComplete;
     Bool *tempIncrease;
     Bool *bpIncrease;
     unsigned int *numOfMeasureCalls;
     unsigned int *globalTime;
+    unsigned int *measureInterval;
+   // TCB *MeasureTCB;
+   // TCB* ComputeTCB;
 } MeasureData;
 
 typedef struct {
@@ -23,13 +39,17 @@ typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
+    
     // Corrected
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
     unsigned int *prCorrectedBuf;
+    
+    // Measurement selection
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    
     unsigned int *globalTime;
 } ComputeData;
 
@@ -56,6 +76,7 @@ typedef struct {
     unsigned int *globalTime;
 } DisplayData;
 */
+
 typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
@@ -71,11 +92,13 @@ typedef struct {
     Bool *pulseOff;
     Bool *batteryLow;
     // may be used for testing
-    double *tempNumeric;
+    float *tempNumeric;
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
     unsigned int *globalTime;
+    Bool *sysAlarm;
+    unsigned int *warningInterval;
 } WarningAlarmData;
 
 typedef struct {
@@ -85,15 +108,23 @@ typedef struct {
     Bool *tempOff;
     Bool *pulseOff;
     Bool *batteryLow;
+    /*
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
+    */
     // Data to be displayed
+    
     float *tempCorrectedBuf;
-    unsigned int *bloodPressCorrectedBuf;
-    unsigned int *prCorrectedBuf;
+    unsigned int bloodPressCorrectedBuf;
+    unsigned int *pulseRateCorrectedBuf;
     unsigned short *batteryState;
     // Test data
+    unsigned int *pulseNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *sysNumeric;
+    float *tempNumeric;
+    
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
@@ -101,8 +132,11 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
-    unsigned int *alarmAcknowledge; // type TBD
+    Bool *sysAlarm;
+    unsigned int *alarmTimer;
+    Bool *alarmAcknowledge; // type TBD
     unsigned int *globalTime;
+    unsigned int *displayInterval;
 } TFTData;
 
 typedef struct {
@@ -111,21 +145,24 @@ typedef struct {
     Bool *pulseSelection;
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
-    unsigned int *prCorrectedBuf;
+    unsigned int *pulseRateCorrectedBuf;
     unsigned int *globalTime;
 } ComData;
 
 typedef struct {
     unsigned short *batteryState;
     unsigned int *globalTime;
+    unsigned int *statusInterval;
 } StatusData;
 
-// implemented as linked list
-typedef struct {
+
+typedef struct TCB TCB; // This line is to be able to use TCB as a field inside TCB
+struct TCB{
     void *taskDataPtr;
     void (*taskPtr)(void*);
-    struct TCB *prev;
-    struct TCB *next;
-} TCB;
+    struct TCB* next; // TCB* next
+    struct TCB* prev; // TCB* prev
+};
+
 
 #endif

@@ -3,3 +3,4 @@
 
 void batteryStatusSC(void *statusStruct);
 
+#endif

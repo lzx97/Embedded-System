@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "Bool.h"
 #include <stdio.h>
 #include "DataStructs.h"
@@ -5,6 +8,12 @@
 #include "measureSC.h"
 #include "peripheralCom.h"
 #include "TFTKeypad.h"
+#include "schedulerSC.h"
+#include "computeSC.h"
+//#include <Arduino.h>
+#ifdef __cplusplus
+}
+#endif
 
 TCB* head;
 TCB* tail;
@@ -33,21 +42,26 @@ unsigned int systolicPressRaw = 80;
 unsigned int diastolicPressRaw = 80;
 unsigned int pulseRateRaw = 50;
 
-double tempNumeric = 0;
+float tempNumeric = 0;
 unsigned int sysNumeric = 0;
 unsigned int diasNumeric = 0;
 unsigned int pulseNumeric = 0;
 
-unsigned char *tempCorrected = NULL;
-unsigned char *sysPressCorrected = NULL;
-unsigned char *diasCorrected = NULL;
-unsigned char *prCorrected = NULL;
+unsigned int bloodPressCorrectedBuf[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+float tempCorrectedBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+unsigned int pulseRateCorrectedBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+
+unsigned int bloodPressRawBuf[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};;
+unsigned int temperatureRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+unsigned int pulseRateRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+
 
 unsigned short batteryState = 200;
+/*
 unsigned char bpOutOfRange = 0;
 unsigned char tempOutOfRange = 0;
 unsigned char pulseOutOfRange = 0;
-
+*/
 Bool bpHigh = FALSE;
 Bool bpLow = FALSE;
 Bool tempOff = FALSE;
@@ -69,51 +83,52 @@ StatusData stData;
 
 void setup(void) {
 
-    setupDisplay();
     // Add variables to measure struct
     mData.globalTime = &globalTime;
     mData.measureInterval = &measureInterval;
-    mData.diastolicPressRaw = &diastolicPressRaw;
-    mData.systolicPressRaw = &systolicPressRaw;
-    mData.pulseRateRaw = &pulseRateRaw;
-    mData.temperatureRaw = &temperatureRaw;
+    // Raw data
+    mData.bloodPressRawBuf = bloodPressRawBuf;
+    mData.pulseRateRawBuf = pulseRateRawBuf;
+    mData.temperatureRawBuf = temperatureRawBuf;
+    
     mData.sysMeasureComplete = &sysMeasureComplete;
     mData.diaMeasureComplete = &diaMeasureComplete;
     mData.tempIncrease = &tempIncrease;
     mData.bpIncrease = &bpIncrease;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
+//    mData.MeasureTCB = &MeasureTCB;
+//    mData.ComputeTCB = &ComputeTCB;
+
 
     // Add variables to compute struct
     cData.globalTime = &globalTime;
-    cData.diastolicPressRaw = &diastolicPressRaw;
-    cData.computeInterval = &computeInterval;
-    cData.systolicPressRaw = &systolicPressRaw;
-    cData.pulseRateRaw = &pulseRateRaw;
-    cData.temperatureRaw = &temperatureRaw;
-    cData.diasCorrected = &diasCorrected;
-    cData.sysPressCorrected = &sysPressCorrected;
-    cData.prCorrected = &prCorrected;
-    cData.tempCorrected = &tempCorrected;
+    cData.bloodPressRawBuf = bloodPressRawBuf;
+    cData.pulseRateRawBuf = pulseRateRawBuf;
+    cData.temperatureRawBuf = temperatureRawBuf;
+
+/*
     cData.tempNumeric = &tempNumeric;
     cData.sysNumeric = &sysNumeric;
     cData.diasNumeric = &diasNumeric;
     cData.pulseNumeric = &pulseNumeric;
-
+*/
     // Add variables to display struct
     dData.globalTime = &globalTime;
     dData.displayInterval = &displayInterval;
-    dData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
-    dData.prCorrectedBuf = &prCorrectedBuf;
-    dData.tempCorrectedBuf = &tempCorrectedBuf;
-    dData.bloodPressRawBuf = &bloodPressRawBuf;
-    dData.pulseRateRawBuf = &pulseRateRawBuf;
+    dData.bloodPressCorrectedBuf = bloodPressCorrectedBuf;
+    dData.pulseRateCorrectedBuf = pulseRateCorrectedBuf;
+    dData.tempCorrectedBuf = tempCorrectedBuf;
+    dData.bloodPressRawBuf = bloodPressRawBuf;
+    dData.pulseRateRawBuf = pulseRateRawBuf;
     dData.bpHigh = &bpHigh;
     dData.bpLow = &bpLow;
     dData.tempOff = &tempOff;
     dData.pulseOff = &pulseOff;
+    /*
     dData.bpOutOfRange = &bpOutOfRange;
     dData.pulseOutOfRange = &pulseOutOfRange;
     dData.tempOutOfRange = &tempOutOfRange;
+    */
     dData.batteryLow = &batteryLow;
     dData.tempNumeric = &tempNumeric;
     dData.sysNumeric = &sysNumeric;
@@ -132,13 +147,11 @@ void setup(void) {
     // Add values to warning/alarm struct
     wData.globalTime = &globalTime;
     wData.warningInterval = &warningInterval;
-    wData.diastolicPressRaw = &diastolicPressRaw;
-    wData.systolicPressRaw = &systolicPressRaw;
-    wData.pulseRateRaw = &pulseRateRaw;
-    wData.temperatureRaw = &temperatureRaw;
+    /*
     wData.bpOutOfRange = &bpOutOfRange;
     wData.pulseOutOfRange = &pulseOutOfRange;
     wData.tempOutOfRange = &tempOutOfRange;
+    */
     wData.batteryState = &batteryState;
     wData.bpHigh = &bpHigh;
     wData.bpLow = &bpLow;
@@ -158,27 +171,27 @@ void setup(void) {
 
 
     // Initialize the TCBs
-    MeasureTCB.taskPtr = &measureData;
+    MeasureTCB.taskPtr = &measurerSC;
     MeasureTCB.taskDataPtr = (void*)&mData;
     MeasureTCB.prev = NULL;
     MeasureTCB.next = &ComputeTCB;
 
-    ComputeTCB.taskPtr = &computeData;
+    ComputeTCB.taskPtr = &computeSC;
     ComputeTCB.taskDataPtr = (void*)&cData;
     ComputeTCB.prev = &MeasureTCB;
     ComputeTCB.next = &tftTCB;
 
-    tftTCB.taskPtr = &TFTData;
+    tftTCB.taskPtr = &displayLoop;
     tftTCB.taskDataPtr = (void*)&dData;
     tftTCB.prev = &ComputeTCB;
     tftTCB.next = &WarningAlarmTCB;
-
+ /*
     WarningAlarmTCB.taskPtr = &annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
     WarningAlarmTCB.prev = &tftTCB;
     WarningAlarmTCB.next = &StatusTCB;
-
-    StatusTCB.taskPtr = &batteryStatus;
+*/
+    StatusTCB.taskPtr = &batteryStatusSC;
     StatusTCB.taskDataPtr = (void*)&stData;
     StatusTCB.prev = &WarningAlarmTCB;
     StatusTCB.next = NULL;
@@ -187,13 +200,14 @@ void setup(void) {
     head = &MeasureTCB;
     tail = &StatusTCB;
 
+    setupDisplay(&dData);
 }
 
-
+unsigned long start_time;
 void loop(void) {
     start_time = millis();
-    schedule();
-    (*globalTime)++;
+    scheduler();
+    (globalTime)++;
     while (millis() < start_time + 1000){ 
         // Wait until one second has passed
     }

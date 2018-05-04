@@ -1,19 +1,23 @@
 #include "DataStructs.h"
-
+#include "schedulerSC.h"
 // Don't forget to add functions to header file
 
-void scheduler() {
+TCB* head;
+TCB* tail;
+unsigned int globalTime;
+
+void scheduler(void) {
     TCB* curr = head;
     while (curr != tail){
-        (curr->taskPtr))(curr->taskDataPtr);
+        (*(curr->taskPtr))(curr->taskDataPtr);
         curr = curr->next;
     }
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
-    (curr->taskPtr))(curr->taskDataPtr);
+    (*(curr->taskPtr))(curr->taskDataPtr);
     // Delay one second
     delay(1000);
-    globalCounter++;
+    globalTime++;
 }
 
 

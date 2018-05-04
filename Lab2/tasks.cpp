@@ -88,7 +88,7 @@ void displayData(void *displayStruct) {
     if ((globalCounter % *(dData->displayInterval)) != 0){
         return;
     };
-    tft.fillScreen(BLACK);s
+    tft.fillScreen(BLACK);
     tft.setTextSize(2);
     tft.setCursor(0, 0);
     // print low and high presure
@@ -171,7 +171,7 @@ void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *nu
     if (*tempIncrease && *temperature > 50){
         *tempIncrease = FALSE;
     }
-    if (!(*tempIncrease) && *temperature < 15){s
+    if (!(*tempIncrease) && *temperature < 15){
         *tempIncrease = TRUE;
     }
     if (*tempIncrease) {
