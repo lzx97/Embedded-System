@@ -5,12 +5,6 @@
 
 
 // implemented as linked list
-typedef struct {
-    void *taskDataPtr;
-    void (*taskPtr)(void*);
-    struct TCB *prev;
-    struct TCB *next;
-} TCB;
 
 typedef struct {
     unsigned int *temperatureRawBuf; 
@@ -26,8 +20,8 @@ typedef struct {
     unsigned int *numOfMeasureCalls;
     unsigned int *globalTime;
     unsigned int *measureInterval;
-    TCB *MeasureTCB;
-    TCB* ComputeTCB;
+   // TCB *MeasureTCB;
+   // TCB* ComputeTCB;
 } MeasureData;
 
 typedef struct {
@@ -133,6 +127,12 @@ typedef struct {
     unsigned int *globalTime;
 } StatusData;
 
+typedef struct {
+    void *taskDataPtr;
+    void (*taskPtr)(void*);
+    struct TCB* prev;
+    struct TCB* next;
+} TCB;
 
 
 #endif

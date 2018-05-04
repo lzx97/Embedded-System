@@ -1,15 +1,15 @@
 #include "DataStructs.h"
 #include "peripheralCom.h"
 
-TCB MeasureTCB;
-TCB ComputeTCB;
+// TCB MeasureTCB;
+// TCB ComputeTCB;
 
 void measureSC(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
     if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
-        if(MeasureTCB.next == &ComputeTCB){
+       // if(*(mData->MeasureTCB.next) == *(mData->&ComputeTCB)){
           //
-        }
+        //}
         return;
     }
     // create string to be sent to the PS

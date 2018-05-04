@@ -195,7 +195,7 @@ void setup(void) {
 void loop(void) {
     start_time = millis();
     schedule();
-    (*globalTime)++;
+    (globalTime)++;
     while (millis() < start_time + 1000){ 
         // Wait until one second has passed
     }
