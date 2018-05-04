@@ -1,6 +1,12 @@
 #include "DataStructs.h"
+#include "peripheralCom.h"
 
 void measureSC(void *measureStruct) {
+    MeasureData *mData = (MeasureData*) measureStruct;
+    if ((globalCounter % (*(mData->measureInterval))) != 0){
+        if(MeasureTCB->)
+        return;
+    }
     // create string to be sent to the PS
     char start = 2;
     char stop = 3;
@@ -14,5 +20,7 @@ void measureSC(void *measureStruct) {
     strcat(str, &stop);
 
     // transfer and receive 
-    com(char *data, void *dataStruct);
+    peripheralCom(str, &measureStruct);
+
+    // ADD COMPUTE STRUCT IF NOT ALREADY THERE
 }

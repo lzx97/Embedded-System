@@ -9,8 +9,9 @@
 #include <Elegoo_GFX.h>    // Core graphics library
 #include <Elegoo_TFTLCD.h> // Hardware-specific library
 #include <TouchScreen.h>
-void drawAnnunciate();
-void drawMenu();
+
+//void drawAnnunciate(); // Should be covered by using headerfile
+//void drawMenu();
 
 // The control pins for the LCD can be assigned to any digital or
 // analog pins...but we'll use the analog pins as this allows us to
@@ -95,7 +96,6 @@ int mode = 0; // 0 = Default, 1 = Menu, 2=Annunciate
 #define STATUS_Y 10
 
 
-
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
@@ -116,7 +116,7 @@ uint16_t acknbuttoncolors[1] = {ILI9341_GREEN};
 
 uint16_t identifier; // global variable to be reached from all functions
 
-void setup(void) {
+void setupDisplay(void) {
   Serial.begin(9600);
   Serial.println(F("TFT LCD test"));
 
@@ -169,7 +169,7 @@ void setup(void) {
 }
 
 
-void drawDefaultMode(){
+void drawDefaultMode(void *keyPadStruct){
   tft.fillScreen(BLACK);
   // create default mode buttons
   for (uint8_t row=0; row<2; row++) {
@@ -190,7 +190,7 @@ int bpvar = 0;
 int tempvar = 1;
 int pulsevar = 2;
 
-void drawMenu(){
+void drawMenu(void *keyPadStruct){
   // create default mode buttons
   bpvar = ((bpon == 1) ? 0 : 3);
   tempvar = ((tempon == 1) ? 1 : 4);
@@ -218,7 +218,7 @@ void drawMenu(){
 #define MAXPRESSURE 1000
 int pressed = 1;
 
-void loop(void) {
+void displayLoop(void *keyPadStruct) {
   //mode = 1;
   TSPoint p = ts.getPoint();
   digitalWrite(13, HIGH);
@@ -336,7 +336,7 @@ void loop(void) {
   }
 }
 
-void drawAnnunciate(){
+void drawAnnunciate(void *keyPadStruct){
     // create default mode buttonstft.setCursor(0, 0);
     // print low and high presure
     tft.setCursor(0, 150);

@@ -1,4 +1,5 @@
 #include "DataStructs.h"
+#include "peripheralCom.h"
 
 int globalCounter;
 
@@ -16,5 +17,5 @@ void batteryStatusSC(void *statusStruct) {
     strcat(str, &stop);
 
     // transfer and receive 
-    com(char *data, void *dataStruct);
+    //peripheralCom(char *data, void *dataStruct);
 }

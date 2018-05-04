@@ -4,7 +4,7 @@
 #include "Bool.h"
 
 typedef struct {
-    unsigned int *temperatureRawBuf;
+    unsigned int *temperatureRawBuf; 
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
     Bool *tempSelection;
@@ -15,6 +15,7 @@ typedef struct {
     Bool *tempIncrease;
     Bool *bpIncrease;
     unsigned int *numOfMeasureCalls;
+    unsigned int *globalTime;
 } MeasureData;
 
 typedef struct {
@@ -29,6 +30,7 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    unsigned int *globalTime;
 } ComputeData;
 
 typedef struct {
@@ -50,6 +52,7 @@ typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
+    unsigned int *globalTime;
 } DisplayData;
 
 typedef struct {
@@ -71,6 +74,7 @@ typedef struct {
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
+    unsigned int *globalTime;
 } WarningAlarmData;
 
 typedef struct {
@@ -79,6 +83,7 @@ typedef struct {
     Bool *bpSelection;
     Bool *pulseSelection;
     unsigned int *alarmAcknowledge; // type TBD
+    unsigned int *globalTime;
 } TFTData;
 
 typedef struct {
@@ -88,11 +93,12 @@ typedef struct {
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
     unsigned int *prCorrectedBuf;
+    unsigned int *globalTime;
 } ComData;
 
 typedef struct {
     unsigned short *batteryState;
-
+    unsigned int *globalTime;
 } StatusData;
 
 // implemented as linked list
