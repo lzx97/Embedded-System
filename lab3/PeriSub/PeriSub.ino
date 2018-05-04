@@ -21,9 +21,9 @@ Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
 Bool tempIncrease = FALSE;
 Bool bpIncrease = FALSE;
-Bool tempSelection = TRUE;
-Bool bpSelection = TRUE;
-Bool pulseSelection = TRUE;
+Bool tempSelection = FALSE;
+Bool bpSelection = FALSE;
+Bool pulseSelection = FALSE;
 unsigned int numOfMeasureCalls = 0;
 
 // ComputeData
@@ -113,29 +113,29 @@ void setup() {
 void loop() {
     if (Serial.available() > 0) {
         //Format[mbtpmeasure]
-        Serial.readbyte(inBytes, 11);
+        Serial.readBytes(inBytes, 11);
     }
 
     if (inBytes[0] == 'M') {
         if (inBytes[1] == 'B') {
-            mData.bpSelection = TRUE;
+            *(mData.bpSelection) = TRUE;
         }
         else if (inBytes[1] == 'b') {
-            mData.bpSelection = FALSE;
+            *(mData.bpSelection) = FALSE;
         }
 
         if (inBytes[2] == 'T') {
-            mData.tempSelection = TRUE;
+            *(mData.tempSelection) = TRUE;
         }
         else if (inBytes[2] == 't') {
-            mData.tempSelection = FALSE;
+            *(mData.tempSelection) = FALSE;
         }
 
         if (inBytes[3] == 'P') {
-            mData.pulseSelection == TRUE;
+            *(mData.pulseSelection) == TRUE;
         }
         else if (inBytes[3] == 'p') {
-            mData.pulseSelection == FALSE
+            *(mData.pulseSelection) == FALSE;
         }
 
         for (int i = 4; i < 11; i++) {
@@ -148,11 +148,32 @@ void loop() {
         
     }
     else if (inBytes[0] == 'C') {
+        for (int i = 4; i < 11; i++) {
+            Serial.print(inBytes[i]);
+        }
+        Serial.println();
         
+        void* cDataPtr = (void*)&cData;
+        computePS(cDataPtr);
+
+        Serial.println(*(cData.tempCorrected), 1);
+        Serial.println(*(cData.systolicPressCorrected));
+        Serial.println(*(cData.diastolicPressCorrected));
+        Serial.println(*(cData.pulseRateCorrected));
     }
     else if (inBytes[0] == 'S') {
-        
+        for (int i = 4; i < 11; i++) {
+            Serial.print(inBytes[i]);
+        }
+        Serial.println();
+
+        void* sDataPtr = (void*)&sData;
+        batteryStatusPS(sDataPtr);
+
+        Serial.println(*(sData.batteryState));
     }
+
+    
 
 
     // Test code for each function
