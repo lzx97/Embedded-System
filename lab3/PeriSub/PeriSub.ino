@@ -53,7 +53,7 @@ ComputeDataPS cData;
 WarningAlarmDataPS wData;
 StatusDataPS sData;
 
-
+char inBytes[11];
 
 
 void setup() {
@@ -111,16 +111,48 @@ void setup() {
 }
 
 void loop() {
-    Serial.write("hello");
-    
+    if (Serial.available() > 0) {
+        //Format[mbtpmeasure]
+        Serial.readbyte(inBytes, 11);
+    }
 
-    /*for (int i = 0; i < 10; i++) {
-        Serial.print('<');
-        Serial.print(i * 3);
-        Serial.print('>');
+    if (inBytes[0] == 'M') {
+        if (inBytes[1] == 'B') {
+            mData.bpSelection = TRUE;
+        }
+        else if (inBytes[1] == 'b') {
+            mData.bpSelection = FALSE;
+        }
+
+        if (inBytes[2] == 'T') {
+            mData.tempSelection = TRUE;
+        }
+        else if (inBytes[2] == 't') {
+            mData.tempSelection = FALSE;
+        }
+
+        if (inBytes[3] == 'P') {
+            mData.pulseSelection == TRUE;
+        }
+        else if (inBytes[3] == 'p') {
+            mData.pulseSelection == FALSE
+        }
+
+        for (int i = 4; i < 11; i++) {
+            Serial.print(inBytes[i]);
+        }
         Serial.println();
-    }*/
-    delay(2000);
+
+        void* mDataPtr = (void*)&mData;
+        measurePS(mDataPtr);
+        
+    }
+    else if (inBytes[0] == 'C') {
+        
+    }
+    else if (inBytes[0] == 'S') {
+        
+    }
 
 
     // Test code for each function
@@ -145,3 +177,5 @@ void loop() {
         Serial.println();
         delay(1000);*/
 }
+
+
