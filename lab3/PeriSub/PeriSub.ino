@@ -56,7 +56,6 @@ StatusDataPS sData;
 
 
 
-
 void setup() {
     Serial.begin(9600);
     pinMode(PIN_IN, INPUT);
@@ -112,30 +111,37 @@ void setup() {
 }
 
 void loop() {
+    Serial.write("hello");
     
 
-
+    /*for (int i = 0; i < 10; i++) {
+        Serial.print('<');
+        Serial.print(i * 3);
+        Serial.print('>');
+        Serial.println();
+    }*/
+    delay(2000);
 
 
     // Test code for each function
-    /*void* mDataPtr = (void*)&mData;
-    measurePS(mDataPtr);
-    Serial.println(*(mData.temperatureRaw));
-    Serial.println(*(mData.systolicPressRaw));
-    Serial.println(*(mData.diastolicPressRaw));
-    Serial.println(*(mData.pulseRateRaw));
-    Serial.println("Finished measure");
-    //Serial.println();
-    void* cDataPtr = (void*)&cData;
-    computePS(cDataPtr);
-    Serial.println(*(cData.tempCorrected));
-    Serial.println(*(cData.systolicPressCorrected));
-    Serial.println(*(cData.diastolicPressCorrected));
-    Serial.println(*(cData.pulseRateCorrected));
-    Serial.println("Finished compute");
-    void* sDataPtr = (void*)&sData;
-    batteryStatusPS(sDataPtr);
-    Serial.println(*(sData.batteryState));
-    Serial.println();
-    delay(1000);*/
+    /*  void* mDataPtr = (void*)&mData;
+        measurePS(mDataPtr);
+        Serial.println(*(mData.temperatureRaw));
+        Serial.println(*(mData.systolicPressRaw));
+        Serial.println(*(mData.diastolicPressRaw));
+        Serial.println(*(mData.pulseRateRaw));
+        Serial.println("Finished measure");
+        //Serial.println();
+        void* cDataPtr = (void*)&cData;
+        computePS(cDataPtr);
+        Serial.println(*(cData.tempCorrected));
+        Serial.println(*(cData.systolicPressCorrected));
+        Serial.println(*(cData.diastolicPressCorrected));
+        Serial.println(*(cData.pulseRateCorrected));
+        Serial.println("Finished compute");
+        void* sDataPtr = (void*)&sData;
+        batteryStatusPS(sDataPtr);
+        Serial.println(*(sData.batteryState));
+        Serial.println();
+        delay(1000);*/
 }
