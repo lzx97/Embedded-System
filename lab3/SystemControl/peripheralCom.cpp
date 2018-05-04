@@ -1,5 +1,7 @@
-#include <Arduino.h>
 #include <stdio.h>
+#include "peripheralCom.h"
+#include <Arduino.h>
+
 
 int globalCounter;
 

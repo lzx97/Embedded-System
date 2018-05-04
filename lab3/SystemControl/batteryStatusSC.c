@@ -1,5 +1,6 @@
 #include "DataStructs.h"
 #include "peripheralCom.h"
+#include "batteryStatusSC.h"
 
 int globalCounter;
 

@@ -1,11 +1,12 @@
 #include "DataStructs.h"
-
+#include "schedulerSC.h"
 // Don't forget to add functions to header file
+
 TCB* head;
 TCB* tail;
 unsigned int globalTime;
 
-void scheduler() {
+void scheduler(void) {
     TCB* curr = head;
     while (curr != tail){
         (*(curr->taskPtr))(curr->taskDataPtr);

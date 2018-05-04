@@ -1,5 +1,8 @@
+#include "TFTKeypad.h"
 #include "DataStructs.h"
 #include <stdio.h>
+
+
 
 // IMPORTANT: Elegoo_TFTLCD LIBRARY MUST BE SPECIFICALLY
 // CONFIGURED FOR EITHER THE TFT SHIELD OR THE BREAKOUT BOARD.
@@ -161,7 +164,7 @@ void setupDisplay(void *keyPadStruct) {
   }
    tft.begin(identifier);
    tft.setRotation(0);
-   drawDefaultMode(void *keyPadStruct);
+   drawDefaultMode(keyPadStruct);
 
    Serial.print(F("THIS IS THE WIDTH"));
    Serial.print(tft.width());
@@ -234,11 +237,11 @@ void displayLoop(void *keyPadStruct) {
   pinMode(XM, OUTPUT);
   pinMode(YP, OUTPUT);
   if (pressed == 1){
-      drawDefaultMode(void *keyPadStruct); // MAYBE THIS IS WHY IT RESETS ON / OFF??
+      drawDefaultMode(keyPadStruct); 
       if (mode == 1){
-          drawMenu(void *keyPadStruct);
+          drawMenu(keyPadStruct);
       } else if (mode ==2){
-          drawAnnunciate(void *keyPadStruct);
+          drawAnnunciate(keyPadStruct);
       }
       pressed = 0;
   }
@@ -348,7 +351,7 @@ void displayLoop(void *keyPadStruct) {
           if (*(dData->sysAlarm)){
             *(dData->alarmAcknowledge) = TRUE;
             *(dData->alarmTimer) = 0;
-            *(dData->sysAlarm) = False;
+            *(dData->sysAlarm) = FALSE;
             
           }
           delay(100);
@@ -365,19 +368,19 @@ void drawAnnunciate(void *keyPadStruct){
         tft.setCursor(0, 150);
         if (*(dData->sysAlarm)){
             tft.setTextColor(RED);
-        } else if (*(*dData->bpHigh)){
+        } else if (*(dData->bpHigh)){
             tft.setTextColor(ORANGE);
         } else {
             tft.setTextColor(GREEN);
         }
-        tft.print(*(dData->bloodPressCorrectedBuf)[0]);
+        tft.print(*(dData->sysNumeric)); // Not sure how to access correct index (0)
         tft.setTextColor(WHITE);     tft.print("/");
         if (*(dData->bpLow)){
             tft.setTextColor(ORANGE);
         } else {
             tft.setTextColor(GREEN);
         }
-        tft.print(*(dData->bloodPressCorrectedBuf)[8])
+        tft.print(*(dData->diasNumeric)); // Not sure how to access correct index (8)
         tft.setTextColor(WHITE);  tft.println(" mm Hg");
       
     } else {
@@ -391,11 +394,11 @@ void drawAnnunciate(void *keyPadStruct){
     // print temp
     if (*(dData->tempSelection)){
         if (*(dData->tempOff)){
-            setTextColor(ORANGE);
+            tft.setTextColor(ORANGE);
         } else {
             tft.setTextColor(GREEN);
         }
-        tft.print(*(dData->temperatureRawBuf)[0]);
+        tft.print(((float)*(dData->tempCorrectedBuf), 1));
         tft.setTextColor(WHITE);
         tft.print("C ");
       
@@ -408,11 +411,11 @@ void drawAnnunciate(void *keyPadStruct){
     // print pulserate
     if (*(dData->pulseSelection)){
         if (*(dData->pulseOff)){
-            setTextColor(ORANGE);
+            tft.setTextColor(ORANGE);
         } else {
-            setTextColor(GREEN);
+            tft.setTextColor(GREEN);
         }
-        tft.print(*(dData->bloodPressCorrectedBuf)[0]);
+        tft.print((dData->bloodPressCorrectedBuf)); // Not sure how to access correct index, removed *
         tft.setTextColor(WHITE);
         tft.println(" BPM ");
     } else {

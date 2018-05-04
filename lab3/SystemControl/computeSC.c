@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "DataStructs.h"
 #include "peripheralCom.h"
+#include "computeSC.h"
 
 int globalCounter;
 
@@ -8,7 +9,7 @@ int globalCounter;
 void computeSC(void *computeStruct) {
     // create string to be sent to the PS
     char start = 2;
-    char stop = 3;
+    char stopp = 3;
     char str[30];
     str[0] = 'C';
     str[1] = 'B'; // To be changed after implemented TFTKeypad
@@ -16,7 +17,7 @@ void computeSC(void *computeStruct) {
     str[3] = 'P'; // To be changed after implemented TFTKeypad
     strcat(str, &start);
     strcat(str, "Starting compute");
-    strcat(str, &stop);
+    strcat(str, &stopp);
 
     // transfer and receive 
     //    peripheralCom(char *data, void *dataStruct);

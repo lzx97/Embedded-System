@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "Bool.h"
 #include <stdio.h>
 #include "DataStructs.h"
@@ -7,7 +10,10 @@
 #include "TFTKeypad.h"
 #include "schedulerSC.h"
 #include "computeSC.h"
-#include <Arduino.h>
+//#include <Arduino.h>
+#ifdef __cplusplus
+}
+#endif
 
 TCB* head;
 TCB* tail;
@@ -41,20 +47,21 @@ unsigned int sysNumeric = 0;
 unsigned int diasNumeric = 0;
 unsigned int pulseNumeric = 0;
 
-unsigned int bloodPressCorrectedBuf[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};// = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-float tempCorrectedBuf[8] = {0,0,0,0,0,0,0,0}; //{NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-unsigned int prCorrectedBuf[8] = {0,0,0,0,0,0,0,0}; // {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+unsigned int bloodPressCorrectedBuf[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+float tempCorrectedBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+unsigned int pulseRateCorrectedBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
-unsigned int bloodPressRawBuf[16];
-unsigned int temperatureRawBuf[8];
-unsigned int pulseRateRawBuf[8];
+unsigned int bloodPressRawBuf[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};;
+unsigned int temperatureRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+unsigned int pulseRateRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 
 unsigned short batteryState = 200;
+/*
 unsigned char bpOutOfRange = 0;
 unsigned char tempOutOfRange = 0;
 unsigned char pulseOutOfRange = 0;
-
+*/
 Bool bpHigh = FALSE;
 Bool bpLow = FALSE;
 Bool tempOff = FALSE;
@@ -79,10 +86,11 @@ void setup(void) {
     // Add variables to measure struct
     mData.globalTime = &globalTime;
     mData.measureInterval = &measureInterval;
-    mData.diastolicPressRaw = &diastolicPressRaw;
-    mData.systolicPressRaw = &systolicPressRaw;
-    mData.pulseRateRaw = &pulseRateRaw;
-    mData.temperatureRaw = &temperatureRaw;
+    // Raw data
+    mData.bloodPressRawBuf = bloodPressRawBuf;
+    mData.pulseRateRawBuf = pulseRateRawBuf;
+    mData.temperatureRawBuf = temperatureRawBuf;
+    
     mData.sysMeasureComplete = &sysMeasureComplete;
     mData.diaMeasureComplete = &diaMeasureComplete;
     mData.tempIncrease = &tempIncrease;
@@ -91,11 +99,12 @@ void setup(void) {
 //    mData.MeasureTCB = &MeasureTCB;
 //    mData.ComputeTCB = &ComputeTCB;
 
+
     // Add variables to compute struct
     cData.globalTime = &globalTime;
-    cData.bloodPressRawBuf = &bloodPressRawBuf;
-    cData.pulseRateRawBuf = &pulseRateRawBuf;
-    cData.temperatureRawBuf = &temperatureRawBuf;
+    cData.bloodPressRawBuf = bloodPressRawBuf;
+    cData.pulseRateRawBuf = pulseRateRawBuf;
+    cData.temperatureRawBuf = temperatureRawBuf;
 
 /*
     cData.tempNumeric = &tempNumeric;
@@ -107,17 +116,19 @@ void setup(void) {
     dData.globalTime = &globalTime;
     dData.displayInterval = &displayInterval;
     dData.bloodPressCorrectedBuf = bloodPressCorrectedBuf;
-    dData.prCorrectedBuf = &prCorrectedBuf;
-    dData.tempCorrectedBuf = &tempCorrectedBuf;
-    dData.bloodPressRawBuf = &bloodPressRawBuf;
-    dData.pulseRateRawBuf = &pulseRateRawBuf;
+    dData.pulseRateCorrectedBuf = pulseRateCorrectedBuf;
+    dData.tempCorrectedBuf = tempCorrectedBuf;
+    dData.bloodPressRawBuf = bloodPressRawBuf;
+    dData.pulseRateRawBuf = pulseRateRawBuf;
     dData.bpHigh = &bpHigh;
     dData.bpLow = &bpLow;
     dData.tempOff = &tempOff;
     dData.pulseOff = &pulseOff;
+    /*
     dData.bpOutOfRange = &bpOutOfRange;
     dData.pulseOutOfRange = &pulseOutOfRange;
     dData.tempOutOfRange = &tempOutOfRange;
+    */
     dData.batteryLow = &batteryLow;
     dData.tempNumeric = &tempNumeric;
     dData.sysNumeric = &sysNumeric;
@@ -136,9 +147,11 @@ void setup(void) {
     // Add values to warning/alarm struct
     wData.globalTime = &globalTime;
     wData.warningInterval = &warningInterval;
+    /*
     wData.bpOutOfRange = &bpOutOfRange;
     wData.pulseOutOfRange = &pulseOutOfRange;
     wData.tempOutOfRange = &tempOutOfRange;
+    */
     wData.batteryState = &batteryState;
     wData.bpHigh = &bpHigh;
     wData.bpLow = &bpLow;
@@ -158,7 +171,7 @@ void setup(void) {
 
 
     // Initialize the TCBs
-    MeasureTCB.taskPtr = &measureSC;
+    MeasureTCB.taskPtr = &measurerSC;
     MeasureTCB.taskDataPtr = (void*)&mData;
     MeasureTCB.prev = NULL;
     MeasureTCB.next = &ComputeTCB;
@@ -188,7 +201,6 @@ void setup(void) {
     tail = &StatusTCB;
 
     setupDisplay(&dData);
-
 }
 
 unsigned long start_time;

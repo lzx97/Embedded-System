@@ -7,16 +7,22 @@
 // implemented as linked list
 
 typedef struct {
+    // Raw
     unsigned int *temperatureRawBuf; 
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
+    /*
     unsigned int *diastolicPressRaw;
     unsigned int *systolicPressRaw;
     unsigned int *pulseRateRaw;
     unsigned int *temperatureRaw;
+    */
+    // Measurement seleciton
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+
+    // Variables to update values
     Bool *sysMeasureComplete;
     Bool *diaMeasureComplete;
     Bool *tempIncrease;
@@ -30,16 +36,20 @@ typedef struct {
 
 typedef struct {
     // Raw
-    unsigned int *temperatureRawBuf[8];
-    unsigned int *bloodPressRawBuf[16];
-    unsigned int *pulseRateRawBuf[8];
+    unsigned int *temperatureRawBuf;
+    unsigned int *bloodPressRawBuf;
+    unsigned int *pulseRateRawBuf;
+    
     // Corrected
-    float *tempCorrectedBuf[8];
-    unsigned int *bloodPressCorrectedBuf[16];
-    unsigned int *prCorrectedBuf[8];
+    float *tempCorrectedBuf;
+    unsigned int *bloodPressCorrectedBuf;
+    unsigned int *prCorrectedBuf;
+    
+    // Measurement selection
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    
     unsigned int *globalTime;
 } ComputeData;
 
@@ -98,21 +108,23 @@ typedef struct {
     Bool *tempOff;
     Bool *pulseOff;
     Bool *batteryLow;
+    /*
     unsigned char *bpOutOfRange;
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
+    */
     // Data to be displayed
     
     float *tempCorrectedBuf;
-    unsigned int bloodPressCorrectedBuf[16];
+    unsigned int bloodPressCorrectedBuf;
     unsigned int *pulseRateCorrectedBuf;
-    unsigned int *prCorrectedBuf;
     unsigned short *batteryState;
     // Test data
     unsigned int *pulseNumeric;
     unsigned int *diasNumeric;
     unsigned int *sysNumeric;
     float *tempNumeric;
+    
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
@@ -133,7 +145,7 @@ typedef struct {
     Bool *pulseSelection;
     float *tempCorrectedBuf;
     unsigned int *bloodPressCorrectedBuf;
-    unsigned int *prCorrectedBuf;
+    unsigned int *pulseRateCorrectedBuf;
     unsigned int *globalTime;
 } ComData;
 
@@ -143,8 +155,8 @@ typedef struct {
     unsigned int *statusInterval;
 } StatusData;
 
-typedef struct TCB TCB;
 
+typedef struct TCB TCB; // This line is to be able to use TCB as a field inside TCB
 struct TCB{
     void *taskDataPtr;
     void (*taskPtr)(void*);
