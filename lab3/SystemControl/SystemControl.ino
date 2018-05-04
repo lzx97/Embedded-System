@@ -11,7 +11,7 @@ TCB* tail;
 
 TCB MeasureTCB;
 TCB ComputeTCB;
-TCB DisplayTCB;
+TCB tftTCB;
 TCB WarningAlarmTCB;
 TCB StatusTCB;
 
@@ -53,10 +53,17 @@ Bool bpLow = FALSE;
 Bool tempOff = FALSE;
 Bool pulseOff = FALSE;
 Bool batteryLow = FALSE;
+Bool sysAlarm = FALSE;
+
+Bool tempSelection = TRUE;
+Bool bpSelection = TRUE;
+Bool pulseSelection = TRUE;
+Bool alarmAcknowledge = TRUE; // type TBD
+unsigned int alarmTimer = 0;
 
 MeasureData mData;
 ComputeData cData;
-DisplayData dData;
+TFTData dData;
 WarningAlarmData wData;
 StatusData stData;
 
@@ -95,10 +102,11 @@ void setup(void) {
     // Add variables to display struct
     dData.globalTime = &globalTime;
     dData.displayInterval = &displayInterval;
-    dData.diasCorrected = &diasCorrected;
-    dData.sysPressCorrected = &sysPressCorrected;
-    dData.prCorrected = &prCorrected;
-    dData.tempCorrected = &tempCorrected;
+    dData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
+    dData.prCorrectedBuf = &prCorrectedBuf;
+    dData.tempCorrectedBuf = &tempCorrectedBuf;
+    dData.bloodPressRawBuf = &bloodPressRawBuf;
+    dData.pulseRateRawBuf = &pulseRateRawBuf;
     dData.bpHigh = &bpHigh;
     dData.bpLow = &bpLow;
     dData.tempOff = &tempOff;
@@ -112,11 +120,13 @@ void setup(void) {
     dData.diasNumeric = &diasNumeric;
     dData.pulseNumeric = &pulseNumeric;
     dData.batteryState = &batteryState;
-    dData.displayInterval = &measureInterval;
-    dData.diastolicPressRaw = &diastolicPressRaw;
-    dData.systolicPressRaw = &systolicPressRaw;
-    dData.pulseRateRaw = &pulseRateRaw;
-    dData.temperatureRaw = &temperatureRaw;
+    dData.displayInterval = &displayInterval;
+    dData.tempSelection = &tempSelection;
+    dData.bpSelection = &bpSelection;
+    dData.pulseSelection = &pulseSelection;
+    dData.alarmAcknowledge = &alarmAcknowledge;
+    dData.alarmTimer = &alarmTimer;
+    dData.sysAlarm = &sysAlarm;
 
 
     // Add values to warning/alarm struct
@@ -139,6 +149,7 @@ void setup(void) {
     wData.sysNumeric = &sysNumeric;
     wData.diasNumeric = &diasNumeric;
     wData.pulseNumeric = &pulseNumeric;
+    wData.sysAlarm = &sysAlarm;
 
     // Add data to status struct
     stData.globalTime = &globalTime;
@@ -155,16 +166,16 @@ void setup(void) {
     ComputeTCB.taskPtr = &computeData;
     ComputeTCB.taskDataPtr = (void*)&cData;
     ComputeTCB.prev = &MeasureTCB;
-    ComputeTCB.next = &DisplayTCB;
+    ComputeTCB.next = &tftTCB;
 
-    DisplayTCB.taskPtr = &displayData;
-    DisplayTCB.taskDataPtr = (void*)&dData;
-    DisplayTCB.prev = &ComputeTCB;
-    DisplayTCB.next = &WarningAlarmTCB;
+    tftTCB.taskPtr = &TFTData;
+    tftTCB.taskDataPtr = (void*)&dData;
+    tftTCB.prev = &ComputeTCB;
+    tftTCB.next = &WarningAlarmTCB;
 
     WarningAlarmTCB.taskPtr = &annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
-    WarningAlarmTCB.prev = &DisplayTCB;
+    WarningAlarmTCB.prev = &tftTCB;
     WarningAlarmTCB.next = &StatusTCB;
 
     StatusTCB.taskPtr = &batteryStatus;

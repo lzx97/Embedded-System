@@ -33,6 +33,7 @@ typedef struct {
     unsigned int *globalTime;
 } ComputeData;
 
+/* REPLACED BY TFTDATA
 typedef struct {
     // Warning flags
     Bool *bpHigh;
@@ -54,7 +55,7 @@ typedef struct {
     unsigned int *pulseRateRawBuf;
     unsigned int *globalTime;
 } DisplayData;
-
+*/
 typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
@@ -78,6 +79,24 @@ typedef struct {
 } WarningAlarmData;
 
 typedef struct {
+      // Warning flags
+    Bool *bpHigh;
+    Bool *bpLow;
+    Bool *tempOff;
+    Bool *pulseOff;
+    Bool *batteryLow;
+    unsigned char *bpOutOfRange;
+    unsigned char *tempOutOfRange;
+    unsigned char *pulseOutOfRange;
+    // Data to be displayed
+    float *tempCorrectedBuf;
+    unsigned int *bloodPressCorrectedBuf;
+    unsigned int *prCorrectedBuf;
+    unsigned short *batteryState;
+    // Test data
+    unsigned int *temperatureRawBuf;
+    unsigned int *bloodPressRawBuf;
+    unsigned int *pulseRateRawBuf;
     // Specified by lab spec, more fields to be added
     Bool *tempSelection;
     Bool *bpSelection;

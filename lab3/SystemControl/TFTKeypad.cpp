@@ -1,6 +1,6 @@
 #include "DataStructs.h"
 #include <stdio.h>
-#include "DataStructs.h"
+
 // IMPORTANT: Elegoo_TFTLCD LIBRARY MUST BE SPECIFICALLY
 // CONFIGURED FOR EITHER THE TFT SHIELD OR THE BREAKOUT BOARD.
 // SEE RELEVANT COMMENTS IN Elegoo_TFTLCD.h FOR SETUP.
@@ -170,6 +170,8 @@ void setupDisplay(void) {
 
 
 void drawDefaultMode(void *keyPadStruct){
+  TFTData *dData = (TFTData*) keyPadStruct;
+
   tft.fillScreen(BLACK);
   // create default mode buttons
   for (uint8_t row=0; row<2; row++) {
@@ -182,15 +184,20 @@ void drawDefaultMode(void *keyPadStruct){
     }
   }
 }
-int bpon = 1;
-int tempon = 1;
-int pulseon = 1;
+int bpon;
+int tempon;
+int pulseon;
 
 int bpvar = 0;
 int tempvar = 1;
 int pulsevar = 2;
 
 void drawMenu(void *keyPadStruct){
+  TFTData *dData = (TFTData*) keyPadStruct;
+  bpon = (*dData)->bpSelection;
+  tempon = (*dData)->tempSelection;
+  pulseon = (*dData)->pulseSelection;
+  
   // create default mode buttons
   bpvar = ((bpon == 1) ? 0 : 3);
   tempvar = ((tempon == 1) ? 1 : 4);
@@ -219,7 +226,7 @@ void drawMenu(void *keyPadStruct){
 int pressed = 1;
 
 void displayLoop(void *keyPadStruct) {
-  //mode = 1;
+  TFTData *dData = (TFTData*) keyPadStruct;
   TSPoint p = ts.getPoint();
   digitalWrite(13, HIGH);
   digitalWrite(13, LOW);
@@ -316,6 +323,9 @@ void displayLoop(void *keyPadStruct) {
               } else if (b == 2 || b == 5){
                   pulseon = ((pulseon == 0) ? 1 : 0);
               }
+              (*dData)->bpSelection = bpon;
+              (*dData)->tempSelection = tempon;
+              (*dData)->pulseSelection = pulseon;
               delay(100);
               mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
               //drawMenu();
@@ -331,14 +341,25 @@ void displayLoop(void *keyPadStruct) {
       if (acknbuttons[0].justPressed()) {
           acknbuttons[0].press(false);
           acknbuttons[0].drawButton(true);  // draw invert!
+          // Check if alarm is ringing
+          // If so, acknowledge
+          // Else, do nothing
+          if ((*dData)->sysAlarm{
+            (*dData)->alarmAcknowledge == TRUE;
+            (*dData)->alarmTimer = 0;
+            
+          }
           delay(100);
       }
   }
 }
 
 void drawAnnunciate(void *keyPadStruct){
+    TFTData *dData = (TFTData*) keyPadStruct;
+    
     // create default mode buttonstft.setCursor(0, 0);
     // print low and high presure
+    if ((*dData)->
     tft.setCursor(0, 150);
     tft.setTextColor(GREEN);
     tft.print("--");
