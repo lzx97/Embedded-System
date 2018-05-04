@@ -10,6 +10,10 @@ typedef struct {
     unsigned int *temperatureRawBuf; 
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
+    unsigned int *diastolicPressRaw;
+    unsigned int *systolicPressRaw;
+    unsigned int *pulseRateRaw;
+    unsigned int *temperatureRaw;
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
@@ -26,13 +30,13 @@ typedef struct {
 
 typedef struct {
     // Raw
-    unsigned int *temperatureRawBuf;
-    unsigned int *bloodPressRawBuf;
-    unsigned int *pulseRateRawBuf;
+    unsigned int *temperatureRawBuf[8];
+    unsigned int *bloodPressRawBuf[16];
+    unsigned int *pulseRateRawBuf[8];
     // Corrected
-    float *tempCorrectedBuf;
-    unsigned int *bloodPressCorrectedBuf;
-    unsigned int *prCorrectedBuf;
+    float *tempCorrectedBuf[8];
+    unsigned int *bloodPressCorrectedBuf[16];
+    unsigned int *prCorrectedBuf[8];
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
@@ -62,6 +66,7 @@ typedef struct {
     unsigned int *globalTime;
 } DisplayData;
 */
+
 typedef struct {
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
@@ -77,11 +82,13 @@ typedef struct {
     Bool *pulseOff;
     Bool *batteryLow;
     // may be used for testing
-    double *tempNumeric;
+    float *tempNumeric;
     unsigned int *sysNumeric;
     unsigned int *diasNumeric;
     unsigned int *pulseNumeric;
     unsigned int *globalTime;
+    Bool *sysAlarm;
+    unsigned int *warningInterval;
 } WarningAlarmData;
 
 typedef struct {
@@ -95,11 +102,17 @@ typedef struct {
     unsigned char *tempOutOfRange;
     unsigned char *pulseOutOfRange;
     // Data to be displayed
+    
     float *tempCorrectedBuf;
-    unsigned int *bloodPressCorrectedBuf;
+    unsigned int bloodPressCorrectedBuf[16];
+    unsigned int *pulseRateCorrectedBuf;
     unsigned int *prCorrectedBuf;
     unsigned short *batteryState;
     // Test data
+    unsigned int *pulseNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *sysNumeric;
+    float *tempNumeric;
     unsigned int *temperatureRawBuf;
     unsigned int *bloodPressRawBuf;
     unsigned int *pulseRateRawBuf;
@@ -108,8 +121,10 @@ typedef struct {
     Bool *bpSelection;
     Bool *pulseSelection;
     Bool *sysAlarm;
-    unsigned int *alarmAcknowledge; // type TBD
+    unsigned int *alarmTimer;
+    Bool *alarmAcknowledge; // type TBD
     unsigned int *globalTime;
+    unsigned int *displayInterval;
 } TFTData;
 
 typedef struct {
@@ -125,14 +140,17 @@ typedef struct {
 typedef struct {
     unsigned short *batteryState;
     unsigned int *globalTime;
+    unsigned int *statusInterval;
 } StatusData;
 
-typedef struct {
+typedef struct TCB TCB;
+
+struct TCB{
     void *taskDataPtr;
     void (*taskPtr)(void*);
-    struct TCB* prev;
-    struct TCB* next;
-} TCB;
+    struct TCB* next; // TCB* next
+    struct TCB* prev; // TCB* prev
+};
 
 
 #endif

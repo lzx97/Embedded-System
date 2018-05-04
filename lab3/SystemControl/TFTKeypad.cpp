@@ -117,7 +117,7 @@ uint16_t acknbuttoncolors[1] = {ILI9341_GREEN};
 
 uint16_t identifier; // global variable to be reached from all functions
 
-void setupDisplay(void) {
+void setupDisplay(void *keyPadStruct) {
   Serial.begin(9600);
   Serial.println(F("TFT LCD test"));
 
@@ -161,7 +161,7 @@ void setupDisplay(void) {
   }
    tft.begin(identifier);
    tft.setRotation(0);
-   drawDefaultMode();
+   drawDefaultMode(void *keyPadStruct);
 
    Serial.print(F("THIS IS THE WIDTH"));
    Serial.print(tft.width());
@@ -234,11 +234,11 @@ void displayLoop(void *keyPadStruct) {
   pinMode(XM, OUTPUT);
   pinMode(YP, OUTPUT);
   if (pressed == 1){
-      drawDefaultMode(); // MAYBE THIS IS WHY IT RESETS ON / OFF??
+      drawDefaultMode(void *keyPadStruct); // MAYBE THIS IS WHY IT RESETS ON / OFF??
       if (mode == 1){
-          drawMenu();
+          drawMenu(void *keyPadStruct);
       } else if (mode ==2){
-          drawAnnunciate();
+          drawAnnunciate(void *keyPadStruct);
       }
       pressed = 0;
   }
