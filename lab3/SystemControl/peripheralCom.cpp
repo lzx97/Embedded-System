@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#include <stdio.h>
 
 int globalCounter;
 
@@ -21,22 +23,3 @@ void communicationSC(char *data, void *dataStruct) {
     
 }
 
-
-void communicationPS() {
-    // TODO: implement
-    if (Serial.available() > 0) {
-        char received[30];
-        int i = 0;
-        while (Serial.available() > 0) {
-            received[i] = Serial.read();
-            i++;
-        }
-        
-        //
-
-        if (received[1] == 'M') {
-            measure();
-            Serial.write('');
-        }
-    }
-}

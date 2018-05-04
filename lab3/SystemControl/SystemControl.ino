@@ -82,6 +82,8 @@ void setup(void) {
     mData.tempIncrease = &tempIncrease;
     mData.bpIncrease = &bpIncrease;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
+    mData.MeasureTCB = &MeasureTCB;
+    mData.ComputeTCB = &ComputeTCB;
 
     // Add variables to compute struct
     cData.globalTime = &globalTime;

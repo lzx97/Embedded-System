@@ -3,6 +3,15 @@
 #include <stdio.h>
 #include "Bool.h"
 
+
+// implemented as linked list
+typedef struct {
+    void *taskDataPtr;
+    void (*taskPtr)(void*);
+    struct TCB *prev;
+    struct TCB *next;
+} TCB;
+
 typedef struct {
     unsigned int *temperatureRawBuf; 
     unsigned int *bloodPressRawBuf;
@@ -16,6 +25,9 @@ typedef struct {
     Bool *bpIncrease;
     unsigned int *numOfMeasureCalls;
     unsigned int *globalTime;
+    unsigned int *measureInterval;
+    TCB *MeasureTCB;
+    TCB* ComputeTCB;
 } MeasureData;
 
 typedef struct {
@@ -101,6 +113,7 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    Bool *sysAlarm;
     unsigned int *alarmAcknowledge; // type TBD
     unsigned int *globalTime;
 } TFTData;
@@ -120,12 +133,6 @@ typedef struct {
     unsigned int *globalTime;
 } StatusData;
 
-// implemented as linked list
-typedef struct {
-    void *taskDataPtr;
-    void (*taskPtr)(void*);
-    struct TCB *prev;
-    struct TCB *next;
-} TCB;
+
 
 #endif

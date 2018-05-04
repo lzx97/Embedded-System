@@ -32,6 +32,7 @@
 #define MAGENTA 0xF81F
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
+#define ORANGE  0xFD20
 
 // Color definitions
 #define ILI9341_BLACK       0x0000      /*   0,   0,   0 */
@@ -194,9 +195,9 @@ int pulsevar = 2;
 
 void drawMenu(void *keyPadStruct){
   TFTData *dData = (TFTData*) keyPadStruct;
-  bpon = (*dData)->bpSelection;
-  tempon = (*dData)->tempSelection;
-  pulseon = (*dData)->pulseSelection;
+  bpon = *(dData->bpSelection);
+  tempon = *(dData->tempSelection);
+  pulseon = *(dData->pulseSelection);
   
   // create default mode buttons
   bpvar = ((bpon == 1) ? 0 : 3);
@@ -323,9 +324,9 @@ void displayLoop(void *keyPadStruct) {
               } else if (b == 2 || b == 5){
                   pulseon = ((pulseon == 0) ? 1 : 0);
               }
-              (*dData)->bpSelection = bpon;
-              (*dData)->tempSelection = tempon;
-              (*dData)->pulseSelection = pulseon;
+              *(dData->bpSelection) = bpon;
+              *(dData->tempSelection) = tempon;
+              *(dData->pulseSelection) = pulseon;
               delay(100);
               mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
               //drawMenu();
@@ -344,9 +345,10 @@ void displayLoop(void *keyPadStruct) {
           // Check if alarm is ringing
           // If so, acknowledge
           // Else, do nothing
-          if ((*dData)->sysAlarm{
-            (*dData)->alarmAcknowledge == TRUE;
-            (*dData)->alarmTimer = 0;
+          if (*(dData->sysAlarm)){
+            *(dData->alarmAcknowledge) = TRUE;
+            *(dData->alarmTimer) = 0;
+            *(dData->sysAlarm) = False;
             
           }
           delay(100);
@@ -359,40 +361,82 @@ void drawAnnunciate(void *keyPadStruct){
     
     // create default mode buttonstft.setCursor(0, 0);
     // print low and high presure
-    if ((*dData)->
-    tft.setCursor(0, 150);
-    tft.setTextColor(GREEN);
-    tft.print("--");
-    tft.setTextColor(WHITE);
-    tft.print("/");
-    tft.setTextColor(GREEN);
-    tft.print("--");
-    tft.setTextColor(WHITE);
-    tft.println(" mm Hg");
-
+    if (*(dData->bpSelection)){
+        tft.setCursor(0, 150);
+        if (*(dData->sysAlarm)){
+            tft.setTextColor(RED);
+        } else if (*(*dData->bpHigh)){
+            tft.setTextColor(ORANGE);
+        } else {
+            tft.setTextColor(GREEN);
+        }
+        tft.print(*(dData->bloodPressCorrectedBuf)[0]);
+        tft.setTextColor(WHITE);     tft.print("/");
+        if (*(dData->bpLow)){
+            tft.setTextColor(ORANGE);
+        } else {
+            tft.setTextColor(GREEN);
+        }
+        tft.print(*(dData->bloodPressCorrectedBuf)[8])
+        tft.setTextColor(WHITE);  tft.println(" mm Hg");
+      
+    } else {
+        tft.setCursor(0, 150);
+        tft.setTextColor(GREEN);    tft.print("--");
+        tft.setTextColor(WHITE);    tft.print("/");
+        tft.setTextColor(GREEN);    tft.print("--");
+        tft.setTextColor(WHITE);    tft.println(" mm Hg");
+    }
+    
     // print temp
-    tft.setTextColor(GREEN);
-    tft.print("37.2");
-    tft.setTextColor(WHITE);
-    tft.print("C ");
-
+    if (*(dData->tempSelection)){
+        if (*(dData->tempOff)){
+            setTextColor(ORANGE);
+        } else {
+            tft.setTextColor(GREEN);
+        }
+        tft.print(*(dData->temperatureRawBuf)[0]);
+        tft.setTextColor(WHITE);
+        tft.print("C ");
+      
+    } else {
+        tft.print("--.-");
+        tft.setTextColor(WHITE);
+        tft.print("C ");
+    }
+    
     // print pulserate
-    tft.setTextColor(RED);
-    tft.print("200");
-    tft.setTextColor(WHITE);
-    tft.println(" BPM ");
+    if (*(dData->pulseSelection)){
+        if (*(dData->pulseOff)){
+            setTextColor(ORANGE);
+        } else {
+            setTextColor(GREEN);
+        }
+        tft.print(*(dData->bloodPressCorrectedBuf)[0]);
+        tft.setTextColor(WHITE);
+        tft.println(" BPM ");
+    } else {
+        tft.setTextColor(GREEN);
+        tft.print("---");
+        tft.setTextColor(WHITE);
+        tft.println(" BPM ");
+    }
 
     // print battery
-    tft.setTextColor(GREEN);
-    tft.print("95");
+    if (*(dData->batteryLow)){
+        tft.setTextColor(RED);
+    } else {
+        tft.setTextColor(GREEN);
+    }
+    tft.print(*(dData->batteryState));
     tft.setTextColor(WHITE);
-    tft.print(" %");
+    tft.print(" Charges");
 
-  acknbuttons[0].initButton(&tft,  ACKN_BUTTON_X,
+    acknbuttons[0].initButton(&tft,  ACKN_BUTTON_X,
                  ACKN_BUTTON_Y,    // x, y, w, h, outline, fill, text
                   ACKN_BUTTON_W, ACKN_BUTTON_H, ILI9341_WHITE, acknbuttoncolors[0], ILI9341_WHITE,
                   acknbuttonlabels[0], ACKN_BUTTON_TEXTSIZE);
-  acknbuttons[0].drawButton();
+    acknbuttons[0].drawButton();
 }
 
 
