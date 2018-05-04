@@ -1,6 +1,14 @@
 #include "DataStructs.h"
-#include "peripheralCom.h"
 #include "measureSC.h";
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "peripheralCom.h"
+#ifdef __cplusplus
+}
+#endif
+
+
 
 // TCB MeasureTCB;
 // TCB ComputeTCB;
@@ -18,15 +26,15 @@ void measurerSC(void *measureStruct) {
     char stopp = 3;
     char str[25];
     str[0] = 'M';
-    str[1] = 'B'; // To be changed after implemented TFTKeypad
-    str[2] = 'T'; // To be changed after implemented TFTKeypad
-    str[3] = 'P'; // To be changed after implemented TFTKeypad
+    str[1] = (*(mData->bpSelection) ? 'B' : 'b');
+    str[2] = (*(mData->tempSelection) ? 'T' : 't');
+    str[3] = (*(mData->pulseSelection) ? 'P' : 'p');
     strcat(str, &start);
     strcat(str, "Starting measure\n");
     strcat(str, &stopp);
 
     // transfer and receive 
-    communicationSC(str, &measureStruct);
+    // communicationSC(str, measureStruct);
 
     // ADD COMPUTE STRUCT IF NOT ALREADY THERE
 }

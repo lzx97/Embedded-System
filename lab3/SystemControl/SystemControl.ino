@@ -6,14 +6,16 @@ extern "C" {
 #include "DataStructs.h"
 #include "batteryStatusSC.h"
 #include "measureSC.h"
-#include "peripheralCom.h"
-#include "TFTKeypad.h"
+//#include "peripheralCom.h"
 #include "schedulerSC.h"
 #include "computeSC.h"
 //#include <Arduino.h>
 #ifdef __cplusplus
 }
 #endif
+#include "TFTKeypad.h"
+
+void communicationSC(char *data, void *dataStruct);
 
 TCB* head;
 TCB* tail;
@@ -179,26 +181,27 @@ void setup(void) {
     ComputeTCB.taskPtr = &computeSC;
     ComputeTCB.taskDataPtr = (void*)&cData;
     ComputeTCB.prev = &MeasureTCB;
-    ComputeTCB.next = &tftTCB;
+    ComputeTCB.next = &StatusTCB;
+
+    StatusTCB.taskPtr = &batteryStatusSC;
+    StatusTCB.taskDataPtr = (void*)&stData;
+    StatusTCB.prev = &ComputeTCB;
+    StatusTCB.next = &tftTCB;
 
     tftTCB.taskPtr = &displayLoop;
     tftTCB.taskDataPtr = (void*)&dData;
-    tftTCB.prev = &ComputeTCB;
-    tftTCB.next = &WarningAlarmTCB;
+    tftTCB.prev = &StatusTCB;
+    tftTCB.next = NULL;
  /*
     WarningAlarmTCB.taskPtr = &annuciate;
     WarningAlarmTCB.taskDataPtr = (void*)&wData;
     WarningAlarmTCB.prev = &tftTCB;
     WarningAlarmTCB.next = &StatusTCB;
 */
-    StatusTCB.taskPtr = &batteryStatusSC;
-    StatusTCB.taskDataPtr = (void*)&stData;
-    StatusTCB.prev = &WarningAlarmTCB;
-    StatusTCB.next = NULL;
 
     // Initialize the taskQueue
     head = &MeasureTCB;
-    tail = &StatusTCB;
+    tail = &tftTCB;
 
     setupDisplay(&dData);
 }
@@ -206,11 +209,43 @@ void setup(void) {
 unsigned long start_time;
 void loop(void) {
     start_time = millis();
-    scheduler();
+    scheduler(head, tail, globalTime);
     (globalTime)++;
-    while (millis() < start_time + 1000){ 
-        // Wait until one second has passed
-    }
 }
 
+void communicationSC(char *data, void *dataStruct) {
+    // send process
+        char dataType = data[0];
+        Serial.write(data); // send
+        if (dataType == 'M'){
+        } else if (dataType == 'C'){
+        while (Serial.available() == 0){
+        }
+        
+        ComputeData *cData = (ComputeData*) dataStruct;
+
+        if (data[1] == 'B'){
+            (*(cData->sysNumeric)) = Serial.parseInt();
+            (*(cData->diasNumeric)) = Serial.parseInt();
+
+        }
+        if (data[2] == 'T'){
+            (*(cData->tempNumeric)) = Serial.parseFloat();
+        }
+        if (data[3] == 'P'){
+            (*(cData->pulseNumeric)) = Serial.parseInt();
+        }
+  
+        } else if (dataType == 'B'){
+          while (Serial.available() == 0){
+        }
+          StatusData *stData = (StatusData*) dataStruct;
+          (*(stData->batteryState)) = Serial.parseInt();
+          
+        }
+
+    // receive process
+    // TODO: implement
+    
+}
 

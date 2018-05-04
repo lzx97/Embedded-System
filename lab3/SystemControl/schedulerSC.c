@@ -2,13 +2,16 @@
 #include "schedulerSC.h"
 // Don't forget to add functions to header file
 
-TCB* head;
-TCB* tail;
+
 unsigned int globalTime;
 
-void scheduler(void) {
+void scheduler(struct TCB* head, struct TCB* tail, unsigned long globalTime) {
     TCB* curr = head;
     while (curr != tail){
+         if (curr == MeasureStruct){
+          deleteNode(ComputeStruct, head, tail);
+          insertNode(ComputeStruct, MeasureStruct, head, tail);
+         }
         (*(curr->taskPtr))(curr->taskDataPtr);
         curr = curr->next;
     }
@@ -16,12 +19,11 @@ void scheduler(void) {
     // So we call it one last time to run through everything
     (*(curr->taskPtr))(curr->taskDataPtr);
     // Delay one second
-    delay(1000);
-    globalTime++;
+    //globalTime++;
 }
 
 
-void deleteNode(TCB* node) {
+void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
     TCB* curr;
     TCB* prevNode;
     TCB* nextNode;
@@ -59,7 +61,7 @@ void deleteNode(TCB* node) {
 
 // Do insert(TCBToInsert, TCBtoadd it to after)
 // So calling insert(compute, measure) adds compute after measure
-void insertNode(TCB* node, TCB* precNode) {
+void insertNode(struct TCB* node, struct TCB* precNode, struct TCB* head, struct TCB* tail) {
     // Since C lacks default parameters,
     // The user has to input NULL as 2nd arg if not specified
     if (NULL == precNode){

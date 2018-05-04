@@ -49,7 +49,10 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
-    
+    unsigned int *sysNumeric;
+    unsigned int *diasNumeric;
+    unsigned int *pulseNumeric;
+    float *tempNumeric;
     unsigned int *globalTime;
 } ComputeData;
 
