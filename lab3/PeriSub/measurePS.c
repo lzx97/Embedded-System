@@ -7,7 +7,6 @@
 
 
 void measurePS(void *measureStruct) {
-    // TODO: modify lab 2 codes according to the new spec
     MeasureDataPS *mData = (MeasureDataPS*) measureStruct;
     
     // measure temperature
@@ -27,7 +26,7 @@ void measurePS(void *measureStruct) {
     }
 
     // increment simulation counter
-    *(mData->numOfMeasureCalls) += 1; // Change this to numOfTempCalls, numOfBpCalls, numOfPulseCalls??
+    *(mData->numOfMeasureCalls) += 1;
 }
 
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {
@@ -90,36 +89,33 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
+    /*while (digitalRead(PIN_IN) != HIGH) {
+        
+    }
+    while (digitalRead(PIN_IN) != LOW) {
+        // idle until PIN_IN == LOW
+    }
+    unsigned long startTime = micros();
+    while (digitalRead(PIN_IN) != HIGH) {
+        // idle till HIGH
+        //Serial.println(digitalRead(PIN_IN));
+    }
+    while (digitalRead(PIN_IN) != LOW) {
+        // idle till another low
+        //Serial.println(digitalRead(PIN_IN));
+    }
+    unsigned long stopTime = micros();
+    unsigned long period = stopTime - startTime;
+    double periodInS = (1.0 * period) / 1000000;
+    int pulse = (int) 1 / periodInS;
+
+    *pulseRate = pulse + 1;*/
+    
+    
+    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 1000000UL);
     double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 
     *pulseRate = pulse;
     
-
-
-
-    /* if (*bpIncrease && (*pulseRate > 40)){
-        *bpIncrease = FALSE;
-    }
-    if (!(*bpIncrease) && (*pulseRate < 15)){
-        *bpIncrease = TRUE;
-    }
-
-     if (*bpIncrease) {
-        if (*numOfMeasureCalls % 2 == 0) {
-            *pulseRate -= 1;
-        }
-        else {
-            *pulseRate += 3;
-        }
-    }
-    else {
-        if (*numOfMeasureCalls % 2 == 0) {
-            *pulseRate += 1;
-        }
-        else {
-            *pulseRate -= 3;
-        }
-    }*/ 
 }
