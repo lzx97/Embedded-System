@@ -112,7 +112,7 @@ void measurePulseRate(unsigned int *pulseRate){
     *pulseRate = pulse + 1;*/
     
     
-    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 1000000UL);
+    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
     double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 
