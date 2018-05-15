@@ -35,19 +35,19 @@ void communicationSC(char *str, void *dataStruct) {
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
         ComputeData* cData = (ComputrData*) dataStruct;
-        (*(cData->tempCorrectedBuf))[0] = computeIn[0];
+        (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
         (*(cData->tempCorrectedBuf))[1] = computeIn[1];
         (*(cData->tempCorrectedBuf))[2] = computeIn[2];
         (*(cData->tempCorrectedBuf))[3] = computeIn[3];
-        (*(cData->bloodPressCorrectedBuf))[0] = computeIn[4];
+        (*(cData->bloodPressCorrectedBuf))[0] = computeIn[4]; // sys
         (*(cData->bloodPressCorrectedBuf))[1] = computeIn[5];
         (*(cData->bloodPressCorrectedBuf))[2] = computeIn[6];
-        (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7];
+        (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7]; //dias
         (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
         (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
-        (*(cData->prCorrectedBuf))[0] = computeIn[10];
-        (*(cData->prCorrectedBuf))[0] = computeIn[11];
-        (*(cData->prCorrectedBuf))[0] = computeIn[12];
+        (*(cData->prCorrectedBuf))[0] = computeIn[10]; // pulse 
+        (*(cData->prCorrectedBuf))[1] = computeIn[11];
+        (*(cData->prCorrectedBuf))[2] = computeIn[12];
     }
     else if (str[0] == 'S') {
         char statusIn[5];
