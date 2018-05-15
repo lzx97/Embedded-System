@@ -2,21 +2,16 @@
 extern "C" {
 #endif
 #include "Bool.h"
-#include <stdio.h>
 #include "DataStructs.h"
-#include "batteryStatusSC.h"
-#include "measureSC.h"
 #include "warningSC.h"
-//#include "peripheralCom.h"
 //#include "schedulerSC.h"
 #include "computeSC.h"
-//#include <Arduino.h>
 #ifdef __cplusplus
 }
 #endif
 #include "TFTKeypad.h"
-
-void communicationSC(char *data, void *dataStruct);
+#include "batteryStatusSC.h"
+#include "measureSC.h"
 
 TCB* head;
 TCB* tail;
@@ -235,7 +230,7 @@ void loop(void) {
     globalTime++;
 }
 
-void communicationSC(char *data, void *dataStruct) {
+void communicationSC1(char *data, void *dataStruct) {
     // send process
     
         char dataType = data[0];
