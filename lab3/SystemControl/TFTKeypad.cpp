@@ -379,14 +379,18 @@ void drawAnnunciate(void *tftStruct) {
     } else {
       tft.setTextColor(GREEN);
     }
-    tft.print(*(dData->sysNumeric)); // Not sure how to access correct index (0)
+    tft.print((*(dData->bloodPressCorrectedBuf))[0]);
+    tft.print((*(dData->bloodPressCorrectedBuf))[1]);
+    tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
     tft.setTextColor(WHITE);     tft.print("/");
     if (*(dData->bpLow)) {
       tft.setTextColor(ORANGE);
     } else {
       tft.setTextColor(GREEN);
     }
-    tft.print(*(dData->diasNumeric)); // Not sure how to access correct index (8)
+    tft.print((*(dData->bloodPressCorrectedBuf))[24]);
+    tft.print((*(dData->bloodPressCorrectedBuf))[25]);
+    tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
     tft.setTextColor(WHITE);  tft.println(" mm Hg");
 
   } else {
@@ -404,7 +408,10 @@ void drawAnnunciate(void *tftStruct) {
     } else {
       tft.setTextColor(GREEN);
     }
-    tft.print(((float) * (dData->tempNumeric), 1));
+    tft.print((*(dData->tempCorrectedBuf))[0]);
+    tft.print((*(dData->tempCorrectedBuf))[1]);
+    tft.print((*(dData->tempCorrectedBuf))[2]);
+    tft.print((*(dData->tempCorrectedBuf))[3]);
     tft.setTextColor(WHITE);
     tft.print("C ");
 
@@ -421,7 +428,9 @@ void drawAnnunciate(void *tftStruct) {
     } else {
       tft.setTextColor(GREEN);
     }
-    tft.print(*(dData->pulseNumeric)); // Not sure how to access correct index, removed *
+    tft.print((*(dData->pulseCorrectedBuf))[0]);
+    tft.print((*(dData->pulseCorrectedBuf))[1]);
+    tft.print((*(dData->pulseCorrectedBuf))[2]);
     tft.setTextColor(WHITE);
     tft.println(" BPM ");
   } else {
@@ -437,7 +446,9 @@ void drawAnnunciate(void *tftStruct) {
   } else {
     tft.setTextColor(GREEN);
   }
-  tft.print(*(dData->batteryState));
+  tft.print((*(dData->batteryState))[0]);
+  tft.print((*(dData->batteryState))[1]);
+  tft.print((*(dData->batteryState))[2]);
   tft.setTextColor(WHITE);
   tft.print(" Charges");
 

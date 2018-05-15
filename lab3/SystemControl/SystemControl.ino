@@ -59,7 +59,7 @@ unsigned int temperatureRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 unsigned int pulseRateRawBuf[8] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 
-unsigned short batteryState = 200;
+char **batteryState = "200";
 /*
 unsigned char bpOutOfRange = 0;
 unsigned char tempOutOfRange = 0;
