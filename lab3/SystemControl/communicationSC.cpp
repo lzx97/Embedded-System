@@ -5,7 +5,7 @@
 void communicationSC(char *str, void *dataStruct) {
     // send process
     Serial1.print(str);
-    Serail1.fulsh(); // Wait print to complete
+    Serial1.fulsh(); // Wait print to complete
 
 
     // receive process 
@@ -18,6 +18,9 @@ void communicationSC(char *str, void *dataStruct) {
         
         // TODO: store values in the measureIn to measureStruct
         // need to wait until top level code is set
+        MeasureData* mData = (MeasureData*) dataStruct;
+        //(*(mData->temperatureRawBuf))[0] = measure[0];
+        //(*(mData->bloodPressRawBuf))
         
     }
 
@@ -31,7 +34,21 @@ void communicationSC(char *str, void *dataStruct) {
 
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
-
+        ComputeData* cData = (ComputrData*) dataStruct;
+        (*(cData->tempCorrectedBuf))[0] = computeIn[0];
+        (*(cData->tempCorrectedBuf))[1] = computeIn[1];
+        (*(cData->tempCorrectedBuf))[2] = computeIn[2];
+        (*(cData->tempCorrectedBuf))[3] = computeIn[3];
+        (*(cData->bloodPressCorrectedBuf))[0] = computeIn[4];
+        (*(cData->bloodPressCorrectedBuf))[1] = computeIn[5];
+        (*(cData->bloodPressCorrectedBuf))[2] = computeIn[6];
+        (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7];
+        (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
+        (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
+        (*(cData->prCorrectedBuf))[0] = computeIn[10];
+        (*(cData->prCorrectedBuf))[0] = computeIn[11];
+        (*(cData->prCorrectedBuf))[0] = computeIn[12];
+    }
     else if (str[0] == 'S') {
         char statusIn[5];
         while (Serial1.available() < 3) {
@@ -44,6 +61,6 @@ void communicationSC(char *str, void *dataStruct) {
         (*(sData->batteryState))[0] = statusIn[0];
         (*(sData->batteryState))[1] = statusIn[1];
         (*(sData->batteryState))[2] = statusIn[2];
-        
+    }
 }
 
