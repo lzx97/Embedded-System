@@ -20,7 +20,7 @@ void communicationSC(char *data, void *dataStruct) {
 
 
     // receive process
-    // TODO: implement
+    // TODO: implement 
     
 }
 
