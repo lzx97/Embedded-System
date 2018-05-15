@@ -211,40 +211,6 @@ void loop(void) {
     globalTime++;
 }
 
-void communicationSC1(char *data, void *dataStruct) {
-    // send process
-    
-        char dataType = data[0];
-        Serial.write(data); // send
-        
-        if (dataType == 'M'){
-        } else if (dataType == 'C'){
-        while (Serial.available() == 0){
-        }
-        
-        ComputeData *cData = (ComputeData*) dataStruct;
-
-        if (data[1] == 'B'){
-            (*(cData->sysNumeric)) = Serial.parseInt();
-            (*(cData->diasNumeric)) = Serial.parseInt();
-
-        }
-        if (data[2] == 'T'){
-            (*(cData->tempNumeric)) = Serial.parseFloat();
-        }
-        if (data[3] == 'P'){
-            (*(cData->pulseNumeric)) = Serial.parseInt();
-        }
-  
-        } else if (dataType == 'B'){
-          while (Serial.available() == 0){
-        }
-          StatusData *stData = (StatusData*) dataStruct;
-          (*(stData->batteryState)) = Serial.parseInt();
-          
-        }
-}
-
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
     TCB* curr;
     TCB* prevNode;
