@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "DataStructs.h"
 
 // send a String to PS and receive a data packet from the PS
 void communicationSC(char *str, void *dataStruct) {

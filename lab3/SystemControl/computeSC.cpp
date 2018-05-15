@@ -9,7 +9,7 @@ void computeSC(void *computeStruct) {
 
     // global counter checker
     //if () {
-        
+        //return;
     //}
 
     char str[13];
