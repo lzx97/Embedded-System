@@ -120,7 +120,7 @@ typedef struct {
     unsigned int *globalTime;
     unsigned int *displayInterval;
     unsigned long *timeNow;
-    Bool *justPressed
+    Bool *justPressed;
 } TFTData;
 
 typedef struct {

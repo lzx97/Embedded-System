@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include "peripheralCom.h"
 #include <Arduino.h>
 
 // send a String to PS and receive a data packet from the PS

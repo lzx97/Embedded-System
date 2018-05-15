@@ -1,6 +1,6 @@
 #include "DataStructs.h"
 #include "measureSC.h";
-#include "peripheralCom.h"
+#include "communicationSC.h"
 
 
 
