@@ -2,9 +2,6 @@
 #include "peripheralCom.h"
 #include <Arduino.h>
 
-
-int globalCounter;
-
 // send a String to PS and receive a data packet from the PS
 void communicationSC(char *str, void *dataStruct) {
     // send process
@@ -15,10 +12,10 @@ void communicationSC(char *str, void *dataStruct) {
     // receive process 
     if (str[0] == 'M') { 
         char measureIn[12];
-        while ((Serial.available() < 10)) {
+        while ((Serial1.available() < 10)) {
             
         }
-        Serial.readBytes(measureIn, 10);
+        Serial1.readBytes(measureIn, 10);
         
         // TODO: store values in the measureIn to measureStruct
         // need to wait until top level code is set
@@ -27,22 +24,22 @@ void communicationSC(char *str, void *dataStruct) {
 
     else if (str[0] =='C') {
         char computeIn[15];
-        while ((Serial.available() < 13)) {
+        while ((Serial1.available() < 13)) {
             
         }
         
-        Serial.readBytes(computeIn, 13);
+        Serial1.readBytes(computeIn, 13);
 
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
 
     else if (str[0] == 'S') {
         char statusIn[5];
-        while (Serial.available() < 3) {
+        while (Serial1.available() < 3) {
             
         }
         
-        Serial.readBytes(statusIn, 3);
+        Serial1.readBytes(statusIn, 3);
 
         StatusData* sData = (StatusData*) dataStruct;
         (*(sData->batteryState))[0] = statusIn[0];
