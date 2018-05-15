@@ -2,10 +2,10 @@
 #define TFTKEYPAD_H
 
 #include "Datastructs.h"
-void displayLoop(void *keyPadStruct);
-void setupDisplay(void *keyPadStruct);
-void drawDefaultMode(void *keyPadStruct);
-void drawMenu(void *keyPadStruct);
-void drawAnnunciate(void *keyPadStruct);
+void displayLoop(void *tftStruct);
+void setupDisplay(void *tftStruct);
+void drawDefaultMode(void *tftStruct);
+void drawMenu(void *tftStruct);
+void drawAnnunciate(void *tftStruct);
 
 #endif

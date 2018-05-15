@@ -1,6 +1,7 @@
 #include "DataStructs.h"
 #include <stdio.h>
 #include "TFTKeypad.h"
+#include "Bool.h"
 
 
 // IMPORTANT: Elegoo_TFTLCD LIBRARY MUST BE SPECIFICALLY
@@ -120,7 +121,7 @@ uint16_t acknbuttoncolors[1] = {ILI9341_GREEN};
 
 uint16_t identifier; // global variable to be reached from all functions
 
-void setupDisplay(void *keyPadStruct) {
+void setupDisplay(void *tftStruct) {
   Serial.begin(9600);
   Serial.println(F("TFT LCD test"));
 
@@ -164,13 +165,13 @@ void setupDisplay(void *keyPadStruct) {
   }
   tft.begin(identifier);
   tft.setRotation(0);
-  drawDefaultMode(keyPadStruct);
+  drawDefaultMode(tftStruct);
 }
 
 
-void drawDefaultMode(void *keyPadStruct) {
-  TFTData *dData = (TFTData*) keyPadStruct;
-
+void drawDefaultMode(void *tftStruct) {
+  TFTData *dData = (TFTData*) tftStruct;
+  *(dData->justPressed) = FALSE;
   tft.fillScreen(BLACK);
   // create default mode buttons
   for (uint8_t row = 0; row < 2; row++) {
@@ -187,12 +188,13 @@ int bpon;
 int tempon;
 int pulseon;
 
-int bpvar = 0;
-int tempvar = 1;
-int pulsevar = 2;
+int bpvar;
+int tempvar;
+int pulsevar;
 
-void drawMenu(void *keyPadStruct) {
-  TFTData *dData = (TFTData*) keyPadStruct;
+void drawMenu(void *tftStruct) {
+  TFTData *dData = (TFTData*) tftStruct;
+  *(dData->justPressed) = FALSE;
   bpon = *(dData->bpSelection);
   tempon = *(dData->tempSelection);
   pulseon = *(dData->pulseSelection);
@@ -222,150 +224,150 @@ void drawMenu(void *keyPadStruct) {
 }
 #define MINPRESSURE 10
 #define MAXPRESSURE 1000
-int pressed = 1;
 
 unsigned long startTime;
 
-void displayLoop(void *keyPadStruct) {
-  
-  startTime = millis();
-  while(millis() < startTime + 10000){
-  //Serial.print("Start time is ");
-  //Serial.println(startTime);
-  //Serial.print(F("Current time is "));
-  //Serial.println(millis());
-  TFTData *dData = (TFTData*) keyPadStruct;
-  TSPoint p = ts.getPoint();
-  digitalWrite(13, HIGH);
-  digitalWrite(13, LOW);
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);
-  if (pressed == 1) {
-    drawDefaultMode(keyPadStruct);
-    if (mode == 1) {
-      drawMenu(keyPadStruct);
-    } else if (mode == 2) {
-      drawAnnunciate(keyPadStruct);
-    }
-    pressed = 0;
-  }
+void displayLoop(void *tftStruct) {
+  TFTData *dData = (TFTData*) tftStruct;
+  while (millis() < (*(dData->timeNow))  + 1000) {
+    TFTData *dData = (TFTData*) tftStruct;
 
-  int dx;
-  int dy;
-  if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
-    // scale from 0->1023 to tft.width
-    p.y = (map(p.y, TS_MINX, TS_MAXX, tft.width(), 0));
-    p.x = (tft.height() - map(p.x, TS_MINY, TS_MAXY, tft.height(), 0)); //
-    // Mapping to match actual screen
-    dx = (unsigned int16_t) p.y;
-    dy = (unsigned int32_t) p.x;
-    dx = (unsigned int32_t) (dx - 6) * 232 / 210;
-    dy = (unsigned int32_t) (dy + 5) * 320 / 345;
-    Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
-  }
+    digitalWrite(13, HIGH);
+    TSPoint p = ts.getPoint();
+    digitalWrite(13, LOW);
 
-
-  // go thru all the buttons, checking if they were pressed
-  for (uint8_t b = 0; b < 4; b++) {
-    if (buttons[b].contains(dx, dy)) {
-      Serial.print("Pressing: "); Serial.println(buttonlabels[b]);
-      buttons[b].press(true);  // tell the button it is pressed
-      Serial.print(dx);   Serial.print(", ");  Serial.println(dy);
-      pressed = 1;
-    } else {
-      buttons[b].press(false);  // tell the button it is NOT pressed
-    }
-  }
-  if (mode == 1) {
-    for (uint8_t b = 0; b < 3; b++) {
-      if (menubuttons[b].contains(dx, dy)) {
-        Serial.print("Pressing: "); Serial.println(menubuttonlabels[b]);
-        menubuttons[b].press(true);  // tell the button it is pressed
-        Serial.print(dx);     Serial.print(", ");     Serial.println(dy);
-        pressed = 1;
-      } else {
-        menubuttons[b].press(false);  // tell the button it is NOT pressed
+    pinMode(XM, OUTPUT);
+    pinMode(YP, OUTPUT);
+    if (*(dData->justPressed) == TRUE) {
+      drawDefaultMode(tftStruct);
+      if (mode == 1) {
+        drawMenu(tftStruct);
+      } else if (mode == 2) {
+        drawAnnunciate(tftStruct);
       }
+      *(dData->justPressed) = FALSE;
     }
-  } else if (mode == 2) {
-    if (acknbuttons[0].contains(dx, dy)) {
-      Serial.print("Pressing: "); Serial.println(acknbuttonlabels[0]);
-      acknbuttons[0].press(true);  // tell the button it is pressed
+
+    int dx;
+    int dy;
+    if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
+      // scale from 0->1023 to tft.width
+      p.y = (map(p.y, TS_MINX, TS_MAXX, tft.width(), 0));
+      p.x = (tft.height() - map(p.x, TS_MINY, TS_MAXY, tft.height(), 0)); //
+      // Mapping to match actual screen
+      dx = (unsigned int16_t) p.y;
+      dy = (unsigned int32_t) p.x;
+      dx = (unsigned int32_t) (dx - 6) * 232 / 210;
+      dy = (unsigned int32_t) (dy + 5) * 320 / 345;
       Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
-      pressed = 1;
     } else {
-      acknbuttons[0].press(false);  // tell the button it is NOT pressed
-    }
-  }
-
-  // now we can ask the buttons if their state has changed
-  for (uint8_t b = 0; b < 4; b++) {
-    if (buttons[b].justReleased()) {
-      // Serial.print("Released: "); Serial.println(b);
-      buttons[b].drawButton();  // draw normal
+      dx = -100;
+      dy = -200;
+      p.z = -1;
     }
 
-    if (buttons[b].justPressed()) {
-      buttons[b].drawButton(true);  // draw invert!
-      buttons[b].press(false);
-      if (b < 4) {
-        mode = b + 1; // Set mode to default 0 = Default, 1 = Menu, 2=Annunciate
+
+    // go thru all the buttons, checking if they were pressed
+    for (uint8_t b = 0; b < 4; b++) {
+      if (buttons[b].contains(dx, dy)) {
+        Serial.print("Pressing: "); Serial.println(buttonlabels[b]);
+        buttons[b].press(true);  // tell the button it is pressed
+        Serial.print(dx);   Serial.print(", ");  Serial.println(dy);
+        *(dData->justPressed) = TRUE;
+      } else {
+        buttons[b].press(false);  // tell the button it is NOT pressed
       }
-      delay(100);
     }
-  }
-  if (mode == 1) {
-    for (uint8_t b = 0; b < 6; b++) {
-      if (menubuttons[b].justReleased()) {
-        // Serial.print("Released: "); Serial.println(b);
-        menubuttons[b].drawButton();  // draw normal
-      }
-
-      if (menubuttons[b].justPressed()) {
-        menubuttons[b].press(false);
-        menubuttons[b].drawButton(true);  // draw invert!
-        if (b == 0 || b == 3) {
-          bpon = ((bpon == 0) ? 1 : 0);
-        } else if (b == 1 || b == 4) {
-          tempon = ((tempon == 0) ? 1 : 0);
-        } else if (b == 2 || b == 5) {
-          pulseon = ((pulseon == 0) ? 1 : 0);
+    if (mode == 1) {
+      for (uint8_t b = 0; b < 3; b++) {
+        if (menubuttons[b].contains(dx, dy)) {
+          Serial.print("Pressing: "); Serial.println(menubuttonlabels[b]);
+          menubuttons[b].press(true);  // tell the button it is pressed
+          Serial.print(dx);     Serial.print(", ");     Serial.println(dy);
+          *(dData->justPressed) = TRUE;
+        } else {
+          menubuttons[b].press(false);  // tell the button it is NOT pressed
         }
-        *(dData->bpSelection) = bpon;
-        *(dData->tempSelection) = tempon;
-        *(dData->pulseSelection) = pulseon;
+      }
+    } else if (mode == 2) {
+      if (acknbuttons[0].contains(dx, dy)) {
+        Serial.print("Pressing: "); Serial.println(acknbuttonlabels[0]);
+        acknbuttons[0].press(true);  // tell the button it is pressed
+        Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
+        *(dData->justPressed) = TRUE;
+      } else {
+        acknbuttons[0].press(false);  // tell the button it is NOT pressed
+      }
+    }
+
+    // now we can ask the buttons if their state has changed
+    for (uint8_t b = 0; b < 4; b++) {
+      if (buttons[b].justReleased()) {
+        // Serial.print("Released: "); Serial.println(b);
+        buttons[b].drawButton();  // draw normal
+      }
+
+      if (buttons[b].justPressed()) {
+        buttons[b].drawButton(true);  // draw invert!
+        buttons[b].press(false);
+        if (b < 4) {
+          mode = b + 1; // Set mode to default 0 = Default, 1 = Menu, 2=Annunciate
+        }
         delay(100);
-        mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
-        //drawMenu();
+      }
+    }
+    if (mode == 1) {
+      for (uint8_t b = 0; b < 6; b++) {
+        if (menubuttons[b].justReleased()) {
+          // Serial.print("Released: "); Serial.println(b);
+          menubuttons[b].drawButton();  // draw normal
+        }
+
+        if (menubuttons[b].justPressed()) {
+          menubuttons[b].press(false);
+          menubuttons[b].drawButton(true);  // draw invert!
+          if (b == 0 || b == 3) {
+            bpon = ((bpon == 0) ? 1 : 0);
+          } else if (b == 1 || b == 4) {
+            tempon = ((tempon == 0) ? 1 : 0);
+          } else if (b == 2 || b == 5) {
+            pulseon = ((pulseon == 0) ? 1 : 0);
+          }
+          *(dData->bpSelection) = bpon;
+          *(dData->tempSelection) = tempon;
+          *(dData->pulseSelection) = pulseon;
+          mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
+          delay(100);
+        }
+      }
+    }
+    if (mode == 2) {
+      if (acknbuttons[0].justReleased()) {
+        // Serial.print("Released: "); Serial.println(b);
+        acknbuttons[0].drawButton();  // draw normal
+      }
+
+      if (acknbuttons[0].justPressed()) {
+        acknbuttons[0].press(false);
+        acknbuttons[0].drawButton(true);  // draw invert!
+        // Check if alarm is ringing
+        // If so, acknowledge
+        // Else, do nothing
+        if (*(dData->sysAlarm)) {
+          *(dData->alarmAcknowledge) = TRUE;
+          *(dData->alarmTimer) = 0;
+          *(dData->sysAlarm) = FALSE;
+          delay(100);
+
+        }
       }
     }
   }
-  if (mode == 2) {
-    if (acknbuttons[0].justReleased()) {
-      // Serial.print("Released: "); Serial.println(b);
-      acknbuttons[0].drawButton();  // draw normal
-    }
-
-    if (acknbuttons[0].justPressed()) {
-      acknbuttons[0].press(false);
-      acknbuttons[0].drawButton(true);  // draw invert!
-      // Check if alarm is ringing
-      // If so, acknowledge
-      // Else, do nothing
-      if (*(dData->sysAlarm)) {
-        *(dData->alarmAcknowledge) = TRUE;
-        *(dData->alarmTimer) = 0;
-        *(dData->sysAlarm) = FALSE;
-
-      }
-      delay(100);
-    }
-  }
-}
 }
 
-void drawAnnunciate(void *keyPadStruct) {
-  TFTData *dData = (TFTData*) keyPadStruct;
+void drawAnnunciate(void *tftStruct) {
+  TFTData *dData = (TFTData*) tftStruct;
+  *(dData->justPressed) = FALSE;
   // create default mode buttonstft.setCursor(0, 0);
   // print low and high presure
   if (*(dData->bpSelection)) {
@@ -445,25 +447,3 @@ void drawAnnunciate(void *keyPadStruct) {
                             acknbuttonlabels[0], ACKN_BUTTON_TEXTSIZE);
   acknbuttons[0].drawButton();
 }
-
-
-
-
-// Print something in the mini status bar with either flashstring
-/*
-  void status(const __FlashStringHelper *msg) {
-  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
-  tft.setCursor(STATUS_X, STATUS_Y);
-  tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(1);
-  tft.print(msg);
-  }
-  // or charstring
-  void status(char *msg) {
-  tft.fillRect(STATUS_X, STATUS_Y, 240, 8, ILI9341_BLACK);
-  tft.setCursor(STATUS_X, STATUS_Y);
-  tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(1);
-  tft.print(msg);
-  }
-*/
