@@ -8,9 +8,9 @@
 
 typedef struct {
   // Raw
-  unsigned int *temperatureRawBuf;
-  unsigned int *bloodPressRawBuf;
-  unsigned int *pulseRateRawBuf;
+  char (*temperatureRawBuf)[16];
+  char (*bloodPressRawBuf)[40];
+  char (*pulseRateRawBuf)[24];
 
   // Measurement seleciton
   Bool *tempSelection;
@@ -18,11 +18,6 @@ typedef struct {
   Bool *pulseSelection;
 
   // Variables to update values
-  Bool *sysMeasureComplete;
-  Bool *diaMeasureComplete;
-  Bool *tempIncrease;
-  Bool *bpIncrease;
-  unsigned int *numOfMeasureCalls;
   unsigned int *globalTime;
   unsigned int *measureInterval;
   // TCB *MeasureTCB;
@@ -30,32 +25,23 @@ typedef struct {
 } MeasureData;
 
 typedef struct {
-  // Raw
-  unsigned int *temperatureRawBuf;
-  unsigned int *bloodPressRawBuf;
-  unsigned int *pulseRateRawBuf;
-
   // Corrected
-  float *tempCorrectedBuf;
-  unsigned int *bloodPressCorrectedBuf;
-  unsigned int *prCorrectedBuf;
+  char (*tempCorrectedBuf)[32];
+  char (*bloodPressCorrectedBuf)[48];
+  char (*prCorrectedBuf)[24];
 
-  // Measurement selection
-  Bool *tempSelection;
-  Bool *bpSelection;
-  Bool *pulseSelection;
-  unsigned int *sysNumeric;
-  unsigned int *diasNumeric;
-  unsigned int *pulseNumeric;
-  float *tempNumeric;
+
   unsigned int *globalTime;
+  unsigned int *computeInterval;
 } ComputeData;
 
 typedef struct {
-  unsigned int *temperatureRawBuf;
-  unsigned int *bloodPressRawBuf;
-  unsigned int *pulseRateRawBuf;
-  unsigned short *batteryState;
+  // Measured Raw data
+  char (*temperatureRawBuf)[16];
+  char (*bloodPressRawBuf)[40];
+  char (*pulseRateRawBuf)[24];
+  char (*batteryState)[3];
+
   // Warning flags
   unsigned char *bpOutOfRange;
   unsigned char *tempOutOfRange;
@@ -65,11 +51,8 @@ typedef struct {
   Bool *tempOff;
   Bool *pulseOff;
   Bool *batteryLow;
+
   // may be used for testing
-  float *tempNumeric;
-  unsigned int *sysNumeric;
-  unsigned int *diasNumeric;
-  unsigned int *pulseNumeric;
   unsigned int *globalTime;
   Bool *sysAlarm;
   Bool *alarmAcknowledge; // type TBD
