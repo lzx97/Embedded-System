@@ -1,17 +1,17 @@
 #include "DataStructs.h"
 #include "measureSC.h";
-#include "peripheralCom.h"
+#include "communicationSC.h"
 
-
+int globalCounter;
 
 // TCB MeasureTCB;
 // TCB ComputeTCB;
 
 void measurerSC(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
-    if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
-        return;
-    }
+    //if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
+        //return;
+    //}
 
     // create the command string to be sent to the PS
     char str[13];
