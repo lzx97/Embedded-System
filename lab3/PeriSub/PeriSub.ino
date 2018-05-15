@@ -21,9 +21,9 @@ Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
 Bool tempIncrease = FALSE;
 Bool bpIncrease = FALSE;
-Bool tempSelection = FALSE;
-Bool bpSelection = FALSE;
-Bool pulseSelection = FALSE;
+Bool tempSelection = TRUE;
+Bool bpSelection = TRUE;
+Bool pulseSelection = TRUE;
 unsigned int numOfMeasureCalls = 0;
 
 // ComputeData
@@ -52,8 +52,6 @@ MeasureDataPS mData;
 ComputeDataPS cData;
 WarningAlarmDataPS wData;
 StatusDataPS sData;
-
-char inBytes[11];
 
 
 void setup() {
@@ -111,73 +109,151 @@ void setup() {
 }
 
 void loop() {
-    if (Serial.available() > 0) {
-        //Format[mbtpmeasure]
-        Serial.readBytes(inBytes, 11);
-    }
-
-    if (inBytes[0] == 'M') {
-        if (inBytes[1] == 'B') {
-            *(mData.bpSelection) = TRUE;
-        }
-        else if (inBytes[1] == 'b') {
-            *(mData.bpSelection) = FALSE;
-        }
-
-        if (inBytes[2] == 'T') {
-            *(mData.tempSelection) = TRUE;
-        }
-        else if (inBytes[2] == 't') {
-            *(mData.tempSelection) = FALSE;
-        }
-
-        if (inBytes[3] == 'P') {
-            *(mData.pulseSelection) == TRUE;
-        }
-        else if (inBytes[3] == 'p') {
-            *(mData.pulseSelection) == FALSE;
-        }
-
-        for (int i = 4; i < 11; i++) {
-            Serial.print(inBytes[i]);
-        }
-        Serial.println();
-
-        void* mDataPtr = (void*)&mData;
-        measurePS(mDataPtr);
+    char inBytes[13];
+    if (Serial.available() > 12) {
+        //Format[mbtp<Measure>]
+        Serial.readBytes(inBytes, 13);
         
-    }
-    else if (inBytes[0] == 'C') {
-        for (int i = 4; i < 11; i++) {
-            Serial.print(inBytes[i]);
+        // Measure case
+        if (inBytes[0] == 'M') {
+            // Set measure selection fields
+            // Blood pressure
+            if (inBytes[1] == 'B') {
+                *(mData.bpSelection) = TRUE;
+            }
+            else if (inBytes[1] == 'b') {
+                *(mData.bpSelection) = FALSE;
+            }
+            // Temperature
+            if (inBytes[2] == 'T') {
+                *(mData.tempSelection) = TRUE;
+            }
+            else if (inBytes[2] == 't') {
+                *(mData.tempSelection) = FALSE;
+            }
+            // Pulse Rate
+            if (inBytes[3] == 'P') {
+                *(mData.pulseSelection) == TRUE;
+            }
+            else if (inBytes[3] == 'p') {
+                *(mData.pulseSelection) == FALSE;
+            }
+            // end of measure selection processing
+    
+            // call measure function
+            void* mDataPtr = (void*)&mData;
+            measurePS(mDataPtr);
+    
+            // Send raw data back
+            
+            Serial.print(*(mData.temperatureRaw));
+            Serial.flush();
+            if (*(mData.systolicPressRaw) < 100) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(mData.systolicPressRaw));
+            Serial.flush();
+            Serial.print(*(mData.diastolicPressRaw));
+            Serial.flush();
+            if (*(mData.pulseRateRaw) < 10) {
+                Serial.print(0);
+                Serial.flush();
+                Serial.print(0);
+                Serial.flush();
+            }
+            else if (*(mData.pulseRateRaw) < 100) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(mData.pulseRateRaw));
+            Serial.flush();
         }
-        Serial.println();
         
-        void* cDataPtr = (void*)&cData;
-        computePS(cDataPtr);
+        else if (inBytes[0] == 'C') {
+            /*
+            // Set measure selection fields
+            // Blood pressure
+            if (inBytes[1] == 'B') {
+                *(cData.bpSelection) = TRUE;
+            }
+            else if (inBytes[1] == 'b') {
+                *(cData.bpSelection) = FALSE;
+            }
+            // Temperature
+            if (inBytes[2] == 'T') {
+                *(cData.tempSelection) = TRUE;
+            }
+            else if (inBytes[2] == 't') {
+                *(cData.tempSelection) = FALSE;
+            }
+            // Pulse Rate
+            if (inBytes[3] == 'P') {
+                *(cData.pulseSelection) == TRUE;
+            }
+            else if (inBytes[3] == 'p') {
+                *(cData.pulseSelection) == FALSE;
+            }
+            // end of measure selection processing
+            */
+            
+            // call compute
+            void* cDataPtr = &cData;
+            computePS(cDataPtr);
 
-        Serial.println(*(cData.tempCorrected), 1);
-        Serial.println(*(cData.systolicPressCorrected));
-        Serial.println(*(cData.diastolicPressCorrected));
-        Serial.println(*(cData.pulseRateCorrected));
-    }
-    else if (inBytes[0] == 'S') {
-        for (int i = 4; i < 11; i++) {
-            Serial.print(inBytes[i]);
+            // print corrected data
+            Serial.print(*(cData.tempCorrected), 1); // 4 chars
+            Serial.flush();
+            if (*(cData.systolicPressCorrected) < 100) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(cData.systolicPressCorrected)); // 3 chars
+            Serial.flush();
+            if (*(cData.diastolicPressCorrected) < 100) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(cData.diastolicPressCorrected));
+            
+            if (*(cData.pulseRateCorrected) < 100) {
+                Serial.print(0);
+                Serial.flush();
+                Serial.print(0);
+                Serial.flush();
+            }
+            else if (*(cData.pulseRateCorrected) < 100) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(cData.pulseRateCorrected));
+            Serial.flush();
         }
-        Serial.println();
-
-        void* sDataPtr = (void*)&sData;
+        else if (inBytes[0] == 'S') {
+        void* sDataPtr = (void*) &sData;
         batteryStatusPS(sDataPtr);
 
-        Serial.println(*(sData.batteryState));
+        if (*(sData.batteryState) < 10) {
+            Serial.print(0);
+            Serial.flush();
+            Serial.print(0);
+            Serial.flush();
+        }
+        else if (*(sData.batteryState) < 100) {
+            Serial.print(0);
+            Serial.flush();
+        }
+        Serial.print(*(sData.batteryState));
+        Serial.flush();
     }
-
+    }
     
 
 
+
+    /*
     // Test code for each function
-    /*  void* mDataPtr = (void*)&mData;
+    void* mDataPtr = (void*)&mData;
         measurePS(mDataPtr);
         Serial.println(*(mData.temperatureRaw));
         Serial.println(*(mData.systolicPressRaw));

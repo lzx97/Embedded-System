@@ -120,10 +120,21 @@ typedef struct {
     unsigned int *globalTime;
     unsigned int *displayInterval;
     unsigned long *timeNow;
+    Bool *justPressed
 } TFTData;
 
 typedef struct {
-    unsigned short *batteryState;
+    Bool *tempSelection;
+    Bool *bpSelection;
+    Bool *pulseSelection;
+    float *tempCorrectedBuf;
+    unsigned int *bloodPressCorrectedBuf;
+    unsigned int *pulseRateCorrectedBuf;
+    unsigned int *globalTime;
+} ComData;
+
+typedef struct {
+    char (*batteryState)[3]; // pointer to char array of size 5
     unsigned int *globalTime;
     unsigned int *statusInterval;
 } StatusData;
