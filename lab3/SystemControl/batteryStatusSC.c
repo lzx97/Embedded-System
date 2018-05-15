@@ -1,22 +1,26 @@
 #include "DataStructs.h"
-#include "peripheralCom.h"
 #include "batteryStatusSC.h"
 
 int globalCounter;
 
 void batteryStatusSC(void *statusStruct) {
     // create string to be sent to the PS
+    StatusData *stData = (StatusData*) statusStruct;
+    if ((globalCounter % *(stData->statusInterval)) != 0){
+    return;
+    }
     char start = 2;
-    char stop = 3;
-    char str[25];
+    char stopp = 3;
+    char str[12];
     str[0] = 'B';
-    str[1] = 'A'; // To be changed after implemented TFTKeypad
-    str[2] = 'A'; // To be changed after implemented TFTKeypad
-    str[3] = 'A'; // To be changed after implemented TFTKeypad
+    str[1] = ' ';
+    str[2] = ' ';
+    str[3] = ' ';
     strcat(str, &start);
-    strcat(str, "Starting status\n");
-    strcat(str, &stop);
+    strcat(str, "Starting batterystatus\n");
+    strcat(str, &stopp);
 
     // transfer and receive 
-    //peripheralCom(char *data, void *dataStruct);
+    communicationSC(str, statusStruct);
+
 }
