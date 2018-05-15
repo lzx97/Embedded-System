@@ -153,7 +153,7 @@ typedef struct {
 } ComData;
 
 typedef struct {
-    unsigned short *batteryState;
+    char (*batteryState)[3]; // pointer to char array of size 5
     unsigned int *globalTime;
     unsigned int *statusInterval;
 } StatusData;
