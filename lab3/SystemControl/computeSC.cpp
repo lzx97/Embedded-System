@@ -1,7 +1,7 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
 
-int globalCounter;
+//int globalCounter;
 
 // SC part of the compute. Send data packet to call compute. 
 void computeSC(void *computeStruct) {

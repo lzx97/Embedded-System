@@ -28,7 +28,7 @@ typedef struct {
   // Corrected
   char (*tempCorrectedBuf)[32];
   char (*bloodPressCorrectedBuf)[48];
-  char (*prCorrectedBuf)[24];
+  char (*pulseRateCorrectedBuf)[24];
 
 
   unsigned int *globalTime;
@@ -76,7 +76,7 @@ typedef struct {
   // Data to be displayed
   char (*tempCorrectedBuf)[32];
   char (*bloodPressCorrectedBuf)[48];
-  char (*prCorrectedBuf)[24];
+  char (*pulseRateCorrectedBuf)[24];
   char (*batteryState)[3];
 
 

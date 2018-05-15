@@ -3,12 +3,12 @@ extern "C" {
 #endif
 #include "Bool.h"
 #include "DataStructs.h"
-//#include "warningSC.h"
+#include "warningSC.h"
 //#include "schedulerSC.h"
-#include "computeSC.h"
 #ifdef __cplusplus
 }
 #endif
+#include "computeSC.h"
 #include "TFTKeypad.h"
 #include "batteryStatusSC.h"
 #include "measureSC.h"
@@ -72,6 +72,8 @@ WarningAlarmData wData;
 StatusData stData;
 
 void setup(void) {
+    Serial1.begin(9600);
+    Serial.begin(9600);
     // Add variables to measure struct
     mData.globalTime = &globalTime;
     mData.measureInterval = &measureInterval;
@@ -95,14 +97,14 @@ void setup(void) {
 
     cData.tempCorrectedBuf = &tempCorrectedBuf;
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
-    cData.prCorrectedBuf = &pulseRateCorrectedBuf;
+    cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
 
 
     // Add variables to display struct
     dData.globalTime = &globalTime;
     dData.displayInterval = &displayInterval;
     dData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
-    dData.prCorrectedBuf = &pulseRateCorrectedBuf;
+    dData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     dData.tempCorrectedBuf = &tempCorrectedBuf;
     dData.bpHigh = &bpHigh;
     dData.bpLow = &bpLow;
@@ -186,6 +188,7 @@ void setup(void) {
     tail = &tftTCB;
 
     Serial.println("0. are we here?");
+    
 }
 
 void loop(void) {
@@ -198,6 +201,7 @@ void loop(void) {
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
         }
         (*(curr->taskPtr))(curr->taskDataPtr);
+        Serial.println("Task complete");
         oldcurr = curr;
         curr = curr->next;
         if (oldcurr == &ComputeTCB){

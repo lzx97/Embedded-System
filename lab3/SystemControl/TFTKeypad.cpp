@@ -428,9 +428,9 @@ void drawAnnunciate(void *tftStruct) {
     } else {
       tft.setTextColor(GREEN);
     }
-    tft.print((*(dData->pulseCorrectedBuf))[0]);
-    tft.print((*(dData->pulseCorrectedBuf))[1]);
-    tft.print((*(dData->pulseCorrectedBuf))[2]);
+    tft.print((*(dData->pulseRateCorrectedBuf))[0]);
+    tft.print((*(dData->pulseRateCorrectedBuf))[1]);
+    tft.print((*(dData->pulseRateCorrectedBuf))[2]);
     tft.setTextColor(WHITE);
     tft.println(" BPM ");
   } else {

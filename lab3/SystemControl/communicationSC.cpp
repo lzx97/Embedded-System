@@ -5,7 +5,7 @@
 void communicationSC(char *str, void *dataStruct) {
     // send process
     Serial1.print(str);
-    Serial1.fulsh(); // Wait print to complete
+    Serial1.flush(); // Wait print to complete
 
 
     // receive process 
@@ -34,7 +34,7 @@ void communicationSC(char *str, void *dataStruct) {
 
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
-        ComputeData* cData = (ComputrData*) dataStruct;
+        ComputeData* cData = (ComputeData*) dataStruct;
         (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
         (*(cData->tempCorrectedBuf))[1] = computeIn[1];
         (*(cData->tempCorrectedBuf))[2] = computeIn[2];
@@ -45,9 +45,9 @@ void communicationSC(char *str, void *dataStruct) {
         (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7]; //dias
         (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
         (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
-        (*(cData->prCorrectedBuf))[0] = computeIn[10]; // pulse 
-        (*(cData->prCorrectedBuf))[1] = computeIn[11];
-        (*(cData->prCorrectedBuf))[2] = computeIn[12];
+        (*(cData->pulseRateCorrectedBuf))[0] = computeIn[10]; // pulse 
+        (*(cData->pulseRateCorrectedBuf))[1] = computeIn[11];
+        (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
     }
     else if (str[0] == 'S') {
         char statusIn[5];

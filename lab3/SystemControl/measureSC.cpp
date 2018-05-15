@@ -2,7 +2,7 @@
 #include "measureSC.h";
 #include "communicationSC.h"
 
-int globalCounter;
+//int globalCounter;
 
 // TCB MeasureTCB;
 // TCB ComputeTCB;
