@@ -187,7 +187,8 @@ void setup(void) {
     head = &MeasureTCB;
     tail = &tftTCB;
 
-    Serial.println("0. are we here?");
+    setupDisplay(&tftTCB);
+    Serial.println("End of setup");
     
 }
 
@@ -197,8 +198,10 @@ void loop(void) {
     TCB* curr = head;
     TCB* oldcurr;
     while (curr != tail){
+        Serial.println("Task begun");
         if (curr == &MeasureTCB){
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
+            Serial.println("Task added");
         }
         (*(curr->taskPtr))(curr->taskDataPtr);
         Serial.println("Task complete");
@@ -206,7 +209,9 @@ void loop(void) {
         curr = curr->next;
         if (oldcurr == &ComputeTCB){
           deleteNode(&ComputeTCB,head,tail);
+          Serial.println("Task removed");
         }
+        
     }       
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
