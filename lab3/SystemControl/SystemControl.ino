@@ -232,6 +232,14 @@ void loop(void) {
     Serial.print(pulseRateCorrectedBuf[0]);
     Serial.print(pulseRateCorrectedBuf[1]);
     Serial.println(pulseRateCorrectedBuf[2]);
+
+    Serial.print("Temp on? ");
+    Serial.println(tempSelection);
+    Serial.print("Pulse on? ");
+    Serial.println(pulseSelection);
+    Serial.print("BP on? ");
+    Serial.println(bpSelection);
+    
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
