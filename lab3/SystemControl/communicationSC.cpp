@@ -49,6 +49,49 @@ void communicationSC(char *str, void *dataStruct) {
         (*(cData->pulseRateCorrectedBuf))[1] = computeIn[11];
         (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
     }
+        
+        /*
+        if ((*(cData->tempSelection)) == TRUE){
+            for (int i = 7; i > 0; i++){
+                (*(cData->tempCorrectedBuf))[4*i] = (*(cData->tempCorrectedBuf))[4*(i-1)]; // temp
+                (*(cData->tempCorrectedBuf))[4*i+1] = (*(cData->tempCorrectedBuf))[4*(i-1)+1]; 
+                (*(cData->tempCorrectedBuf))[4*i+2] = (*(cData->tempCorrectedBuf))[4*(i-1)+2]; 
+                (*(cData->tempCorrectedBuf))[4*i+3] = (*(cData->tempCorrectedBuf))[4*(i-1)+3]; 
+            }
+            (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
+            (*(cData->tempCorrectedBuf))[1] = computeIn[1]; 
+            (*(cData->tempCorrectedBuf))[2] = computeIn[2]; 
+            (*(cData->tempCorrectedBuf))[3] = computeIn[3]; 
+        }
+        
+        if ((*(cData->bpSelection)) == TRUE){
+            for (int i = 7; i > 0; i++){
+                (*(cData->bloodPressCorrectedBuf))[3*i] = (*(cData->bloodPressCorrectedBuf))[3*(i-1)]; // Sys
+                (*(cData->bloodPressCorrectedBuf))[3*i+1] = (*(cData->bloodPressCorrectedBuf))[3*(i-1)+1]; 
+                (*(cData->bloodPressCorrectedBuf))[3*i+2] = (*(cData->bloodPressCorrectedBuf))[3*(i-1)+2]; 
+                (*(cData->bloodPressCorrectedBuf))[24+3*i] = (*(cData->bloodPressCorrectedBuf))[24+3*(i-1)]; // Dias
+                (*(cData->bloodPressCorrectedBuf))[24+3*i+1] = (*(cData->bloodPressCorrectedBuf))[24+3*(i-1)+1]; 
+                (*(cData->bloodPressCorrectedBuf))[24+3*i+2] = (*(cData->bloodPressCorrectedBuf))[24+3*(i-1)+2]; 
+            }
+          (*(cData->bloodPressCorrectedBuf))[0] = computeIn[4]; // sys
+          (*(cData->bloodPressCorrectedBuf))[1] = computeIn[5];
+          (*(cData->bloodPressCorrectedBuf))[2] = computeIn[6];
+          (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7]; //dias
+          (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
+          (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
+          }
+        if ((*(cData->pulseSelection)) == TRUE){
+            for (int i = 7; i > 0; i++){
+                (*(cData->pulseRateCorrectedBuf))[3*i] = (*(cData->pulseRateCorrectedBuf))[3*(i-1)]; // pulse
+                (*(cData->pulseRateCorrectedBuf))[3*i+1] = (*(cData->pulseRateCorrectedBuf))[3*(i-1)+1]; 
+                (*(cData->pulseRateCorrectedBuf))[3*i+2] = (*(cData->pulseRateCorrectedBuf))[3*(i-1)+2]; 
+            }
+            (*(cData->pulseRateCorrectedBuf))[0] = computeIn[10]; // pulse 
+            (*(cData->pulseRateCorrectedBuf))[1] = computeIn[11];
+            (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
+        }
+        
+    }*/ 
     else if (str[0] == 'S') {
         char statusIn[5];
         while (Serial1.available() < 3) {

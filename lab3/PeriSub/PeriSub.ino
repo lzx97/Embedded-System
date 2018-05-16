@@ -216,7 +216,7 @@ void loop() {
             }
             Serial.print(*(cData.diastolicPressCorrected));
             
-            if (*(cData.pulseRateCorrected) < 100) {
+            if (*(cData.pulseRateCorrected) < 10) {
                 Serial.print(0);
                 Serial.flush();
                 Serial.print(0);

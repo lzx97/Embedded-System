@@ -1,22 +1,16 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
 
-//int globalCounter;
 
 // SC part of the compute. Send data packet to call compute. 
 void computeSC(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
 
-    // global counter checker
-    //if () {
-        //return;
-    //}
-
     char str[13];
     str[0] = 'C';
-    str[1] = 'A';
-    str[2] = 'A';
-    str[3] = 'A';
+    str[1] = (*(cData->bpSelection));
+    str[2] = (*(cData->tempSelection));
+    str[3] = (*(cData->pulseSelection));
     str[4] = '<';
     str[5] = 'C';
     str[6] = 'o';
