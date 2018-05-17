@@ -7,7 +7,6 @@ void communicationSC(char *str, void *dataStruct) {
     Serial1.write(str,13);
     Serial1.flush(); // Wait print to complete
 
-
     // receive process 
     if (str[0] == 'M') { 
         char measureIn[12];
@@ -26,22 +25,22 @@ void communicationSC(char *str, void *dataStruct) {
             }
             (*(mData->temperatureRawBuf))[0] = measureIn[0];
             (*(mData->temperatureRawBuf))[1] = measureIn[1];
+            
         }
         if ((*(mData->bpSelection)) == TRUE){
             for (int i = 7; i > 0; i--){ 
-                (*(mData->bloodPressRawBuf))[5*i] = (*(mData->bloodPressRawBuf))[5*(i-1)]; // temp
-                (*(mData->bloodPressRawBuf))[5*i+1] = (*(mData->bloodPressRawBuf))[5*(i-1)+1]; 
-                (*(mData->bloodPressRawBuf))[5*i+2] = (*(mData->bloodPressRawBuf))[5*(i-1)+2]; 
-                (*(mData->bloodPressRawBuf))[20+5*i] = (*(mData->bloodPressRawBuf))[20+5*(i-1)]; 
-                (*(mData->bloodPressRawBuf))[20+5*i+1] = (*(mData->bloodPressRawBuf))[20+5*(i-1)+1]; 
+                (*(mData->bloodPressRawBuf))[3*i] = (*(mData->bloodPressRawBuf))[3*(i-1)]; // temp
+                (*(mData->bloodPressRawBuf))[3*i+1] = (*(mData->bloodPressRawBuf))[3*(i-1)+1]; 
+                (*(mData->bloodPressRawBuf))[3*i+2] = (*(mData->bloodPressRawBuf))[3*(i-1)+2]; 
+                (*(mData->bloodPressRawBuf))[24+2*i] = (*(mData->bloodPressRawBuf))[24+2*(i-1)]; 
+                (*(mData->bloodPressRawBuf))[24+2*i+1] = (*(mData->bloodPressRawBuf))[24+2*(i-1)+1]; 
             }
         (*(mData->bloodPressRawBuf))[0] = measureIn[2];
         (*(mData->bloodPressRawBuf))[1] = measureIn[3];
         (*(mData->bloodPressRawBuf))[2] = measureIn[4];
-        (*(mData->bloodPressRawBuf))[20] = measureIn[5];
-        (*(mData->bloodPressRawBuf))[21] = measureIn[6];
+        (*(mData->bloodPressRawBuf))[24] = measureIn[5];
+        (*(mData->bloodPressRawBuf))[25] = measureIn[6];
         }
-        
         if ((*(mData->pulseSelection)) == TRUE){
             for (int i = 7; i > 0; i--){ 
                 (*(mData->bloodPressRawBuf))[3*i] = (*(mData->bloodPressRawBuf))[3*(i-1)]; // temp
@@ -53,35 +52,14 @@ void communicationSC(char *str, void *dataStruct) {
         (*(mData->pulseRateRawBuf))[2] = measureIn[9];
         }
     } else if (str[0] =='C') {
-        Serial.println("Inside communication - compute");
         char computeIn[15];
-        while ((Serial1.available() < 13)) {
-            Serial.println("waiting to receive compute data");
-            Serial.print("Number of compute bytes received: "); Serial.println(Serial1.available());        
+        while ((Serial1.available() < 13)) {     
             }
         
         Serial1.readBytes(computeIn, 13);
-        Serial.print("Returned values in compute: ");
-        Serial.println(computeIn);
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
         ComputeData* cData = (ComputeData*) dataStruct;
-        /*
-        (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
-        (*(cData->tempCorrectedBuf))[1] = computeIn[1];
-        (*(cData->tempCorrectedBuf))[2] = computeIn[2];
-        (*(cData->tempCorrectedBuf))[3] = computeIn[3];
-        (*(cData->bloodPressCorrectedBuf))[0] = computeIn[4]; // sys
-        (*(cData->bloodPressCorrectedBuf))[1] = computeIn[5];
-        (*(cData->bloodPressCorrectedBuf))[2] = computeIn[6];
-        (*(cData->bloodPressCorrectedBuf))[24] = computeIn[7]; //dias
-        (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
-        (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
-        (*(cData->pulseRateCorrectedBuf))[0] = computeIn[10]; // pulse 
-        (*(cData->pulseRateCorrectedBuf))[1] = computeIn[11];
-        (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
-      */
-        
         
         if ((*(cData->tempSelection)) == TRUE){
             for (int i = 7; i > 0; i--){
@@ -125,8 +103,7 @@ void communicationSC(char *str, void *dataStruct) {
        
     } else if (str[0] == 'S') {
         char statusIn[5];
-        while (Serial1.available() < 3) {
-            
+        while (Serial1.available() < 3) {   
         }
         
         Serial1.readBytes(statusIn, 3);

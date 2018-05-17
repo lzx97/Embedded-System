@@ -1,6 +1,7 @@
 #include "DataStructs.h"
 #include "measureSC.h";
 #include "communicationSC.h"
+#include "Bool.h"
 #include <Arduino.h>
 
 //int globalCounter;
@@ -10,9 +11,15 @@
 
 void measurerSC(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
+    Serial.print("This is globalTime: ");
+    Serial.println(*(mData->globalTime));
+    Serial.print("This is measureInterval: ");
+    Serial.println(*(mData->measureInterval));
+    
     if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
         return;
     }
+    Serial.println("TIME TO MEASURE");
 
     // create the command string to be sent to the PS
     char str[13];

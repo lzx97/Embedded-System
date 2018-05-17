@@ -25,23 +25,23 @@ TCB StatusTCB;
 unsigned int globalTime = 0; // Change this to millis
 Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
-Bool tempIncrease = TRUE;
-Bool bpIncrease = TRUE;
+Bool tempIncrease = FALSE;
+Bool bpIncrease = FALSE;
 unsigned int numOfMeasureCalls = 0;
 
-unsigned int measureInterval = 5;
-unsigned int computeInterval = 5;
-unsigned int displayInterval = 5;
-unsigned int warningInterval = 1;
-unsigned int statusInterval = 5;
+const unsigned int measureInterval = 5;
+const unsigned int computeInterval = 5;
+const unsigned int displayInterval = 5;
+const unsigned int warningInterval = 1;
+const unsigned int statusInterval = 5;
 
-char bloodPressCorrectedBuf[48];
-char tempCorrectedBuf[32];
-char pulseRateCorrectedBuf[24];
+char bloodPressCorrectedBuf[48] = {};
+char tempCorrectedBuf[32] = {};
+char pulseRateCorrectedBuf[24] = {};
 
-char bloodPressRawBuf[40];
-char temperatureRawBuf[16];
-char pulseRateRawBuf[24];
+char bloodPressRawBuf[40] = {};
+char temperatureRawBuf[16] = {};
+char pulseRateRawBuf[24] = {};
 
 
 char batteryState[3];
@@ -138,6 +138,9 @@ void setup(void) {
     wData.bloodPressRawBuf = &bloodPressRawBuf;
     wData.pulseRateRawBuf = &pulseRateRawBuf;
     wData.temperatureRawBuf = &temperatureRawBuf;
+    wData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
+    wData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
+    wData.tempCorrectedBuf = &tempCorrectedBuf;
     /*
     wData.bpOutOfRange = &bpOutOfRange;
     wData.pulseOutOfRange = &pulseOutOfRange;
@@ -190,29 +193,26 @@ void setup(void) {
     tail = &tftTCB;
 
     setupDisplay(&tftTCB);
-    Serial.println("End of setup");
+    //Serial.println("End of setup");
     
 }
 
 void loop(void) {
-    Serial.println("Start of loop: are we here?");
+    //Serial.println("Start of loop: are we here?");
     timeNow = millis();
     TCB* curr = head;
     TCB* oldcurr;
     while (curr != tail){
-        Serial.println("Task begun");delay(50);
-        if (curr == &MeasureTCB && globalTime % measureInterval == 0){
-            insertNode(&ComputeTCB, &MeasureTCB, head, tail);
-            Serial.println("Task ADDED: @ measure"); delay(50);
-        }
+        //Serial.println("Task begun");delay(50);
+
         (*(curr->taskPtr))(curr->taskDataPtr);
-        Serial.print("New raw temp data: "); Serial.print(temperatureRawBuf[0]); Serial.print(temperatureRawBuf[1]);  Serial.println("New raw pulse data: " ); Serial.print(pulseRateRawBuf[0]); Serial.print(pulseRateRawBuf[1]); Serial.print(pulseRateRawBuf[2]);
-        Serial.println("Task complete"); delay(50);
+        if ((curr == &MeasureTCB) && (globalTime % measureInterval == 0)){
+            insertNode(&ComputeTCB, &MeasureTCB, head, tail);
+        }
         oldcurr = curr;
         curr = curr->next;
-        if (oldcurr == &ComputeTCB && globalTime % measureInterval == 0){
+        if ((oldcurr == &ComputeTCB) && (globalTime % measureInterval == 0)){
           deleteNode(&ComputeTCB,head,tail);
-          Serial.println("Task REMOVED: after compute"); delay(50);
         }
         
     }       
@@ -221,7 +221,14 @@ void loop(void) {
     (*(curr->taskPtr))(curr->taskDataPtr);
     // Delay one second
     globalTime++;
-    //Serial.println("One cycle complete");
+
+
+    Serial.print("Latest measured temp value: ");
+    Serial.print(temperatureRawBuf[0]);
+    Serial.print(temperatureRawBuf[1]);
+    Serial.print(temperatureRawBuf[2]);
+    Serial.println(temperatureRawBuf[3]);
+    
     
     Serial.print("Current corrected temp value: ");
     Serial.print(tempCorrectedBuf[0]);
