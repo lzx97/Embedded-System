@@ -198,7 +198,7 @@ void loop() {
             */
             
             // call compute
-            void* cDataPtr = &cData;
+            void* cDataPtr = (void*)&cData;
             computePS(cDataPtr);
 
             // print corrected data

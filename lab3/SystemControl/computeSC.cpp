@@ -1,5 +1,6 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
+#include <Arduino.h>
 
 
 // SC part of the compute. Send data packet to call compute. 
@@ -8,9 +9,9 @@ void computeSC(void *computeStruct) {
 
     char str[13];
     str[0] = 'C';
-    str[1] = (*(cData->bpSelection));
-    str[2] = (*(cData->tempSelection));
-    str[3] = (*(cData->pulseSelection));
+    str[1] = ((*(cData->bpSelection)) ? 'B' : 'b');
+    str[2] = ((*(cData->tempSelection)) ? 'T' : 't');
+    str[3] = ((*(cData->pulseSelection)) ? 'P' : 'p');
     str[4] = '<';
     str[5] = 'C';
     str[6] = 'o';

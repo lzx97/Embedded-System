@@ -1,6 +1,7 @@
 #include "DataStructs.h"
 #include "measureSC.h";
 #include "communicationSC.h"
+#include <Arduino.h>
 
 //int globalCounter;
 
@@ -29,6 +30,5 @@ void measurerSC(void *measureStruct) {
     str[11] = 'e';
     str[12] = '>';
 
-    
     communicationSC(str, measureStruct);
 }

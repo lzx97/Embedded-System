@@ -206,6 +206,7 @@ void loop(void) {
             Serial.println("Task ADDED: @ measure"); delay(50);
         }
         (*(curr->taskPtr))(curr->taskDataPtr);
+        Serial.print("New raw temp data: "); Serial.print(temperatureRawBuf[0]); Serial.print(temperatureRawBuf[1]);  Serial.println("New raw pulse data: " ); Serial.print(pulseRateRawBuf[0]); Serial.print(pulseRateRawBuf[1]); Serial.print(pulseRateRawBuf[2]);
         Serial.println("Task complete"); delay(50);
         oldcurr = curr;
         curr = curr->next;
@@ -232,14 +233,6 @@ void loop(void) {
     Serial.print(pulseRateCorrectedBuf[0]);
     Serial.print(pulseRateCorrectedBuf[1]);
     Serial.println(pulseRateCorrectedBuf[2]);
-
-    Serial.print("Temp on? ");
-    Serial.println(tempSelection);
-    Serial.print("Pulse on? ");
-    Serial.println(pulseSelection);
-    Serial.print("BP on? ");
-    Serial.println(bpSelection);
-    
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
