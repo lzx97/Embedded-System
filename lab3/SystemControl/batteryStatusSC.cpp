@@ -1,12 +1,11 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
 
-int globalCounter;
 
 void batteryStatusSC(void *statusStruct) {
     // create string to be sent to the PS
     StatusData *sData = (StatusData*) statusStruct;
-    if ((globalCounter % *(sData->statusInterval)) != 0){
+    if ((*(sData->globalTime)) % (*(sData->statusInterval)) != 0){
         return;
     }
     char str[13];

@@ -42,7 +42,9 @@ typedef struct {
   char (*bloodPressRawBuf)[40];
   char (*pulseRateRawBuf)[24];
   char (*batteryState)[3];
-
+  char (*tempCorrectedBuf)[32];
+  char (*bloodPressCorrectedBuf)[48];
+  char (*pulseRateCorrectedBuf)[24];
   // Warning flags
   unsigned char *bpOutOfRange;
   unsigned char *tempOutOfRange;
