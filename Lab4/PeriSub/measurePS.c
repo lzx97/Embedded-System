@@ -11,7 +11,7 @@ void measurePS(void *measureStruct) {
     
     // measure temperature
     if (*(mData->tempSelection)){ 
-        measureTemp(mData->temperatureRaw, mData->tempIncrease, mData->numOfMeasureCalls);
+        measureTemp(mData->temperatureRaw);
     }
 
     // measure blood pressures
@@ -29,7 +29,16 @@ void measurePS(void *measureStruct) {
     *(mData->numOfMeasureCalls) += 1;
 }
 
-void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls) {
+void measureTemp(unsigned int *temperature) {
+    unsigned int val = analogRead(TEMP_IN);
+    float volt = val / 1024.0;
+    unsigned int tempRaw = (unsigned int) (15 + 35 * volt);
+    
+    *temperature = tempRaw;
+
+    
+    
+    /*
     if (*tempIncrease && *temperature > 50){
         *tempIncrease = FALSE;
     }
@@ -49,6 +58,56 @@ void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *nu
         } else {
             *temperature += 1;
         }
+    }
+    */
+}
+
+void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete
+                        unsigned int *bloodPressure) {
+    Bool IncRead;
+    Bool DecRead;
+    while (!(*(sysMeasureComplete)) || !(*(diaMeasureComplete))) {
+        do {
+            IncRead = digitalRead(INC);
+            DecRead = digitalRead(DEC);
+        }
+        while (IncRead == DecRead);
+
+        if (IncRead) {
+            *(bloodPressure) *= 1.1;
+        }
+        else if (DecRead) {
+            *(bloodPressure) *= 0.9;
+        }
+
+        if (!(*(sysMeasureComplete))) {
+            if (*(bloodPressure) >= 110 && *(bloodPressure) <= 150) {
+                *sysPres = *bloodPressure;
+                *sysMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+        else if (!(*(diaMeasureComplete))) {
+            if (*(bloodPressure) <= 80 && *(bloodPressure) >=50 ) {
+                *diaPres  = *bloodPressure;
+                *diaMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            } 
+        }
+
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(100);
+        digitalWrite(LED_BUILTIN, LOW);
+        delay(100);
+
     }
 }
 
@@ -95,4 +154,15 @@ void measurePulseRate(unsigned int *pulseRate){
 
     *pulseRate = pulse;
     
+}
+
+void measureRespiration(unsigned int *respirationRaw) {
+    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
+    double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
+    int freq = (int) 1 / (2 * halfPeriodInS);
+
+    // map freq (range [10, 200]) to resp (range [1, 14])
+    int resp = (int)(((freq - 10.0)/(200 - 10.0)) * (14.33 - 1.0) + 1.0);
+
+    *respirationRaw = resp;
 }
