@@ -56,7 +56,7 @@ StatusDataPS sData;
 
 void setup() {
     Serial.begin(9600);
-    pinMode(PIN_IN, INPUT);
+    pinMode(PULSE_IN, INPUT);
 
     // MeasureData fields
     mData.temperatureRaw = &temperatureRaw;

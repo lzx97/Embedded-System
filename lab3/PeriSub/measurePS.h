@@ -3,7 +3,9 @@
 
 #include "Bool.h"
 
-#define PIN_IN 7
+#define PULSE_IN 7
+#define SYS_IN 2
+#define DIA_IN 4
 
 void measurePS(void *measureStruct);
 void measureTemp(unsigned int *temperature, Bool *tempIncrease, unsigned int *numOfMeasureCalls);
