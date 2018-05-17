@@ -201,7 +201,7 @@ void loop(void) {
     TCB* oldcurr;
     while (curr != tail){
         Serial.println("Task begun");delay(50);
-        if (curr == &MeasureTCB){
+        if (curr == &MeasureTCB && globalTime % measureInterval == 0){
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
             Serial.println("Task ADDED: @ measure"); delay(50);
         }
@@ -210,7 +210,7 @@ void loop(void) {
         Serial.println("Task complete"); delay(50);
         oldcurr = curr;
         curr = curr->next;
-        if (oldcurr == &ComputeTCB){
+        if (oldcurr == &ComputeTCB && globalTime % measureInterval == 0){
           deleteNode(&ComputeTCB,head,tail);
           Serial.println("Task REMOVED: after compute"); delay(50);
         }

@@ -21,6 +21,7 @@ void computeSC(void *computeStruct) {
     str[10] = 't';
     str[11] = 'e';
     str[12] = '>';
+    Serial.println(str);
 
     // transfer and receive 
     communicationSC(str, computeStruct);
