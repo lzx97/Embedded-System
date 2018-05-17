@@ -29,8 +29,9 @@ typedef struct {
   char (*tempCorrectedBuf)[32];
   char (*bloodPressCorrectedBuf)[48];
   char (*pulseRateCorrectedBuf)[24];
-
-
+  Bool *tempSelection;
+  Bool *bpSelection;
+  Bool *pulseSelection;
   unsigned int *globalTime;
   unsigned int *computeInterval;
 } ComputeData;

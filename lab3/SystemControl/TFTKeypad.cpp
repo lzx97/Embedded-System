@@ -229,6 +229,9 @@ unsigned long startTime;
 
 void displayLoop(void *tftStruct) {
   TFTData *dData = (TFTData*) tftStruct;
+  if(*(dData->globalTime) % *(dData->displayInterval) == 0){ 
+      *(dData->justPressed) = TRUE;
+  }
   while (millis() < (*(dData->timeNow))  + 1000) {
     TFTData *dData = (TFTData*) tftStruct;
 

@@ -89,30 +89,7 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    /*while (digitalRead(PIN_IN) != HIGH) {
-        
-    }
-    while (digitalRead(PIN_IN) != LOW) {
-        // idle until PIN_IN == LOW
-    }
-    unsigned long startTime = micros();
-    while (digitalRead(PIN_IN) != HIGH) {
-        // idle till HIGH
-        //Serial.println(digitalRead(PIN_IN));
-    }
-    while (digitalRead(PIN_IN) != LOW) {
-        // idle till another low
-        //Serial.println(digitalRead(PIN_IN));
-    }
-    unsigned long stopTime = micros();
-    unsigned long period = stopTime - startTime;
-    double periodInS = (1.0 * period) / 1000000;
-    int pulse = (int) 1 / periodInS;
-
-    *pulseRate = pulse + 1;*/
-    
-    
-    unsigned long halfPeriod = pulseIn(PULSE_IN, LOW, 2000000UL);
+    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
     double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 

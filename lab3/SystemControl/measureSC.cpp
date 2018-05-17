@@ -1,6 +1,7 @@
 #include "DataStructs.h"
 #include "measureSC.h";
 #include "communicationSC.h"
+#include <Arduino.h>
 
 //int globalCounter;
 
@@ -9,9 +10,9 @@
 
 void measurerSC(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
-    //if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
-        //return;
-    //}
+    if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
+        return;
+    }
 
     // create the command string to be sent to the PS
     char str[13];
@@ -29,6 +30,5 @@ void measurerSC(void *measureStruct) {
     str[11] = 'e';
     str[12] = '>';
 
-    
     communicationSC(str, measureStruct);
 }

@@ -1,22 +1,17 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
+#include <Arduino.h>
 
-//int globalCounter;
 
 // SC part of the compute. Send data packet to call compute. 
 void computeSC(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
 
-    // global counter checker
-    //if () {
-        //return;
-    //}
-
     char str[13];
     str[0] = 'C';
-    str[1] = 'A';
-    str[2] = 'A';
-    str[3] = 'A';
+    str[1] = ((*(cData->bpSelection)) ? 'B' : 'b');
+    str[2] = ((*(cData->tempSelection)) ? 'T' : 't');
+    str[3] = ((*(cData->pulseSelection)) ? 'P' : 'p');
     str[4] = '<';
     str[5] = 'C';
     str[6] = 'o';
@@ -26,6 +21,7 @@ void computeSC(void *computeStruct) {
     str[10] = 't';
     str[11] = 'e';
     str[12] = '>';
+    Serial.println(str);
 
     // transfer and receive 
     communicationSC(str, computeStruct);

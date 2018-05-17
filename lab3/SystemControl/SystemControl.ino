@@ -94,7 +94,9 @@ void setup(void) {
     // Add variables to compute struct
     cData.globalTime = &globalTime;
     cData.computeInterval = &computeInterval;
-
+    cData.tempSelection = &tempSelection;
+    cData.bpSelection = &bpSelection;
+    cData.pulseSelection = &pulseSelection;
     cData.tempCorrectedBuf = &tempCorrectedBuf;
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
@@ -187,7 +189,8 @@ void setup(void) {
     head = &MeasureTCB;
     tail = &tftTCB;
 
-    Serial.println("0. are we here?");
+    setupDisplay(&tftTCB);
+    Serial.println("End of setup");
     
 }
 
@@ -197,22 +200,39 @@ void loop(void) {
     TCB* curr = head;
     TCB* oldcurr;
     while (curr != tail){
-        if (curr == &MeasureTCB){
+        Serial.println("Task begun");delay(50);
+        if (curr == &MeasureTCB && globalTime % measureInterval == 0){
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
+            Serial.println("Task ADDED: @ measure"); delay(50);
         }
         (*(curr->taskPtr))(curr->taskDataPtr);
-        Serial.println("Task complete");
+        Serial.print("New raw temp data: "); Serial.print(temperatureRawBuf[0]); Serial.print(temperatureRawBuf[1]);  Serial.println("New raw pulse data: " ); Serial.print(pulseRateRawBuf[0]); Serial.print(pulseRateRawBuf[1]); Serial.print(pulseRateRawBuf[2]);
+        Serial.println("Task complete"); delay(50);
         oldcurr = curr;
         curr = curr->next;
-        if (oldcurr == &ComputeTCB){
+        if (oldcurr == &ComputeTCB && globalTime % measureInterval == 0){
           deleteNode(&ComputeTCB,head,tail);
+          Serial.println("Task REMOVED: after compute"); delay(50);
         }
+        
     }       
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
     (*(curr->taskPtr))(curr->taskDataPtr);
     // Delay one second
     globalTime++;
+    //Serial.println("One cycle complete");
+    
+    Serial.print("Current corrected temp value: ");
+    Serial.print(tempCorrectedBuf[0]);
+    Serial.print(tempCorrectedBuf[1]);
+    Serial.print(tempCorrectedBuf[2]);
+    Serial.println(tempCorrectedBuf[3]);
+    
+    Serial.print("Current corrected pulse value: ");
+    Serial.print(pulseRateCorrectedBuf[0]);
+    Serial.print(pulseRateCorrectedBuf[1]);
+    Serial.println(pulseRateCorrectedBuf[2]);
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
