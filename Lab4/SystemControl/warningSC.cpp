@@ -15,8 +15,9 @@ void annunciate(void *warningAlarmStruct) {
     int sys = 100*((*(wData->bloodPressCorrectedBuf))[0] - '0')+ 10*((*(wData->bloodPressCorrectedBuf))[1] - '0') + ((*(wData->bloodPressCorrectedBuf))[2]) - '0';
     int dias = 100*((*(wData->bloodPressCorrectedBuf))[24] - '0')+ 10*((*(wData->bloodPressCorrectedBuf))[25] - '0') + ((*(wData->bloodPressCorrectedBuf))[26]) - '0';
     int pulse = 100*((*(wData->pulseRateCorrectedBuf))[0] - '0') + 10*((*(wData->pulseRateCorrectedBuf))[1] - '0') + ((*(wData->pulseRateCorrectedBuf))[2])- '0';
-    float temp = 100*((*(wData->tempCorrectedBuf))[0] - '0') + 10*((*(wData->tempCorrectedBuf))[1] - '0') + (*(wData->tempCorrectedBuf)[2]) - '0' +  ((*(wData->tempCorrectedBuf)[3])- '0')/10;
-    int resp = 10*((*(wData->respirationRateCorrectedBuf))[1] - '0') + ((*(wData->respirationRateCorrectedBuf))[2])- '0';
+
+    float temp = 10*((*(wData->tempCorrectedBuf))[0] - '0') + ((*(wData->tempCorrectedBuf))[1] - '0') +  0.1 * ((*(wData->tempCorrectedBuf)[3])- '0');
+    int resp = 10*((*(wData->respirationRateCorrectedBuf))[0] - '0') + ((*(wData->respirationRateCorrectedBuf))[1]- '0');
     Serial.print("Batterystate: "); Serial.println(batterystate);
     Serial.print("Sys: "); Serial.println(sys);
     Serial.print("Dias: "); Serial.println(dias);
@@ -60,7 +61,6 @@ void annunciate(void *warningAlarmStruct) {
         *(wData->sysWarning) = FALSE;
     }
       
-    
     // dias
     if (dias > 84 || dias < 66){      // WARNING RANGE
         *(wData->diasWarning) = TRUE;

@@ -138,8 +138,8 @@ void communicationSC(char *str, void *dataStruct) {
                 (*(cData->respirationRateCorrectedBuf))[2*i] = (*(cData->respirationRateCorrectedBuf))[2*(i-1)]; // temp
                 (*(cData->respirationRateCorrectedBuf))[2*i+1] = (*(cData->respirationRateCorrectedBuf))[2*(i-1)+1]; 
             }
-        (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13];
-        (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
+          (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13];
+          (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
         }
     } else if (str[0] == 'S') {
         char statusIn[5];

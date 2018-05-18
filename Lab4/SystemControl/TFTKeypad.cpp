@@ -376,16 +376,19 @@ void displayLoop(void *tftStruct) {
           *(dData->sysAlarmAcknowledge) = TRUE;
           *(dData->sysAlarmTimer) = 0;
           *(dData->sysAlarm) = FALSE;
+          *(dData->sysWarning) = TRUE;
         }
         if (*(dData->tempAlarm)) {
           *(dData->tempAlarmAcknowledge) = TRUE;
           *(dData->tempAlarmTimer) = 0;
           *(dData->tempAlarm) = FALSE;
+          *(dData->tempWarning) = TRUE;
         }
         if (*(dData->pulseAlarm)) {
           *(dData->pulseAlarmAcknowledge) = TRUE;
           *(dData->pulseAlarmTimer) = 0;
           *(dData->pulseAlarm) = FALSE;
+          *(dData->pulseWarning) = TRUE;
         }
         if (*(dData->respAlarm)) {
           *(dData->respAlarmAcknowledge) = TRUE;
@@ -526,7 +529,7 @@ void flashAlarms(void *tftStruct){
     tft.setCursor(0, 150);
     Serial.println("We are in Flash");
     // Flash systolic
-    if(*(dData->sysWarning) && *(dData->bpSelection)){
+    /*if(*(dData->sysWarning) && *(dData->bpSelection)){
         if(millis() - *(dData->lastSysFlash) > 250){
           *(dData->lastSysFlash) = millis();
           if (*(dData->sysFlash)){
@@ -536,20 +539,15 @@ void flashAlarms(void *tftStruct){
               *(dData->sysFlash) = TRUE;
               tft.setTextColor(ORANGE);
           }
-        } else {
-          tft.setTextColor(ORANGE);
         }
         tft.print((*(dData->bloodPressCorrectedBuf))[0]);
         tft.print((*(dData->bloodPressCorrectedBuf))[1]);
         tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
         tft.setTextColor(WHITE);    tft.print("/");
-    } else {
-          tft.setCursor(30, 150);
-
-    }
-
+}
+*/
     // Flash diastolic
-    if(*(dData->diasWarning) && *(dData->bpSelection)){
+    /*if(*(dData->diasWarning) && *(dData->bpSelection)){
         if(millis() - *(dData->lastDiasFlash) > 250){
           *(dData->lastDiasFlash) = millis();
           if (*(dData->diasFlash)){
@@ -569,12 +567,57 @@ void flashAlarms(void *tftStruct){
         tft.setTextColor(WHITE);    tft.println(" mm Hg");
     } else {
       tft.print("\n");
-    }
+    }*/
+    /************************************************************
+     * Flashing shit
+     ***********************************************************/
+        if(*(dData->sysWarning) && *(dData->bpSelection)||
+           *(dData->diasWarning) && *(dData->bpSelection)||
+           *(dData->tempWarning) && *(dData->tempSelection)||
+           *(dData->pulseWarning) && *(dData->pulseSelection)){
+          float timeNow = millis();
+          
+         //Flash systolic 
+         if(*(dData->sysWarning) && *(dData->bpSelection)){
+         if(timeNow - *(dData->lastSysFlash) > 250){
+          *(dData->lastSysFlash) = millis();
+          if (*(dData->sysFlash)){
+              *(dData->sysFlash) = FALSE;
+              tft.setTextColor(BLACK); // Black text on black background = good camouflage
+          } else {
+              *(dData->sysFlash) = TRUE;
+              tft.setTextColor(ORANGE);
+          }
+        }
+        tft.setTextSize(2);
+        tft.setCursor(0, 150);
+        tft.print((*(dData->bloodPressCorrectedBuf))[0]);
+        tft.print((*(dData->bloodPressCorrectedBuf))[1]);
+        tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
+        tft.setTextColor(WHITE);    tft.print("/");
+         }
+        //flash diastolic
+         if(*(dData->diasWarning) && *(dData->bpSelection)){ 
+        if(timeNow - *(dData->lastDiasFlash) > 250){
+          *(dData->lastDiasFlash) = millis();
+          if (*(dData->diasFlash)){
+              *(dData->diasFlash) = FALSE;
+              tft.setTextColor(BLACK);
+          } else {
+              *(dData->diasFlash) = TRUE;
+               tft.setTextColor(ORANGE);
+          }
+        }
+        tft.print((*(dData->bloodPressCorrectedBuf))[24]);
+        tft.print((*(dData->bloodPressCorrectedBuf))[25]);
+        tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
+        tft.setTextColor(WHITE);    tft.print("/");
+        tft.setTextColor(WHITE);    tft.println(" mm Hg");
 
-    tft.setCursor(0, 160);
-    // Flash temp
+         }
+        //Flash Temp 
         if(*(dData->tempWarning) && *(dData->tempSelection)){
-        if(millis() - *(dData->lastTempFlash) > 500){
+        if((timeNow - *(dData->lastTempFlash) > 500)  ){
           *(dData->lastTempFlash) = millis();
           if (*(dData->tempFlash)){
               *(dData->tempFlash) = FALSE;
@@ -583,23 +626,22 @@ void flashAlarms(void *tftStruct){
               *(dData->tempFlash) = TRUE;
                tft.setTextColor(ORANGE);
           }
-        } else {
-          tft.setTextColor(ORANGE);
-        }
+
+          if(*dData->tempAlarm){
+              (*dData->tempWarning)=FALSE;
+              }
+        tft.setTextSize(2);
+        tft.setCursor(0, 166);
         tft.print((*(dData->tempCorrectedBuf))[0]);
         tft.print((*(dData->tempCorrectedBuf))[1]);
         tft.print((*(dData->tempCorrectedBuf))[2]);
         tft.print((*(dData->tempCorrectedBuf))[3]);
-        tft.setTextColor(WHITE);
-        tft.print("C ");
-    }else {
-      tft.setCursor(0, 210);
-
     }
-
-    // Flash Pulse
-    if(*(dData->pulseWarning) && *(dData->pulseSelection)){
-        if(millis() - *(dData->lastPulseFlash) > 1000){
+        }
+        //Flash Pulse
+        if(*(dData->pulseWarning) && *(dData->pulseSelection)){
+          
+        if(timeNow - *(dData->lastPulseFlash) > 1000){
             *(dData->lastPulseFlash) = millis();
             if (*(dData->pulseFlash)){
                 *(dData->pulseFlash) = FALSE;
@@ -607,24 +649,24 @@ void flashAlarms(void *tftStruct){
                 tft.setTextColor(BLACK);
             } else {
                 *(dData->pulseFlash) = TRUE;
-                 tft.setTextColor(ORANGE);
-            }
-        } else {
-            //tft.setTextColor(ORANGE);
+                 tft.setTextColor(ORANGE); 
+            } 
+
+            if(*dData->pulseAlarm){
+              (*dData->pulseWarning)=FALSE;
+              }
+        
         }
-        /*
+        tft.setTextSize(2);
+        tft.setCursor(72, 166);
         tft.print((*(dData->pulseRateCorrectedBuf))[0]);
         tft.print((*(dData->pulseRateCorrectedBuf))[1]);
         tft.print((*(dData->pulseRateCorrectedBuf))[2]);
-        */
-        tft.setTextSize(2);
-        tft.setCursor(72, 166);
-        tft.println("107");
-        //tft.println(" BPM ");
-    }
-      
-}
+        }
 
+    }
+    
+}
 void drawDisplay(void *tftStruct) {
   TFTData *dData = (TFTData*) tftStruct;
   *(dData->justPressed) = FALSE;

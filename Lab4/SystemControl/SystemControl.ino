@@ -144,10 +144,11 @@ void setup(void) {
     cData.tempSelection = &tempSelection;
     cData.bpSelection = &bpSelection;
     cData.pulseSelection = &pulseSelection;
+    cData.respSelection = &respSelection;
     cData.tempCorrectedBuf = &tempCorrectedBuf;
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
-    
+    cData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
 
 
     // Add variables to display struct
