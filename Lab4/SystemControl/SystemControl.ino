@@ -35,16 +35,16 @@ const unsigned int displayInterval = 5;
 const unsigned int warningInterval = 1;
 const unsigned int statusInterval = 5;
 
-char bloodPressCorrectedBuf[48] = {};
-char tempCorrectedBuf[32] = {};
-char pulseRateCorrectedBuf[24] = {};
-char respirationRateCorrectedBuf[16]={}; // Maybe change the size of this here and everywhere else
+char bloodPressCorrectedBuf[48] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char tempCorrectedBuf[32] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char pulseRateCorrectedBuf[24] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char respirationRateCorrectedBuf[16]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'}; // Maybe change the size of this here and everywhere else
 
 
-char bloodPressRawBuf[40] = {};
-char temperatureRawBuf[16] = {};
-char pulseRateRawBuf[24] = {};
-char respirationRateRawBuf[16] = {};
+char bloodPressRawBuf[40] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char temperatureRawBuf[16] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char pulseRateRawBuf[24] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+char respirationRateRawBuf[16] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
 
 char batteryState[3];
 
