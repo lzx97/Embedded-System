@@ -16,13 +16,17 @@ void measurePS(void *measureStruct) {
 
     // measure blood pressures
     if (*(mData->bpSelection)){
-        measureSysPres(mData->systolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
-        measureDiaPres(mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete, mData->numOfMeasureCalls);
+        measureBloodPres(mData->systolicPressRaw, mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete,
+                mData->bloodPressure);
     }
 
     // measure pulse rate
     if (*(mData->pulseSelection)){
         measurePulseRate(mData->pulseRateRaw);
+    }
+
+    if (*(mData->respSelection)) {
+        measureRespiration(mData->respirationRaw);
     }
 
     // increment simulation counter
@@ -62,14 +66,14 @@ void measureTemp(unsigned int *temperature) {
     */
 }
 
-void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete
+void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete,
                         unsigned int *bloodPressure) {
     Bool IncRead;
     Bool DecRead;
     while (!(*(sysMeasureComplete)) || !(*(diaMeasureComplete))) {
         do {
-            IncRead = digitalRead(INC);
-            DecRead = digitalRead(DEC);
+            IncRead = digitalRead(BP_INC);
+            DecRead = digitalRead(BP_DEC);
         }
         while (IncRead == DecRead);
 
@@ -79,6 +83,8 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
         else if (DecRead) {
             *(bloodPressure) *= 0.9;
         }
+
+        Serial.println(*bloodPressure);
 
         if (!(*(sysMeasureComplete))) {
             if (*(bloodPressure) >= 110 && *(bloodPressure) <= 150) {
@@ -102,13 +108,12 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 delay(100);
             } 
         }
-
-        digitalWrite(LED_BUILTIN, HIGH);
-        delay(100);
-        digitalWrite(LED_BUILTIN, LOW);
-        delay(100);
+        delay(300);
+        
 
     }
+    *sysMeasureComplete = FALSE;
+    *diaMeasureComplete = FALSE;
 }
 
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls) {
@@ -148,7 +153,7 @@ void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMe
 }
 
 void measurePulseRate(unsigned int *pulseRate){
-    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
+    unsigned long halfPeriod = pulseIn(PULSE_IN, LOW, 2000000UL);
     double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int pulse = (int) 1 / (2 * halfPeriodInS);
 
@@ -157,7 +162,7 @@ void measurePulseRate(unsigned int *pulseRate){
 }
 
 void measureRespiration(unsigned int *respirationRaw) {
-    unsigned long halfPeriod = pulseIn(PIN_IN, LOW, 2000000UL);
+    unsigned long halfPeriod = pulseIn(PULSE_IN, LOW, 2000000UL);
     double halfPeriodInS = (1.0 * halfPeriod) / 1000000;
     int freq = (int) 1 / (2 * halfPeriodInS);
 

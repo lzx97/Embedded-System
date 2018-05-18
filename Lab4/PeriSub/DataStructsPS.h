@@ -18,6 +18,7 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    Bool *respSelection;
 	// For simulation
     unsigned int *bloodPressure;
     unsigned int *numOfMeasureCalls;
@@ -40,6 +41,7 @@ typedef struct {
     Bool *tempSelection;
     Bool *bpSelection;
     Bool *pulseSelection;
+    Bool *respSelection;
 } ComputeDataPS;
 
 typedef struct {
