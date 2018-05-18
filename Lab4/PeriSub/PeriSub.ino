@@ -2,13 +2,14 @@
 extern "C" {
 #endif
 #include "Bool.h"
-#include "measurePS.h"
+//#include "measurePS.h"
 #include "DataStructsPS.h"
 #include "computePS.h"
 #include "batteryStatusPS.h"
 #ifdef __cplusplus
 }
 #endif
+#include "measurePS.h"
 
 
 /* Shared global variables for storing data */
@@ -16,33 +17,25 @@ extern "C" {
 unsigned int temperatureRaw = 75;
 unsigned int systolicPressRaw = 80;
 unsigned int diastolicPressRaw = 80;
-unsigned int pulseRateRaw = 50;
+unsigned int pulseRateRaw = 0;
+unsigned int respirationRaw = 0;
 Bool sysMeasureComplete = FALSE;
 Bool diaMeasureComplete = FALSE;
-Bool tempIncrease = FALSE;
 Bool bpIncrease = FALSE;
+
 Bool tempSelection = TRUE;
-Bool bpSelection = TRUE;
+Bool bpSelection = FALSE;
 Bool pulseSelection = TRUE;
+Bool respSelection = TRUE;
 unsigned int numOfMeasureCalls = 0;
+unsigned int bloodPressure = 80;
 
 // ComputeData
 float tempCorrected = 0;
 unsigned int systolicPressCorrected = 0;
 unsigned int diastolicPressCorrected = 0;
 unsigned int pulseRateCorrected = 0;
-
-// WarningAlarm
-Bool bpOutOfRange = FALSE;
-Bool tempOutOfRange = FALSE;
-Bool pulseOutOfRange = FALSE;
-Bool bpHigh = FALSE;
-Bool bpLow = FALSE;
-Bool bpOff = FALSE;
-Bool tempOff = FALSE;
-Bool pulseOff = FALSE;
-Bool batteryLow = FALSE;
-unsigned int bpAlarmCount;
+unsigned int respirationCorrected = 0;
 
 //Battery Status
 unsigned short batteryState = 200;
@@ -50,65 +43,55 @@ unsigned short batteryState = 200;
 
 MeasureDataPS mData;
 ComputeDataPS cData;
-WarningAlarmDataPS wData;
 StatusDataPS sData;
 
 
 void setup() {
     Serial.begin(9600);
     pinMode(PULSE_IN, INPUT);
+    pinMode(BP_INC, INPUT);
+    pinMode(BP_DEC, INPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 
     // MeasureData fields
     mData.temperatureRaw = &temperatureRaw;
     mData.systolicPressRaw = &systolicPressRaw;
     mData.diastolicPressRaw = &diastolicPressRaw;
     mData.pulseRateRaw = &pulseRateRaw;
+    mData.respirationRaw = &respirationRaw;
     mData.sysMeasureComplete = &sysMeasureComplete;
     mData.diaMeasureComplete = &diaMeasureComplete;
-    mData.tempIncrease = &tempIncrease;
     mData.bpIncrease = &bpIncrease;
     mData.tempSelection = &tempSelection;
     mData.bpSelection = &bpSelection;
     mData.pulseSelection = &pulseSelection;
+    mData.respSelection = &respSelection;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
+    mData.bloodPressure = &bloodPressure;
+
 
     // ComputeData fields.
     cData.temperatureRaw = &temperatureRaw;
     cData.systolicPressRaw = &systolicPressRaw;
     cData.diastolicPressRaw = &diastolicPressRaw;
     cData.pulseRateRaw = &pulseRateRaw;
+    cData.respirationRaw = &respirationRaw;
     cData.tempCorrected = &tempCorrected;
     cData.systolicPressCorrected = &systolicPressCorrected;
     cData.diastolicPressCorrected = &diastolicPressCorrected;
     cData.pulseRateCorrected = &pulseRateCorrected;
+    cData.respirationCorrected = &respirationCorrected;
     cData.tempSelection = &tempSelection;
     cData.bpSelection = &bpSelection;
     cData.pulseSelection = &pulseSelection;
-
-    // WarningAlarmData fields
-    wData.temperatureRaw = &temperatureRaw;
-    wData.systolicPressRaw = &systolicPressRaw;
-    wData.diastolicPressRaw = &diastolicPressRaw;
-    wData.pulseRateRaw = &pulseRateRaw;
-    wData.batteryState = &batteryState;
-    wData.batteryState = &batteryState;
-    wData.bpOutOfRange = &bpOutOfRange;
-    wData.tempOutOfRange = &tempOutOfRange;
-    wData.pulseOutOfRange = &pulseOutOfRange;
-    wData.bpHigh = &bpHigh;
-    wData.tempOff = &tempOff;
-    wData.pulseOff = &pulseOff;
-    wData.batteryLow = &batteryLow;
-    wData.bpAlarmCount = &bpAlarmCount;
-    wData.tempSelection = &tempSelection;
-    wData.bpSelection = &bpSelection;
-    wData.pulseSelection = &pulseSelection;
+    cData.respSelection = &respSelection;
 
     // StatusData fields
     sData.batteryState = &batteryState;
 }
 
 void loop() {
+    
     char inBytes[13];
     if (Serial.available() > 12) {
         //Format[mbtp<Measure>]
@@ -133,10 +116,17 @@ void loop() {
             }
             // Pulse Rate
             if (inBytes[3] == 'P') {
-                *(mData.pulseSelection) == TRUE;
+                *(mData.pulseSelection) = TRUE;
             }
             else if (inBytes[3] == 'p') {
-                *(mData.pulseSelection) == FALSE;
+                *(mData.pulseSelection) = FALSE;
+            }
+            // Respiration 
+            if (inBytes[4] == 'R') {
+                *(mData.respSelection) = TRUE;
+            }
+            else if (inBytes[4] == 'r') {
+                *(mData.respSelection) = FALSE;
             }
             // end of measure selection processing
     
@@ -168,35 +158,15 @@ void loop() {
             }
             Serial.print(*(mData.pulseRateRaw));
             Serial.flush();
+            if (*(mData.respirationRaw) < 10) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(mData.respirationRaw));
+            Serial.flush();
         }
         
         else if (inBytes[0] == 'C') {
-            /*
-            // Set measure selection fields
-            // Blood pressure
-            if (inBytes[1] == 'B') {
-                *(cData.bpSelection) = TRUE;
-            }
-            else if (inBytes[1] == 'b') {
-                *(cData.bpSelection) = FALSE;
-            }
-            // Temperature
-            if (inBytes[2] == 'T') {
-                *(cData.tempSelection) = TRUE;
-            }
-            else if (inBytes[2] == 't') {
-                *(cData.tempSelection) = FALSE;
-            }
-            // Pulse Rate
-            if (inBytes[3] == 'P') {
-                *(cData.pulseSelection) == TRUE;
-            }
-            else if (inBytes[3] == 'p') {
-                *(cData.pulseSelection) == FALSE;
-            }
-            // end of measure selection processing
-            */
-            
             // call compute
             void* cDataPtr = (void*)&cData;
             computePS(cDataPtr);
@@ -228,7 +198,10 @@ void loop() {
             }
             Serial.print(*(cData.pulseRateCorrected));
             Serial.flush();
+            Serial.print(*(cData.respirationCorrected));
+            Serial.flush();
         }
+        // Battery status case
         else if (inBytes[0] == 'S') {
         void* sDataPtr = (void*) &sData;
         batteryStatusPS(sDataPtr);
@@ -245,8 +218,10 @@ void loop() {
         }
         Serial.print(*(sData.batteryState));
         Serial.flush();
+        }
     }
-    }
+    
+    
     
 
 
@@ -254,25 +229,28 @@ void loop() {
     /*
     // Test code for each function
     void* mDataPtr = (void*)&mData;
-        measurePS(mDataPtr);
-        Serial.println(*(mData.temperatureRaw));
-        Serial.println(*(mData.systolicPressRaw));
-        Serial.println(*(mData.diastolicPressRaw));
-        Serial.println(*(mData.pulseRateRaw));
-        Serial.println("Finished measure");
-        //Serial.println();
-        void* cDataPtr = (void*)&cData;
-        computePS(cDataPtr);
-        Serial.println(*(cData.tempCorrected));
-        Serial.println(*(cData.systolicPressCorrected));
-        Serial.println(*(cData.diastolicPressCorrected));
-        Serial.println(*(cData.pulseRateCorrected));
-        Serial.println("Finished compute");
-        void* sDataPtr = (void*)&sData;
-        batteryStatusPS(sDataPtr);
-        Serial.println(*(sData.batteryState));
-        Serial.println();
-        delay(1000);*/
+    measurePS(mDataPtr);
+    Serial.println(*(mData.temperatureRaw));
+    Serial.println(*(mData.systolicPressRaw));
+    Serial.println(*(mData.diastolicPressRaw));
+    Serial.println(*(mData.pulseRateRaw));
+    Serial.println(*(mData.respirationRaw));
+    Serial.println("Finished measure");
+    //Serial.println();
+    void* cDataPtr = (void*)&cData;
+    computePS(cDataPtr);
+    Serial.println(*(cData.tempCorrected));
+    Serial.println(*(cData.systolicPressCorrected));
+    Serial.println(*(cData.diastolicPressCorrected));
+    Serial.println(*(cData.pulseRateCorrected));
+    Serial.println(*(cData.respirationCorrected));
+    Serial.println("Finished compute");
+    void* sDataPtr = (void*)&sData;
+    batteryStatusPS(sDataPtr);
+    Serial.println(*(sData.batteryState));
+    Serial.println();
+    delay(5000);*/
+    
 }
 
 
