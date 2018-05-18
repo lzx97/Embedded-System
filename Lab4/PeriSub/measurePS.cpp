@@ -36,6 +36,7 @@ void measurePS(void *measureStruct) {
 void measureTemp(unsigned int *temperature) {
     int val = analogRead(TEMP_IN);
     int temp = map(val, 0, 1023, 15, 50);
+
     *temperature = temp;
 
     
