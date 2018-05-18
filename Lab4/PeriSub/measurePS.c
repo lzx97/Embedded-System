@@ -34,11 +34,9 @@ void measurePS(void *measureStruct) {
 }
 
 void measureTemp(unsigned int *temperature) {
-    unsigned int val = analogRead(TEMP_IN);
-    float volt = val / 1024.0;
-    unsigned int tempRaw = (unsigned int) (15 + 35 * volt);
-    
-    *temperature = tempRaw;
+    int val = analogRead(TEMP_IN);
+    int temp = map(val, 0, 1023, 15, 50);
+    *temprature = temp;
 
     
     

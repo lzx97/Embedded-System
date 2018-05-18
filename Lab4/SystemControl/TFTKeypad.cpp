@@ -389,7 +389,7 @@ void displayLoop(void *tftStruct) {
       }
     }
    if (mode == 2){ // We only want to mess with the display if we are in annunciate mode
-   flashAlarms(tftStruct);
+   //flashAlarms(tftStruct);
    }
   }
 }
