@@ -11,8 +11,8 @@
 
 void measurerSC(void *measureStruct) {
     MeasureData *mData = (MeasureData*) measureStruct;
-    Serial.println(*(mData->globalTime));
-    Serial.println(*(mData->measureInterval));
+    //Serial.println(*(mData->globalTime));
+    //Serial.println(*(mData->measureInterval));
     
     if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
         return;
@@ -34,5 +34,6 @@ void measurerSC(void *measureStruct) {
     str[11] = 'e';
     str[12] = '>';
 
+    Serial.println(str);
     communicationSC(str, measureStruct);
 }

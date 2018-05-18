@@ -67,7 +67,7 @@ Bool sysAlarm = FALSE;
 Bool respOff = FALSE;
 */
 Bool tempSelection = TRUE;
-Bool bpSelection = TRUE;
+Bool bpSelection = FALSE;
 Bool pulseSelection = TRUE;
 Bool respSelection = TRUE;
 
@@ -250,14 +250,16 @@ void setup(void) {
 void loop(void) {
     //Serial.println("Start of loop: are we here?");
     timeNow = millis();
-    TCB* curr = head;
+    /*TCB* curr = head;
     TCB* oldcurr;
     while (curr != tail){
         //Serial.println("Task begun");delay(50);
-
+         Serial.println("Inside task loop");
         (*(curr->taskPtr))(curr->taskDataPtr);
         if ((curr == &MeasureTCB) && (globalTime % measureInterval == 0)){
+            Serial.println("adding compute");
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
+            Serial.println("compute added");
         }
         oldcurr = curr;
         curr = curr->next;
@@ -268,7 +270,13 @@ void loop(void) {
     }       
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
-    (*(curr->taskPtr))(curr->taskDataPtr);
+    (*(curr->taskPtr))(curr->taskDataPtr);*/
+
+    measurerSC(&mData);
+    computeSC(&cData);
+    batteryStatusSC(&stData);
+    annunciate(&wData);
+    displayLoop(&dData);
     // Delay one second
     globalTime++;
 
@@ -290,6 +298,8 @@ void loop(void) {
     Serial.print(pulseRateCorrectedBuf[0]);
     Serial.print(pulseRateCorrectedBuf[1]);
     Serial.println(pulseRateCorrectedBuf[2]);
+    Serial.println();
+    Serial.println();
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {

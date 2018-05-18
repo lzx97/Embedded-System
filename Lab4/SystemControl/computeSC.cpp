@@ -6,6 +6,7 @@
 // SC part of the compute. Send data packet to call compute. 
 void computeSC(void *computeStruct) {
     ComputeData *cData = (ComputeData*) computeStruct;
+    Serial.println("inside compute");
 
     char str[13];
     str[0] = 'C';

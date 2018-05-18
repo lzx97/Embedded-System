@@ -9,11 +9,13 @@ void communicationSC(char *str, void *dataStruct) {
 
     // receive process 
     if (str[0] == 'M') { 
-        char measureIn[12];
-        while ((Serial1.available() < 10)) {
+        char measureIn[14];
+        while ((Serial1.available() < 12)) {
 
         }
-        Serial1.readBytes(measureIn, 10);
+        Serial1.readBytes(measureIn, 12);
+
+        Serial.println(measureIn);
         
         // Store values in the measureIn to measureStruct
         MeasureData* mData = (MeasureData*) dataStruct;
@@ -68,11 +70,15 @@ void communicationSC(char *str, void *dataStruct) {
         }
         
     } else if (str[0] =='C') {
-        char computeIn[15];
-        while ((Serial1.available() < 13)) {     
+        char computeIn[17];
+        
+        while ((Serial1.available() < 15)) {     
             }
         
-        Serial1.readBytes(computeIn, 13);
+        Serial1.readBytes(computeIn, 15);
+        Serial.println("Data received");
+        Serial.println(computeIn);
+        Serial.println("Data printed");
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
         ComputeData* cData = (ComputeData*) dataStruct;
@@ -121,8 +127,8 @@ void communicationSC(char *str, void *dataStruct) {
                 (*(cData->respirationRateCorrectedBuf))[2*i] = (*(cData->respirationRateCorrectedBuf))[2*(i-1)]; // temp
                 (*(cData->respirationRateCorrectedBuf))[2*i+1] = (*(cData->respirationRateCorrectedBuf))[2*(i-1)+1]; 
             }
-        (*(cData->respirationRateCorrectedBuf))[0] = computeIn[10];
-        (*(cData->respirationRateCorrectedBuf))[1] = computeIn[11];
+        (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13];
+        (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
         }
     } else if (str[0] == 'S') {
         char statusIn[5];
@@ -130,6 +136,8 @@ void communicationSC(char *str, void *dataStruct) {
         }
         
         Serial1.readBytes(statusIn, 3);
+
+        Serial.println(statusIn);
 
         StatusData* sData = (StatusData*) dataStruct;
         (*(sData->batteryState))[0] = statusIn[0];
