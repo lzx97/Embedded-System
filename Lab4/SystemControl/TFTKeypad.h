@@ -8,5 +8,6 @@ void drawDefaultMode(void *tftStruct);
 void drawMenu(void *tftStruct);
 void drawAnnunciate(void *tftStruct);
 void flashAlarms(void *tftStruct);
+void drawDisplay(void *tftStruct);
 
 #endif

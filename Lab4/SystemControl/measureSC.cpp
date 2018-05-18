@@ -36,4 +36,5 @@ void measurerSC(void *measureStruct) {
 
     Serial.println(str);
     communicationSC(str, measureStruct);
+    Serial.println("Done with communication - measure");
 }
