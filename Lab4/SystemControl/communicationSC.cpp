@@ -20,8 +20,8 @@ void communicationSC(char *str, void *dataStruct) {
         MeasureData* mData = (MeasureData*) dataStruct;
         // Add statements checking if a variable is being tracked currently
         float oldpulse = (float) 100*((*(mData->pulseRateRawBuf))[0] - '0') + 10*((*(mData->pulseRateRawBuf))[1] - '0') + ((*(mData->pulseRateRawBuf))[2])- '0';
-        float oldtemp = (float) 10*((*(mData->temperatureRawBuf))[0] - '0') + (*(mData->temperatureRawBuf)[1]) - '0';
-        float oldresp = (float) 10*((*(mData->respirationRateRawBuf))[1] - '0') + ((*(mData->respirationRateRawBuf))[2])- '0';
+        float oldtemp = (float) 10*((*(mData->temperatureRawBuf))[0] - '0') + ((*(mData->temperatureRawBuf))[1]) - '0';
+        float oldresp = (float) 10*((*(mData->respirationRateRawBuf))[0] - '0') + ((*(mData->respirationRateRawBuf))[1])- '0';
 
         float pulse = (float) 100*(measureIn[7] - '0') + 10*(measureIn[8] - '0') + (measureIn[9])- '0';
         float temp = (float) 10*(measureIn[0] - '0') + (measureIn[1] - '0');
@@ -85,15 +85,24 @@ void communicationSC(char *str, void *dataStruct) {
         Serial.println("communication compute");
         while ((Serial1.available() < 15)) {
         }
-
         Serial1.readBytes(computeIn, 15);
+        ComputeData* cData = (ComputeData*) dataStruct;
+        
+        float oldpulse = (float) 100*((*(cData->pulseRateCorrectedBuf))[0] - '0') + 10*((*(cData->pulseRateCorrectedBuf))[1] - '0') + ((*(cData->pulseRateCorrectedBuf))[2])- '0';
+        float oldtemp = (float) 10*((*(cData->tempCorrectedBuf))[0] - '0') + ((*(cData->tempCorrectedBuf))[1]) - '0' + ((*(cData->tempCorrectedBuf))[3] - '0')/10;
+        float oldresp = (float) 10*((*(cData->respirationRateCorrectedBuf))[0] - '0') + ((*(cData->respirationRateCorrectedBuf))[1])- '0';
+
+        float pulse = (float) 100*(computeIn[10] - '0') + 10*(computeIn[11] - '0') + (computeIn[12])- '0';
+        float temp = (float) 10*(computeIn[0] - '0') + (computeIn[1] - '0') + (computeIn[3] - '0')/10;
+        float resp = (float) 10*(computeIn[13] - '0') + (computeIn[14])- '0';
+
+        
         Serial.println("Data received");
         Serial.println(computeIn);
         Serial.println("Data printed");
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
         
-        ComputeData* cData = (ComputeData*) dataStruct;
         /*
         (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
         (*(cData->tempCorrectedBuf))[1] = computeIn[1];
@@ -111,7 +120,7 @@ void communicationSC(char *str, void *dataStruct) {
         (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13]; 
         (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
         */
-          if ((*(cData->tempSelection)) == TRUE) {
+          if ((*(cData->tempSelection)) == TRUE && (temp > 1.15*oldtemp || temp < 0.85*oldtemp)){
             for (int i = 7; i > 0; i--) {
                 (*(cData->tempCorrectedBuf))[4 * i] = (*(cData->tempCorrectedBuf))[4 * (i - 1)]; // temp
                 (*(cData->tempCorrectedBuf))[4 * i + 1] = (*(cData->tempCorrectedBuf))[4 * (i - 1) + 1];
@@ -140,7 +149,7 @@ void communicationSC(char *str, void *dataStruct) {
             (*(cData->bloodPressCorrectedBuf))[25] = computeIn[8];
             (*(cData->bloodPressCorrectedBuf))[26] = computeIn[9];
             }
-            if ((*(cData->pulseSelection)) == TRUE) {
+            if ((*(cData->pulseSelection)) == TRUE && (pulse> 1.15*oldpulse || pulse < 0.85*oldpulse)){
             for (int i = 7; i > 0; i--) {
                 (*(cData->pulseRateCorrectedBuf))[3 * i] = (*(cData->pulseRateCorrectedBuf))[3 * (i - 1)]; // pulse
                 (*(cData->pulseRateCorrectedBuf))[3 * i + 1] = (*(cData->pulseRateCorrectedBuf))[3 * (i - 1) + 1];
@@ -150,7 +159,7 @@ void communicationSC(char *str, void *dataStruct) {
             (*(cData->pulseRateCorrectedBuf))[1] = computeIn[11];
             (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
             }
-            if ((*(cData->respSelection)) == TRUE) {
+            if ((*(cData->respSelection)) == TRUE&& (resp > 1.15*oldresp || resp < 0.85*oldresp)){
             for (int i = 7; i > 0; i--) {
                 (*(cData->respirationRateCorrectedBuf))[2 * i] = (*(cData->respirationRateCorrectedBuf))[2 * (i - 1)]; // temp
                 (*(cData->respirationRateCorrectedBuf))[2 * i + 1] = (*(cData->respirationRateCorrectedBuf))[2 * (i - 1) + 1];
