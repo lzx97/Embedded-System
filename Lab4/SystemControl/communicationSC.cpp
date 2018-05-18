@@ -11,10 +11,9 @@ void communicationSC(char *str, void *dataStruct) {
     if (str[0] == 'M') { 
         char measureIn[14];
         while ((Serial1.available() < 12)) {
-
         }
         Serial1.readBytes(measureIn, 12);
-
+        Serial.print("This is measureIn: ");
         Serial.println(measureIn);
         
         // Store values in the measureIn to measureStruct
@@ -27,15 +26,24 @@ void communicationSC(char *str, void *dataStruct) {
         float pulse = (float) 100*(measureIn[7] - '0') + 10*(measureIn[8] - '0') + (measureIn[9])- '0';
         float temp = (float) 10*(measureIn[0] - '0') + (measureIn[1] - '0');
         float resp = (float) 10*(measureIn[10] - '0') + (measureIn[11])- '0';
+        Serial.print("This is oldpulse: ");        Serial.println(oldpulse);
+        Serial.print("This is pulse: ");        Serial.println(pulse);
+        Serial.print("This is oldtemp: ");        Serial.println(oldtemp);
+        Serial.print("This is temp: ");        Serial.println(temp);
+        Serial.print("This is oldresp: ");        Serial.println(oldresp);
+        Serial.print("This is resp: ");        Serial.println(resp);
         if ((*(mData->tempSelection)) == TRUE && (temp > 1.15*oldtemp || temp < 0.85*oldtemp)){
+          //Serial.println("Do we enter the if gate?");
+          //Serial.print("tempraw before: "); Serial.println(*(mData->temperatureRawBuf));
             for (int i = 7; i > 0; i--){ 
                 (*(mData->temperatureRawBuf))[2*i] = (*(mData->temperatureRawBuf))[2*(i-1)]; // temp
                 (*(mData->temperatureRawBuf))[2*i+1] = (*(mData->temperatureRawBuf))[2*(i-1)+1]; 
             }
             (*(mData->temperatureRawBuf))[0] = measureIn[0];
             (*(mData->temperatureRawBuf))[1] = measureIn[1];
-            
+            //Serial.print("tempraw after: "); Serial.println(*(mData->temperatureRawBuf));
         }
+        Serial.print("bpRaw before: "); Serial.println(*(mData->bloodPressRawBuf));
         if ((*(mData->bpSelection)) == TRUE){
             for (int i = 7; i > 0; i--){ 
                 (*(mData->bloodPressRawBuf))[3*i] = (*(mData->bloodPressRawBuf))[3*(i-1)]; // temp
@@ -50,6 +58,7 @@ void communicationSC(char *str, void *dataStruct) {
         (*(mData->bloodPressRawBuf))[24] = measureIn[5];
         (*(mData->bloodPressRawBuf))[25] = measureIn[6];
         }
+        Serial.print("bpRaw after: "); Serial.println(*(mData->bloodPressRawBuf));
         if ((*(mData->pulseSelection)) == TRUE && (pulse> 1.15*oldpulse || pulse < 0.85*oldpulse)){
             for (int i = 7; i > 0; i--){ 
                 (*(mData->pulseRateRawBuf))[3*i] = (*(mData->pulseRateRawBuf))[3*(i-1)]; // temp
@@ -60,6 +69,7 @@ void communicationSC(char *str, void *dataStruct) {
         (*(mData->pulseRateRawBuf))[1] = measureIn[8];
         (*(mData->pulseRateRawBuf))[2] = measureIn[9];
         }
+        Serial.print("PulseRaw after: "); Serial.println(*(mData->pulseRateRawBuf));        
         if ((*(mData->respSelection)) == TRUE && (resp > 1.15*oldresp || resp < 0.85*oldresp)){
             for (int i = 7; i > 0; i--){ 
                 (*(mData->respirationRateRawBuf))[2*i] = (*(mData->respirationRateRawBuf))[2*(i-1)]; // temp
@@ -68,10 +78,11 @@ void communicationSC(char *str, void *dataStruct) {
         (*(mData->respirationRateRawBuf))[0] = measureIn[10];
         (*(mData->respirationRateRawBuf))[1] = measureIn[11];
         }
+        Serial.print("respRaw after: "); Serial.println(*(mData->respirationRateRawBuf));
         
     } else if (str[0] =='C') {
         char computeIn[17];
-        
+        Serial.println("communication compute");
         while ((Serial1.available() < 15)) {     
             }
         

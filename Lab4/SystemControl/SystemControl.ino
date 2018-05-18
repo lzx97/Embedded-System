@@ -35,18 +35,36 @@ const unsigned int displayInterval = 5;
 const unsigned int warningInterval = 1;
 const unsigned int statusInterval = 5;
 
-char bloodPressCorrectedBuf[48] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char tempCorrectedBuf[32] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char pulseRateCorrectedBuf[24] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char respirationRateCorrectedBuf[16]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'}; // Maybe change the size of this here and everywhere else
+char bloodPressCorrectedBuf[48] = {'0','0','0','0','0','0','0','0',
+                                   '0','0','0','0','0','0','0','0',
+                                   '0','0','0','0','0','0','0','0',
+                                   '0','0','0','0','0','0','0','0',
+                                   '0','0','0','0','0','0','0','0',
+                                   '0','0','0','0','0','0','0','0'};
+char tempCorrectedBuf[32] = {'0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0'};
+char pulseRateCorrectedBuf[24] = {'0','0','0','0','0','0','0','0',
+                                  '0','0','0','0','0','0','0','0',
+                                  '0','0','0','0','0','0','0','0'};
+char respirationRateCorrectedBuf[16]={'0','0','0','0','0','0','0','0',
+                                      '0','0','0','0','0','0','0','0'}; // Maybe change the size of this here and everywhere else
 
+char bloodPressRawBuf[40] = {'0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0',
+                             '0','0','0','0','0','0','0','0'};
+char temperatureRawBuf[16] = {'0','0','0','0','0','0','0','0',
+                              '0','0','0','0','0','0','0','0'};
+char pulseRateRawBuf[24] =    {'0','0','0','0','0','0','0','0',
+                               '0','0','0','0','0','0','0','0',
+                               '0','0','0','0','0','0','0','0'};
+char respirationRateRawBuf[16] = {'0','0','0','0','0','0','0','0',
+                                  '0','0','0','0','0','0','0','0'};
 
-char bloodPressRawBuf[40] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char temperatureRawBuf[16] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char pulseRateRawBuf[24] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-char respirationRateRawBuf[16] = {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
-
-char batteryState[3];
+char batteryState[3] = {'0','0','0'};
 
 Bool pulseWarning = FALSE;
 Bool pulseAlarm = FALSE;
@@ -75,6 +93,7 @@ Bool sysAlarmAcknowledge = TRUE;
 Bool tempAlarmAcknowledge = TRUE;
 Bool pulseAlarmAcknowledge = TRUE;
 Bool respAlarmAcknowledge = TRUE;
+
 unsigned int sysAlarmTimer = 0;
 unsigned int tempAlarmTimer = 0;
 unsigned int pulseAlarmTimer = 0;
@@ -109,6 +128,7 @@ void setup(void) {
     mData.bloodPressRawBuf = &bloodPressRawBuf;
     mData.pulseRateRawBuf = &pulseRateRawBuf;
     mData.temperatureRawBuf = &temperatureRawBuf;
+    mData.respirationRateRawBuf = &respirationRateRawBuf;
     
     // measure selections
     mData.tempSelection = &tempSelection;
@@ -126,6 +146,7 @@ void setup(void) {
     cData.tempCorrectedBuf = &tempCorrectedBuf;
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
+    
 
 
     // Add variables to display struct
@@ -134,6 +155,7 @@ void setup(void) {
     dData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     dData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     dData.tempCorrectedBuf = &tempCorrectedBuf;
+    dData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
     
     dData.pulseWarning = &pulseWarning;
     dData.pulseAlarm = &pulseAlarm;
@@ -182,9 +204,12 @@ void setup(void) {
     wData.bloodPressRawBuf = &bloodPressRawBuf;
     wData.pulseRateRawBuf = &pulseRateRawBuf;
     wData.temperatureRawBuf = &temperatureRawBuf;
+    mData.respirationRateRawBuf = &respirationRateRawBuf;
+
     wData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     wData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     wData.tempCorrectedBuf = &tempCorrectedBuf;
+    wData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
     wData.batteryState = &batteryState;
     wData.pulseWarning = &pulseWarning;
     wData.pulseAlarm = &pulseAlarm;
@@ -195,7 +220,6 @@ void setup(void) {
     wData.sysAlarm = &sysAlarm;
     wData.respAlarm = &respAlarm;
     wData.batteryLow = &batteryLow;
-
 
     wData.sysAlarmAcknowledge = &sysAlarmAcknowledge;
     wData.sysAlarmTimer = &sysAlarmTimer;
@@ -243,7 +267,7 @@ void setup(void) {
     tail = &tftTCB;
 
     setupDisplay(&tftTCB);
-    //Serial.println("End of setup");
+    Serial.println("End of setup"); delay(100);
     
 }
 
@@ -271,21 +295,25 @@ void loop(void) {
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
     (*(curr->taskPtr))(curr->taskDataPtr);*/
-
+    Serial.println("Starting loop"); delay(50);
     measurerSC(&mData);
+    Serial.println("Done with measure"); delay(50);
     computeSC(&cData);
+    Serial.println("Done with compute"); delay(50);
     batteryStatusSC(&stData);
+    Serial.println("Done with status"); delay(50);
     annunciate(&wData);
+    Serial.println("Done with warning"); delay(50);
     displayLoop(&dData);
+    Serial.println("Done with display"); delay(50);
+    Serial.println("Done with loop"); delay(50);
     // Delay one second
     globalTime++;
 
 
     Serial.print("Latest measured temp value: ");
     Serial.print(temperatureRawBuf[0]);
-    Serial.print(temperatureRawBuf[1]);
-    Serial.print(temperatureRawBuf[2]);
-    Serial.println(temperatureRawBuf[3]);
+    Serial.println(temperatureRawBuf[1]);
     
     
     Serial.print("Current corrected temp value: ");

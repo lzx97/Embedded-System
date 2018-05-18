@@ -338,16 +338,21 @@ void displayLoop(void *tftStruct) {
         if (menubuttons[b].justPressed()) {
           menubuttons[b].press(false);
           menubuttons[b].drawButton(true);  // draw invert!
-          if (b == 0 || b == 3) {
+          Serial.print("This is the value of b: "); Serial.println(b);
+          if (b == 0 || b == 4) {
             bpon = ((bpon == 0) ? 1 : 0);
-          } else if (b == 1 || b == 4) {
+          } else if (b == 1 || b == 5) {
             tempon = ((tempon == 0) ? 1 : 0);
-          } else if (b == 2 || b == 5) {
+          } else if (b == 2 || b == 6) {
             pulseon = ((pulseon == 0) ? 1 : 0);
+          } else if (b == 3 ||b == 7) {
+            respon = ((respon == 0) ? 1 : 0);
           }
           *(dData->bpSelection) = bpon;
           *(dData->tempSelection) = tempon;
           *(dData->pulseSelection) = pulseon;
+          *(dData->respSelection) = respon;
+
           mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
           delay(100);
         }
@@ -386,11 +391,11 @@ void displayLoop(void *tftStruct) {
           *(dData->respAlarm) = FALSE;
         }
         delay(100);
+        flashAlarms(tftStruct);
+
       }
     }
-   if (mode == 2){ // We only want to mess with the display if we are in annunciate mode
-   flashAlarms(tftStruct);
-   }
+   
   }
 }
 
@@ -600,10 +605,6 @@ void flashAlarms(void *tftStruct){
         tft.setTextColor(WHITE);
         tft.print("C ");
     }
-    
- 
-  
-  
+      
 }
-
 
