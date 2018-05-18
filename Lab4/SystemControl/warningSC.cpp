@@ -1,6 +1,7 @@
 #include "DataStructs.h"
 #include "warningSC.h"
 #include "Bool.h"
+#include <Arduino.h>
 
 // ADD METHOD TO CHECK RESP OFF
 
@@ -16,7 +17,12 @@ void annunciate(void *warningAlarmStruct) {
     int pulse = 100*((*(wData->pulseRateCorrectedBuf))[0] - '0') + 10*((*(wData->pulseRateCorrectedBuf))[1] - '0') + ((*(wData->pulseRateCorrectedBuf))[2])- '0';
     float temp = 100*((*(wData->tempCorrectedBuf))[0] - '0') + 10*((*(wData->tempCorrectedBuf))[1] - '0') + (*(wData->tempCorrectedBuf)[2]) - '0' +  ((*(wData->tempCorrectedBuf)[3])- '0')/10;
     int resp = 10*((*(wData->respirationRateCorrectedBuf))[1] - '0') + ((*(wData->respirationRateCorrectedBuf))[2])- '0';
-    
+    Serial.print("Batterystate: "); Serial.println(batterystate);
+    Serial.print("Sys: "); Serial.println(sys);
+    Serial.print("Dias: "); Serial.println(dias);
+    Serial.print("Pulse: "); Serial.println(pulse);
+    Serial.print("Temp: "); Serial.println(temp);
+    Serial.print("Resp: "); Serial.println(resp);
     // Battery
     *(wData->batteryLow) = ((batterystate < 40) ?  TRUE : FALSE);
     

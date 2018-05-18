@@ -540,6 +540,9 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->bloodPressCorrectedBuf))[1]);
         tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
         tft.setTextColor(WHITE);    tft.print("/");
+    } else {
+          tft.setCursor(30, 150);
+
     }
 
     // Flash diastolic
@@ -561,6 +564,34 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
         tft.setTextColor(WHITE);    tft.print("/");
         tft.setTextColor(WHITE);    tft.println(" mm Hg");
+    } else {
+      tft.print("\n");
+    }
+
+    tft.setCursor(0, 160);
+    // Flash temp
+        if(*(dData->tempWarning) && *(dData->tempSelection)){
+        if(millis() - *(dData->lastTempFlash) > 500){
+          *(dData->lastTempFlash) = millis();
+          if (*(dData->tempFlash)){
+              *(dData->tempFlash) = FALSE;
+              tft.setTextColor(BLACK);
+          } else {
+              *(dData->tempFlash) = TRUE;
+               tft.setTextColor(ORANGE);
+          }
+        } else {
+          tft.setTextColor(ORANGE);
+        }
+        tft.print((*(dData->tempCorrectedBuf))[0]);
+        tft.print((*(dData->tempCorrectedBuf))[1]);
+        tft.print((*(dData->tempCorrectedBuf))[2]);
+        tft.print((*(dData->tempCorrectedBuf))[3]);
+        tft.setTextColor(WHITE);
+        tft.print("C ");
+    }else {
+      tft.setCursor(0, 210);
+
     }
 
     // Flash Pulse
@@ -582,28 +613,6 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->pulseRateCorrectedBuf))[2]);
         tft.setTextColor(WHITE);
         tft.println(" BPM ");
-    }
-
-    // Flash temp
-        if(*(dData->tempWarning) && *(dData->tempSelection)){
-        if(millis() - *(dData->lastTempFlash) > 500){
-          *(dData->lastTempFlash) = millis();
-          if (*(dData->tempFlash)){
-              *(dData->tempFlash) = FALSE;
-              tft.setTextColor(BLACK);
-          } else {
-              *(dData->tempFlash) = TRUE;
-               tft.setTextColor(ORANGE);
-          }
-        } else {
-          tft.setTextColor(ORANGE);
-        }
-        tft.print((*(dData->tempCorrectedBuf))[0]);
-        tft.print((*(dData->tempCorrectedBuf))[1]);
-        tft.print((*(dData->tempCorrectedBuf))[2]);
-        tft.print((*(dData->tempCorrectedBuf))[3]);
-        tft.setTextColor(WHITE);
-        tft.print("C ");
     }
       
 }

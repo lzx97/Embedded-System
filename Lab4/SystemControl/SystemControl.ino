@@ -3,11 +3,11 @@ extern "C" {
 #endif
 #include "Bool.h"
 #include "DataStructs.h"
-#include "warningSC.h"
 //#include "schedulerSC.h"
 #ifdef __cplusplus
 }
 #endif
+#include "warningSC.h"
 #include "computeSC.h"
 #include "TFTKeypad.h"
 #include "batteryStatusSC.h"
@@ -295,22 +295,16 @@ void loop(void) {
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
     (*(curr->taskPtr))(curr->taskDataPtr);*/
-    Serial.println("Starting loop"); delay(50);
     measurerSC(&mData);
-    Serial.println("Done with measure"); delay(50);
     computeSC(&cData);
-    Serial.println("Done with compute"); delay(50);
     batteryStatusSC(&stData);
-    Serial.println("Done with status"); delay(50);
     annunciate(&wData);
-    Serial.println("Done with warning"); delay(50);
     displayLoop(&dData);
-    Serial.println("Done with display"); delay(50);
     Serial.println("Done with loop"); delay(50);
     // Delay one second
     globalTime++;
 
-
+  /*
     Serial.print("Latest measured temp value: ");
     Serial.print(temperatureRawBuf[0]);
     Serial.println(temperatureRawBuf[1]);
@@ -328,6 +322,7 @@ void loop(void) {
     Serial.println(pulseRateCorrectedBuf[2]);
     Serial.println();
     Serial.println();
+    */
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
