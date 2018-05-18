@@ -24,7 +24,7 @@ Bool diaMeasureComplete = FALSE;
 Bool bpIncrease = FALSE;
 
 Bool tempSelection = TRUE;
-Bool bpSelection = TRUE;
+Bool bpSelection = FALSE;
 Bool pulseSelection = TRUE;
 Bool respSelection = TRUE;
 unsigned int numOfMeasureCalls = 0;
@@ -91,7 +91,8 @@ void setup() {
 }
 
 void loop() {
-    /*char inBytes[13];
+    
+    char inBytes[13];
     if (Serial.available() > 12) {
         //Format[mbtp<Measure>]
         Serial.readBytes(inBytes, 13);
@@ -115,10 +116,17 @@ void loop() {
             }
             // Pulse Rate
             if (inBytes[3] == 'P') {
-                *(mData.pulseSelection) == TRUE;
+                *(mData.pulseSelection) = TRUE;
             }
             else if (inBytes[3] == 'p') {
-                *(mData.pulseSelection) == FALSE;
+                *(mData.pulseSelection) = FALSE;
+            }
+            // Respiration 
+            if (inBytes[4] == 'R') {
+                *(mData.respSelection) = TRUE;
+            }
+            else if (inBytes[4] == 'r') {
+                *(mData.respSelection) = FALSE;
             }
             // end of measure selection processing
     
@@ -149,6 +157,12 @@ void loop() {
                 Serial.flush();
             }
             Serial.print(*(mData.pulseRateRaw));
+            Serial.flush();
+            if (*(mData.respirationRaw) < 10) {
+                Serial.print(0);
+                Serial.flush();
+            }
+            Serial.print(*(mData.respirationRaw));
             Serial.flush();
         }
         
@@ -184,6 +198,8 @@ void loop() {
             }
             Serial.print(*(cData.pulseRateCorrected));
             Serial.flush();
+            Serial.print(*(cData.respirationCorrected));
+            Serial.flush();
         }
         // Battery status case
         else if (inBytes[0] == 'S') {
@@ -204,12 +220,13 @@ void loop() {
         Serial.flush();
         }
     }
-    */
+    
+    
     
 
 
 
-    
+    /*
     // Test code for each function
     void* mDataPtr = (void*)&mData;
     measurePS(mDataPtr);
@@ -232,7 +249,7 @@ void loop() {
     batteryStatusPS(sDataPtr);
     Serial.println(*(sData.batteryState));
     Serial.println();
-    delay(2000);
+    delay(5000);*/
     
 }
 

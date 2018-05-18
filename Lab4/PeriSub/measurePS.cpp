@@ -114,6 +114,7 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
     }
     *sysMeasureComplete = FALSE;
     *diaMeasureComplete = FALSE;
+    Serial.println();
 }
 
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls) {
