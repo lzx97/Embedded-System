@@ -2,18 +2,18 @@
 extern "C" {
 #endif
 #include "Bool.h"
-//#include "measurePS.h"
+#include "measurePS.h"
 #include "DataStructsPS.h"
 #include "computePS.h"
 #include "batteryStatusPS.h"
 #ifdef __cplusplus
 }
 #endif
-#include "measurePS.h"
+//#include "measurePS.h"
 
 
 /* Shared global variables for storing data */
-// Measure Data
+// Measure Data  
 unsigned int temperatureRaw = 75;
 unsigned int systolicPressRaw = 80;
 unsigned int diastolicPressRaw = 80;
@@ -74,7 +74,7 @@ void setup() {
     cData.temperatureRaw = &temperatureRaw;
     cData.systolicPressRaw = &systolicPressRaw;
     cData.diastolicPressRaw = &diastolicPressRaw;
-    cData.pulseRateRaw = &pulseRateRaw;
+    cData.pulseRateRaw = &pulseRateRaw; 
     cData.respirationRaw = &respirationRaw;
     cData.tempCorrected = &tempCorrected;
     cData.systolicPressCorrected = &systolicPressCorrected;
@@ -91,12 +91,10 @@ void setup() {
 }
 
 void loop() {
-    
     char inBytes[13];
     if (Serial.available() > 12) {
         //Format[mbtp<Measure>]
         Serial.readBytes(inBytes, 13);
-        
         // Measure case
         if (inBytes[0] == 'M') {
             // Set measure selection fields
