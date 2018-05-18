@@ -52,9 +52,9 @@ void communicationSC(char *str, void *dataStruct) {
         }
         if ((*(mData->pulseSelection)) == TRUE && (pulse> 1.15*oldpulse || pulse < 0.85*oldpulse)){
             for (int i = 7; i > 0; i--){ 
-                (*(mData->bloodPressRawBuf))[3*i] = (*(mData->bloodPressRawBuf))[3*(i-1)]; // temp
-                (*(mData->bloodPressRawBuf))[3*i+1] = (*(mData->bloodPressRawBuf))[3*(i-1)+1]; 
-                (*(mData->bloodPressRawBuf))[3*i+2] = (*(mData->bloodPressRawBuf))[3*(i-1)+2]; 
+                (*(mData->pulseRateRawBuf))[3*i] = (*(mData->pulseRateRawBuf))[3*(i-1)]; // temp
+                (*(mData->pulseRateRawBuf))[3*i+1] = (*(mData->pulseRateRawBuf))[3*(i-1)+1]; 
+                (*(mData->pulseRateRawBuf))[3*i+2] = (*(mData->pulseRateRawBuf))[3*(i-1)+2]; 
             }
         (*(mData->pulseRateRawBuf))[0] = measureIn[7];
         (*(mData->pulseRateRawBuf))[1] = measureIn[8];
