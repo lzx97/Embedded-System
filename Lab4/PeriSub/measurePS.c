@@ -18,6 +18,7 @@ void measurePS(void *measureStruct) {
     if (*(mData->bpSelection)){
         measureBloodPres(mData->systolicPressRaw, mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete,
                 mData->bloodPressure);
+        (*(mData->bpSelection)) = FALSE;
     }
 
     // measure pulse rate
@@ -36,7 +37,7 @@ void measurePS(void *measureStruct) {
 void measureTemp(unsigned int *temperature) {
     int val = analogRead(TEMP_IN);
     int temp = map(val, 0, 1023, 15, 50);
-    *temprature = temp;
+    *temperature = temp;
 
     
     
