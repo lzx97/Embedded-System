@@ -283,9 +283,12 @@ void loop(void) {
 
     Serial.print("Latest measured temp value: ");
     Serial.print(temperatureRawBuf[0]);
-    Serial.print(temperatureRawBuf[1]);
-    Serial.print(temperatureRawBuf[2]);
-    Serial.println(temperatureRawBuf[3]);
+    Serial.println(temperatureRawBuf[1]);
+
+    Serial.print("Latest pulse value: ");
+    Serial.print(temperatureRawBuf[7]);
+    Serial.print(temperatureRawBuf[8]);
+    Serial.println(temperatureRawBuf[9]);
     
     
     Serial.print("Current corrected temp value: ");
