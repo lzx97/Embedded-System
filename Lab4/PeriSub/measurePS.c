@@ -84,8 +84,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
             *(bloodPressure) *= 0.9;
         }
 
-        Serial.println(*bloodPressure);
-
         if (!(*(sysMeasureComplete))) {
             if (*(bloodPressure) >= 110 && *(bloodPressure) <= 150) {
                 *sysPres = *bloodPressure;
@@ -114,7 +112,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
     }
     *sysMeasureComplete = FALSE;
     *diaMeasureComplete = FALSE;
-    Serial.println();
 }
 
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls) {
