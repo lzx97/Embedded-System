@@ -103,6 +103,7 @@ Bool sysFlash = FALSE;
 Bool diasFlash = FALSE;
 Bool tempFlash = FALSE;
 Bool pulseFlash = FALSE;
+
 unsigned long lastSysFlash = 0;
 unsigned long lastDiasFlash = 0;
 unsigned long lastTempFlash = 0;
