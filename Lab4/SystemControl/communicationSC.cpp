@@ -83,30 +83,6 @@ void communicationSC(char *str, void *dataStruct) {
     } else if (str[0] =='C') {
         char computeIn[17];
         Serial.println("communication compute");
-        while ((Serial1.available() < 15)) {     
-            }
-            if ((*(mData->pulseSelection)) == TRUE && (pulse> 1.15*oldpulse || pulse < 0.85*oldpulse)){
-            for (int i = 7; i > 0; i--){
-                (*(mData->pulseRateRawBuf))[3*i] = (*(mData->pulseRateRawBuf))[3*(i-1)]; // temp
-                (*(mData->pulseRateRawBuf))[3*i+1] = (*(mData->pulseRateRawBuf))[3*(i-1)+1];
-                (*(mData->pulseRateRawBuf))[3*i+2] = (*(mData->pulseRateRawBuf))[3*(i-1)+2];
-            }
-            (*(mData->pulseRateRawBuf))[0] = measureIn[7];
-            (*(mData->pulseRateRawBuf))[1] = measureIn[8];
-            (*(mData->pulseRateRawBuf))[2] = measureIn[9];
-            }
-            if ((*(mData->respSelection)) == TRUE && (resp > 1.15*oldresp || resp < 0.85*oldresp)){
-            for (int i = 7; i > 0; i--){
-                (*(mData->respirationRateRawBuf))[2*i] = (*(mData->respirationRateRawBuf))[2*(i-1)]; // temp
-                (*(mData->respirationRateRawBuf))[2*i+1] = (*(mData->respirationRateRawBuf))[2*(i-1)+1];
-            }
-            (*(mData->respirationRateRawBuf))[0] = measureIn[10];
-            (*(mData->respirationRateRawBuf))[1] = measureIn[11];
-            }*/
-
-    } else if (str[0] == 'C') {
-        char computeIn[17];
-
         while ((Serial1.available() < 15)) {
         }
 
@@ -116,7 +92,9 @@ void communicationSC(char *str, void *dataStruct) {
         Serial.println("Data printed");
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
+        
         ComputeData* cData = (ComputeData*) dataStruct;
+        /*
         (*(cData->tempCorrectedBuf))[0] = computeIn[0]; // temp
         (*(cData->tempCorrectedBuf))[1] = computeIn[1];
         (*(cData->tempCorrectedBuf))[2] = computeIn[2];
@@ -132,8 +110,8 @@ void communicationSC(char *str, void *dataStruct) {
         (*(cData->pulseRateCorrectedBuf))[2] = computeIn[12];
         (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13]; 
         (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
-
-        /*  if ((*(cData->tempSelection)) == TRUE) {
+        */
+          if ((*(cData->tempSelection)) == TRUE) {
             for (int i = 7; i > 0; i--) {
                 (*(cData->tempCorrectedBuf))[4 * i] = (*(cData->tempCorrectedBuf))[4 * (i - 1)]; // temp
                 (*(cData->tempCorrectedBuf))[4 * i + 1] = (*(cData->tempCorrectedBuf))[4 * (i - 1) + 1];
@@ -179,7 +157,7 @@ void communicationSC(char *str, void *dataStruct) {
             }
             (*(cData->respirationRateCorrectedBuf))[0] = computeIn[13];
             (*(cData->respirationRateCorrectedBuf))[1] = computeIn[14];
-            }*/
+            }
     } else if (str[0] == 'S') {
         char statusIn[5];
         while (Serial1.available() < 3) {

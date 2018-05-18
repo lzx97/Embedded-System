@@ -2,14 +2,14 @@
 extern "C" {
 #endif
 #include "Bool.h"
-#include "measurePS.h"
+//#include "measurePS.h"
 #include "DataStructsPS.h"
 #include "computePS.h"
 #include "batteryStatusPS.h"
 #ifdef __cplusplus
 }
 #endif
-//#include "measurePS.h"
+#include "measurePS.h"
 
 
 /* Shared global variables for storing data */

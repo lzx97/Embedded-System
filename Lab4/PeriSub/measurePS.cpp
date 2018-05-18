@@ -37,11 +37,15 @@ void measurePS(void *measureStruct) {
 void measureTemp(unsigned int *temperature) {
     int val = analogRead(TEMP_IN);
     int temp = map(val, 0, 1023, 15, 50);
+<<<<<<< HEAD:Lab4/PeriSub/measurePS.c
+=======
+
+>>>>>>> 3fca819026a96582213eb262172539a85dcc70ff:Lab4/PeriSub/measurePS.cpp
     *temperature = temp;
 
     
     
-    /*
+/*
     if (*tempIncrease && *temperature > 50){
         *tempIncrease = FALSE;
     }

@@ -144,10 +144,11 @@ void setup(void) {
     cData.tempSelection = &tempSelection;
     cData.bpSelection = &bpSelection;
     cData.pulseSelection = &pulseSelection;
+    cData.respSelection = &respSelection;
     cData.tempCorrectedBuf = &tempCorrectedBuf;
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
-    
+    cData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
 
 
     // Add variables to display struct
@@ -275,7 +276,7 @@ void setup(void) {
 void loop(void) {
     //Serial.println("Start of loop: are we here?");
     timeNow = millis();
-    /*TCB* curr = head;
+    TCB* curr = head;
     TCB* oldcurr;
     while (curr != tail){
         //Serial.println("Task begun");delay(50);
@@ -295,35 +296,10 @@ void loop(void) {
     }       
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
-    (*(curr->taskPtr))(curr->taskDataPtr);*/
-    measurerSC(&mData);
-    computeSC(&cData);
-    batteryStatusSC(&stData);
-    annunciate(&wData);
-    displayLoop(&dData);
+    (*(curr->taskPtr))(curr->taskDataPtr);
     Serial.println("Done with loop"); delay(50);
     // Delay one second
     globalTime++;
-
-  /*
-    Serial.print("Latest measured temp value: ");
-    Serial.print(temperatureRawBuf[0]);
-    Serial.println(temperatureRawBuf[1]);
-    
-    
-    Serial.print("Current corrected temp value: ");
-    Serial.print(tempCorrectedBuf[0]);
-    Serial.print(tempCorrectedBuf[1]);
-    Serial.print(tempCorrectedBuf[2]);
-    Serial.println(tempCorrectedBuf[3]);
-    
-    Serial.print("Current corrected pulse value: ");
-    Serial.print(pulseRateCorrectedBuf[0]);
-    Serial.print(pulseRateCorrectedBuf[1]);
-    Serial.println(pulseRateCorrectedBuf[2]);
-    Serial.println();
-    Serial.println();
-    */
 }
 
 void deleteNode(struct TCB* node, struct TCB* head, struct TCB* tail) {
