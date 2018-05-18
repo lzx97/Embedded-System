@@ -14,6 +14,8 @@ void communicationSC(char *str, void *dataStruct) {
 
         }
         Serial1.readBytes(measureIn, 12);
+
+        Serial.println(measureIn);
         
         // Store values in the measureIn to measureStruct
         MeasureData* mData = (MeasureData*) dataStruct;
@@ -69,10 +71,14 @@ void communicationSC(char *str, void *dataStruct) {
         
     } else if (str[0] =='C') {
         char computeIn[17];
+        
         while ((Serial1.available() < 15)) {     
             }
         
         Serial1.readBytes(computeIn, 15);
+        Serial.println("Data received");
+        Serial.println(computeIn);
+        Serial.println("Data printed");
         // TODO: store values in the computeIn to computeStruct
         // need to wait until top level code is set
         ComputeData* cData = (ComputeData*) dataStruct;
@@ -130,6 +136,8 @@ void communicationSC(char *str, void *dataStruct) {
         }
         
         Serial1.readBytes(statusIn, 3);
+
+        Serial.println(statusIn);
 
         StatusData* sData = (StatusData*) dataStruct;
         (*(sData->batteryState))[0] = statusIn[0];
