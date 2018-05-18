@@ -529,7 +529,8 @@ void flashAlarms(void *tftStruct){
     tft.setCursor(0, 150);
     Serial.println("We are in Flash");
     // Flash systolic
-    /*if(*(dData->sysWarning) && *(dData->bpSelection)){
+    /*
+    if(*(dData->sysWarning) && *(dData->bpSelection)){
         if(millis() - *(dData->lastSysFlash) > 250){
           *(dData->lastSysFlash) = millis();
           if (*(dData->sysFlash)){
@@ -545,9 +546,9 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
         tft.setTextColor(WHITE);    tft.print("/");
 }
-*/
+
     // Flash diastolic
-    /*if(*(dData->diasWarning) && *(dData->bpSelection)){
+    if(*(dData->diasWarning) && *(dData->bpSelection)){
         if(millis() - *(dData->lastDiasFlash) > 250){
           *(dData->lastDiasFlash) = millis();
           if (*(dData->diasFlash)){
@@ -563,7 +564,6 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->bloodPressCorrectedBuf))[24]);
         tft.print((*(dData->bloodPressCorrectedBuf))[25]);
         tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
-        tft.setTextColor(WHITE);    tft.print("/");
         tft.setTextColor(WHITE);    tft.println(" mm Hg");
     } else {
       tft.print("\n");
@@ -576,7 +576,7 @@ void flashAlarms(void *tftStruct){
            *(dData->tempWarning) && *(dData->tempSelection)||
            *(dData->pulseWarning) && *(dData->pulseSelection)){
           float timeNow = millis();
-          
+         
          //Flash systolic 
          if(*(dData->sysWarning) && *(dData->bpSelection)){
          if(timeNow - *(dData->lastSysFlash) > 250){
@@ -608,11 +608,12 @@ void flashAlarms(void *tftStruct){
                tft.setTextColor(ORANGE);
           }
         }
+        tft.setTextSize(2);
+        tft.setCursor(48, 150);
         tft.print((*(dData->bloodPressCorrectedBuf))[24]);
         tft.print((*(dData->bloodPressCorrectedBuf))[25]);
         tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
-        tft.setTextColor(WHITE);    tft.print("/");
-        tft.setTextColor(WHITE);    tft.println(" mm Hg");
+        tft.setTextColor(WHITE);    //tft.println(" mm Hg");
 
          }
         //Flash Temp 
@@ -667,6 +668,7 @@ void flashAlarms(void *tftStruct){
     }
     
 }
+
 void drawDisplay(void *tftStruct) {
   TFTData *dData = (TFTData*) tftStruct;
   *(dData->justPressed) = FALSE;

@@ -15,6 +15,7 @@ void communicationSC(char *str, void *dataStruct) {
         Serial1.readBytes(measureIn, 12);
         Serial.print("This is measureIn: ");
         Serial.println(measureIn);
+        
 
         // Store values in the measureIn to measureStruct
         MeasureData* mData = (MeasureData*) dataStruct;
