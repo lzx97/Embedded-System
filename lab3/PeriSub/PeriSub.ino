@@ -56,7 +56,7 @@ StatusDataPS sData;
 
 void setup() {
     Serial.begin(9600);
-    pinMode(PULSE_IN, INPUT);
+    pinMode(PIN_IN, INPUT);
 
     // MeasureData fields
     mData.temperatureRaw = &temperatureRaw;
@@ -171,32 +171,7 @@ void loop() {
         }
         
         else if (inBytes[0] == 'C') {
-            /*
-            // Set measure selection fields
-            // Blood pressure
-            if (inBytes[1] == 'B') {
-                *(cData.bpSelection) = TRUE;
-            }
-            else if (inBytes[1] == 'b') {
-                *(cData.bpSelection) = FALSE;
-            }
-            // Temperature
-            if (inBytes[2] == 'T') {
-                *(cData.tempSelection) = TRUE;
-            }
-            else if (inBytes[2] == 't') {
-                *(cData.tempSelection) = FALSE;
-            }
-            // Pulse Rate
-            if (inBytes[3] == 'P') {
-                *(cData.pulseSelection) == TRUE;
-            }
-            else if (inBytes[3] == 'p') {
-                *(cData.pulseSelection) == FALSE;
-            }
-            // end of measure selection processing
-            */
-            
+  
             // call compute
             void* cDataPtr = (void*)&cData;
             computePS(cDataPtr);
