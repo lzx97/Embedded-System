@@ -45,6 +45,13 @@ MeasureDataPS mData;
 ComputeDataPS cData;
 StatusDataPS sData;
 
+volatile long bp = 0;
+volatile int buttonState = FALSE;
+
+unsigned long lastDebounceTime = 0;
+const unsigned int debounceDelay = 300;
+
+
 
 void setup() {
     Serial.begin(9600);
@@ -88,9 +95,13 @@ void setup() {
 
     // StatusData fields
     sData.batteryState = &batteryState;
+
+    attachInterrupt(digitalPinToInterrupt(BP_INC), bpUp, RISING);
+    attachInterrupt(digitalPinToInterrupt(BP_DEC), bpDown, RISING);
 }
 
 void loop() {
+    /*
     char inBytes[13];
     if (Serial.available() > 12) {
         //Format[mbtp<Measure>]
@@ -219,9 +230,9 @@ void loop() {
         }
     }
     
-    
-    
-
+    */
+    Serial.println(*(mData.bloodPressure));
+    delay(1000);
 
 
     /*
@@ -248,7 +259,22 @@ void loop() {
     Serial.println(*(sData.batteryState));
     Serial.println();
     delay(5000);*/
+
+    
     
 }
 
+void bpUp() {
+    if ((millis() - lastDebounceTime) > debounceDelay) {
+        bloodPressure *= 1.1;
+        lastDebounceTime = millis();
+    }
+}
+
+void bpDown() {
+    if ((millis() - lastDebounceTime) > debounceDelay) {
+        bloodPressure *= 0.9;
+        lastDebounceTime = millis();
+    }
+}
 
