@@ -10,7 +10,7 @@
 
 void measurePS(void *measureStruct);
 void measureTemp(unsigned int *temperature);
-void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *bloodPressure);
+void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *bloodPressure, int *patient);
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, 
     Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls);
 void measureDiaPres(unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, 

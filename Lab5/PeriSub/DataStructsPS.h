@@ -22,6 +22,7 @@ typedef struct {
 	// For simulation
     unsigned int *bloodPressure;
     unsigned int *numOfMeasureCalls;
+    int *patient;
 } MeasureDataPS;
 
 typedef struct {

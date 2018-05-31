@@ -17,7 +17,7 @@ void measurePS(void *measureStruct) {
     // measure blood pressures
     if (*(mData->bpSelection)){
         measureBloodPres(mData->systolicPressRaw, mData->diastolicPressRaw, mData->sysMeasureComplete, mData->diaMeasureComplete,
-                mData->bloodPressure);
+                mData->bloodPressure, mData->patient);
         (*(mData->bpSelection)) = FALSE;
     }
 
@@ -67,7 +67,8 @@ void measureTemp(unsigned int *temperature) {
 }
 
 void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete,
-                        unsigned int *bloodPressure) {
+                        unsigned int *bloodPressure, int *patient) {
+    /*
     Bool IncRead;
     Bool DecRead;
     while (!(*(sysMeasureComplete)) || !(*(diaMeasureComplete))) {
@@ -112,6 +113,89 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
     }
     *sysMeasureComplete = FALSE;
     *diaMeasureComplete = FALSE;
+    */
+    
+    if (*patient == -1) {
+        *patient = random(0, 3);
+    }
+
+    
+    if (!(*(sysMeasureComplete))) {
+        if (*patient == 0) {
+            if (*(bloodPressure) >= 110 && *(bloodPressure) <= 130) {
+                *sysPres = *bloodPressure;
+                *sysMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+        else if (*patient == 1) {
+            if (*(bloodPressure) >= 120 && *(bloodPressure) <= 140) {
+                *sysPres = *bloodPressure;
+                *sysMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+        else if (*patient == 2) {
+            if (*(bloodPressure) >= 130 && *(bloodPressure) <= 150) {
+                *sysPres = *bloodPressure;
+                *sysMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+    }
+    else if (!(*(diaMeasureComplete))) {
+        if (*patient == 0) {
+            if (*(bloodPressure) <= 60 && *(bloodPressure) >= 50 ) {
+                *diaPres  = *bloodPressure;
+                *diaMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+        else if (*patient == 1) {
+            if (*(bloodPressure) <= 70 && *(bloodPressure) >= 60) {
+                *diaPres  = *bloodPressure;
+                *diaMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+        else if (*patient == 2) {
+            if (*(bloodPressure) <= 80 && *(bloodPressure) >= 70) {
+                *diaPres  = *bloodPressure;
+                *diaMeasureComplete = TRUE;
+
+                digitalWrite(LED_BUILTIN, HIGH);
+                delay(100);
+                digitalWrite(LED_BUILTIN, LOW);
+                delay(100);
+            }
+        }
+    }
+
+    if (*sysMeasureComplete && *diaMeasureComplete) {
+        sysMeasureComplete = FALSE;
+        diaMeasureComplete = FALSE;
+        *patient = -1;
+    }
 }
 
 void measureSysPres(unsigned int *sysPres, Bool *sysMeasureComplete, Bool *diaMeasureComplete, unsigned int *numOfMeasureCalls) {

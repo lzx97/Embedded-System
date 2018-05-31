@@ -29,6 +29,7 @@ Bool pulseSelection = TRUE;
 Bool respSelection = TRUE;
 unsigned int numOfMeasureCalls = 0;
 unsigned int bloodPressure = 80;
+int patient = -1;
 
 // ComputeData
 float tempCorrected = 0;
@@ -45,11 +46,14 @@ MeasureDataPS mData;
 ComputeDataPS cData;
 StatusDataPS sData;
 
-volatile long bp = 0;
-volatile int buttonState = FALSE;
-
 unsigned long lastDebounceTime = 0;
 const unsigned int debounceDelay = 300;
+
+int ledState = LOW;
+unsigned long lastBlinkTime = 0;
+const unsigned int blinkInterval = 300;
+
+
 
 
 
@@ -75,6 +79,7 @@ void setup() {
     mData.respSelection = &respSelection;
     mData.numOfMeasureCalls = &numOfMeasureCalls;
     mData.bloodPressure = &bloodPressure;
+    mData.patient = &patient;
 
 
     // ComputeData fields.
@@ -98,6 +103,7 @@ void setup() {
 
     attachInterrupt(digitalPinToInterrupt(BP_INC), bpUp, RISING);
     attachInterrupt(digitalPinToInterrupt(BP_DEC), bpDown, RISING);
+    
 }
 
 void loop() {
@@ -231,10 +237,9 @@ void loop() {
     }
     
     */
-    Serial.println(*(mData.bloodPressure));
-    delay(1000);
-
-
+    
+    Serial.println(bloodPressure);
+    delay(500);
     /*
     // Test code for each function
     void* mDataPtr = (void*)&mData;
@@ -265,16 +270,18 @@ void loop() {
 }
 
 void bpUp() {
-    if ((millis() - lastDebounceTime) > debounceDelay) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - lastDebounceTime > debounceDelay) {
         bloodPressure *= 1.1;
-        lastDebounceTime = millis();
+        lastDebounceTime = currentMillis;
     }
 }
 
 void bpDown() {
-    if ((millis() - lastDebounceTime) > debounceDelay) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - lastDebounceTime > debounceDelay) {
         bloodPressure *= 0.9;
-        lastDebounceTime = millis();
+        lastDebounceTime = currentMillis;
     }
 }
 
