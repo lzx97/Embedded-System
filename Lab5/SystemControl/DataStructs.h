@@ -123,6 +123,7 @@ typedef struct {
   Bool *diasFlash;
   Bool *tempFlash;
   Bool *pulseFlash;
+  Bool *displayOff;
   unsigned long *lastSysFlash;
   unsigned long *lastDiasFlash;
   unsigned long *lastTempFlash;

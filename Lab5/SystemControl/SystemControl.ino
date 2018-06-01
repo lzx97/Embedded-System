@@ -111,6 +111,7 @@ unsigned long lastPulseFlash = 0;
 
 unsigned long timeNow = 0;
 Bool justPressed = FALSE;
+Bool displayOff = FALSE;
 
 MeasureData mData;
 ComputeData cData;
@@ -196,6 +197,7 @@ void setup(void) {
     dData.tempFlash = &tempFlash;
     dData.lastPulseFlash = &lastPulseFlash;
     dData.pulseFlash = &pulseFlash;
+    dData.displayOff = &displayOff;
 
 
     // Add values to warning/alarm struct
@@ -269,7 +271,8 @@ void setup(void) {
     tail = &tftTCB;
 
     setupDisplay(&tftTCB);
-    Serial.println("End of setup"); delay(100);
+    Serial.println("End of setup"); 
+    delay(100);
     
 }
 
@@ -365,3 +368,33 @@ void insertNode(struct TCB* node, struct TCB* precNode, struct TCB* head, struct
     return;
 }
 
+void serialEvent() {
+    
+    while (Serial.availale() > 0) {
+        char inbyte = Serial.read();
+        if (inbyte == 'P') {
+            while (inbyte != 'S') {
+                if (Serial.available() > 0) {
+                    inbyte = Serial.read();
+                }
+            }
+        }
+        else if (inbyte == 'S') {
+            // do nothing 
+        }
+        else if (inbyte == 'D') {
+            displayOff != displayOff;
+        }
+        else if (inbyte == 'M') {
+            // print all measure data
+            Serial.print();
+        }
+        else if (inbyte == 'W') {
+            // print all waning-alarm data
+
+        }
+        else {
+            Serial.println("Invalide Input");
+        }
+    }
+}
