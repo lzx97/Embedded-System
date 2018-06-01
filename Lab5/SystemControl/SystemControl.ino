@@ -370,7 +370,7 @@ void insertNode(struct TCB* node, struct TCB* precNode, struct TCB* head, struct
 
 void serialEvent() {
     
-    while (Serial.availale() > 0) {
+    while (Serial.available() > 0) {
         char inbyte = Serial.read();
         if (inbyte == 'P') {
             while (inbyte != 'S') {
@@ -380,14 +380,14 @@ void serialEvent() {
             }
         }
         else if (inbyte == 'S') {
-            // do nothing 
+            // schecule measure
         }
         else if (inbyte == 'D') {
             displayOff != displayOff;
         }
         else if (inbyte == 'M') {
             // print all measure data
-            Serial.print();
+            
         }
         else if (inbyte == 'W') {
             // print all waning-alarm data

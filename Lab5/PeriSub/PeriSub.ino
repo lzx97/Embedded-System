@@ -108,7 +108,7 @@ void setup() {
 
 void loop() {
 
-    measureBloodPres(&systolicPressRaw,  &diastolicPressRaw, &sysMeasureComplete, &diaMeasureComplete, &bloodPressure, &patient);
+    /*measureBloodPres(&systolicPressRaw,  &diastolicPressRaw, &sysMeasureComplete, &diaMeasureComplete, &bloodPressure, &patient);
 
     Serial.print("sysPres = ");
     Serial.print(systolicPressRaw);
@@ -118,9 +118,9 @@ void loop() {
     Serial.print(bloodPressure);
     Serial.print(" patient = ");
     Serial.println(patient);
-    delay(5000);
+    delay(5000);*/
 
-    /*
+    
     char inBytes[13];
     if (Serial.available() > 12) {
         //Format[mbtp<Measure>]
@@ -249,7 +249,7 @@ void loop() {
         }
     }
     
-    */
+    
     
     /*
     // Test code for each function
