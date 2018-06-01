@@ -114,8 +114,10 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
     *sysMeasureComplete = FALSE;
     *diaMeasureComplete = FALSE;
     */
+
     
     if (*patient == -1) {
+        randomSeed(analogRead(A1));
         *patient = random(0, 3);
     }
 
@@ -129,7 +131,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
         else if (*patient == 1) {
@@ -140,7 +141,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
         else if (*patient == 2) {
@@ -151,7 +151,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
     }
@@ -164,7 +163,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
         else if (*patient == 1) {
@@ -175,7 +173,6 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
         else if (*patient == 2) {
@@ -186,14 +183,13 @@ void measureBloodPres(unsigned int *sysPres, unsigned int *diaPres, Bool *sysMea
                 digitalWrite(LED_BUILTIN, HIGH);
                 delay(100);
                 digitalWrite(LED_BUILTIN, LOW);
-                delay(100);
             }
         }
     }
 
     if (*sysMeasureComplete && *diaMeasureComplete) {
-        sysMeasureComplete = FALSE;
-        diaMeasureComplete = FALSE;
+        *sysMeasureComplete = FALSE;
+        *diaMeasureComplete = FALSE;
         *patient = -1;
     }
 }

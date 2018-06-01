@@ -4,7 +4,7 @@
 #include "Bool.h"
 
 #define PULSE_IN 7
-#define TEMP_IN 0
+#define TEMP_IN A0
 #define BP_INC 2
 #define BP_DEC 3
 
