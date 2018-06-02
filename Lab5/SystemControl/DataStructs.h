@@ -105,6 +105,7 @@ typedef struct {
   Bool *bpSelection;
   Bool *pulseSelection;
   Bool *respSelection;
+  Bool *EKGSelection;
   Bool *justPressed;
 
   unsigned int *globalTime;

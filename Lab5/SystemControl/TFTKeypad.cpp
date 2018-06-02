@@ -594,7 +594,7 @@ void flashAlarms(void *tftStruct){
         tft.print((*(dData->bloodPressCorrectedBuf))[0]);
         tft.print((*(dData->bloodPressCorrectedBuf))[1]);
         tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
-        tft.setTextColor(WHITE);    tft.print("/");
+        //tft.setTextColor(WHITE);    tft.print("/");
          }
         //flash diastolic
          if(*(dData->diasWarning) && *(dData->bpSelection)){ 
@@ -608,11 +608,12 @@ void flashAlarms(void *tftStruct){
                tft.setTextColor(ORANGE);
           }
         }
+        tft.setTextSize(2);
+        tft.setCursor(48, 150);
         tft.print((*(dData->bloodPressCorrectedBuf))[24]);
         tft.print((*(dData->bloodPressCorrectedBuf))[25]);
         tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
-        tft.setTextColor(WHITE);    tft.print("/");
-        tft.setTextColor(WHITE);    tft.println(" mm Hg");
+        //tft.setTextColor(WHITE);    tft.println(" mm Hg");
 
          }
         //Flash Temp 
@@ -677,13 +678,13 @@ void drawDisplay(void *tftStruct) {
     tft.setCursor(0, 150);
   //Diastolic pressure
 
-  tft.print("Sys. Press.: ");
+  tft.print("Sys. Press.:");
     tft.print((*(dData->bloodPressCorrectedBuf))[0]);
     tft.print((*(dData->bloodPressCorrectedBuf))[1]);
     tft.print((*(dData->bloodPressCorrectedBuf))[2]); 
   tft.println("mmHg");
     //Systolic pressure
-  tft.print("Dias. Press.: ");
+  tft.print("Dias. Press.:");
     tft.print((*(dData->bloodPressCorrectedBuf))[24]);
     tft.print((*(dData->bloodPressCorrectedBuf))[25]);
     tft.print((*(dData->bloodPressCorrectedBuf))[26]); 
@@ -691,7 +692,7 @@ void drawDisplay(void *tftStruct) {
 
   } else {
     
-    tft.setCursor(0, 150);    tft.print("Sys. Press.: ");
+    tft.setCursor(0, 150);    tft.print("Sys. Press.:");
 
   tft.print("--");  tft.println("mmHg");
     tft.print("Dia. Press.: ");
@@ -727,14 +728,23 @@ void drawDisplay(void *tftStruct) {
 
   // print respiratory rate
   if (*(dData->respSelection)) {
-  tft.print("Resp. Rate:  ");
+  tft.print("Resp. Rate:   ");
     tft.print((*(dData->respirationRateCorrectedBuf))[0]);
     tft.print((*(dData->respirationRateCorrectedBuf))[1]);
-    tft.println(" RR ");
+    tft.println(" RR");
   } else {
     tft.print("--");
-    tft.println(" RR ");
+    tft.println(" RR");
   }
 
+  if (*(dData->EKGSelection)) {
+    tft.print("EKG:  ");
+
+    tft.println(" Hz ");
+  }
+  else {
+    tft.print("--");
+    tft.print(" Hz ");
+  }
 }
 

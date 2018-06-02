@@ -88,6 +88,7 @@ Bool tempSelection = TRUE;
 Bool bpSelection = TRUE;
 Bool pulseSelection = TRUE;
 Bool respSelection = TRUE;
+Bool EKGSelection = TRUE;
 
 Bool sysAlarmAcknowledge = TRUE;
 Bool tempAlarmAcknowledge = TRUE;
@@ -185,6 +186,7 @@ void setup(void) {
     dData.bpSelection = &bpSelection;
     dData.pulseSelection = &pulseSelection;
     dData.respSelection = &respSelection;
+    dData.EKGSelection = &EKGSelection;
     dData.sysAlarm = &sysAlarm;
     dData.timeNow = &timeNow;
     dData.justPressed = &justPressed;
