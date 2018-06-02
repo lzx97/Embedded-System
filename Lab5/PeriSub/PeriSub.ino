@@ -103,6 +103,20 @@ void setup() {
 
     attachInterrupt(digitalPinToInterrupt(BP_INC), bpUp, RISING);
     attachInterrupt(digitalPinToInterrupt(BP_DEC), bpDown, RISING);
+
+    while (1) {
+        if (Serial.available() > 0) {
+            char inbyte = Serial.read();
+            if (inbyte == 'I') {
+                break;
+            }
+        }
+    }
+
+    Serial.println("EE 474 Medical Monitoring System");
+    Serial.println("Patient: someone");
+    Serial.println("Doctors: Chris, Hidea, Zixiang");
+    
     
 }
 

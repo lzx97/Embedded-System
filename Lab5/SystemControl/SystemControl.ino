@@ -85,7 +85,7 @@ Bool sysAlarm = FALSE;
 Bool respOff = FALSE;
 */
 Bool tempSelection = TRUE;
-Bool bpSelection = FALSE;
+Bool bpSelection = TRUE;
 Bool pulseSelection = TRUE;
 Bool respSelection = TRUE;
 
