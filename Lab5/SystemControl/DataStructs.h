@@ -149,6 +149,20 @@ typedef struct {
   unsigned int *statusInterval;
 } StatusData;
 
+typedef struct {
+  double (*vReal)[256];
+  double (*vImag)[256];
+
+} EKGCapData;
+
+typedef struct {
+  double (*vReal)[256];
+  double (*vImag)[256];
+  double (*freqBuf)[16];
+
+} EKGProData;
+
+
 
 typedef struct TCB TCB; // This line is to be able to use TCB as a field inside TCB
 struct TCB {

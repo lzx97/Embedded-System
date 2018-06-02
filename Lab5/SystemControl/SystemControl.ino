@@ -12,9 +12,6 @@ extern "C" {
 #include "TFTKeypad.h"
 #include "batteryStatusSC.h"
 #include "measureSC.h"
-#include <arduinoFFT.h>
-#include <math.h>
-
 
 
 TCB* head;
