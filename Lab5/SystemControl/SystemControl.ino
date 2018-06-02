@@ -139,6 +139,8 @@ void setup(void) {
     mData.pulseRateRawBuf = &pulseRateRawBuf;
     mData.temperatureRawBuf = &temperatureRawBuf;
     mData.respirationRateRawBuf = &respirationRateRawBuf;
+    mData.vReal = &vReal;
+    mData.vImag = &vImag;
     
     
     // measure selections
@@ -159,6 +161,9 @@ void setup(void) {
     cData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     cData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     cData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
+    cData.freqBuf = &freqBuf;
+    cData.vReal = &vReal;
+    cData.vImag = &vImag;
 
 
     // Add variables to display struct
@@ -168,6 +173,7 @@ void setup(void) {
     dData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     dData.tempCorrectedBuf = &tempCorrectedBuf;
     dData.respirationRateCorrectedBuf = &respirationRateCorrectedBuf;
+    dData.freqBuf = &freqBuf;
     
     dData.pulseWarning = &pulseWarning;
     dData.pulseAlarm = &pulseAlarm;

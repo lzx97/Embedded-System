@@ -29,6 +29,6 @@ void computeSC(void *computeStruct) {
     // transfer and receive 
     communicationSC(str, computeStruct);
     Serial.println("Finished compute");
-    //EKGProcess(computeStruct);
+    EKGProcess(computeStruct);
 
 }

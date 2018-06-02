@@ -739,7 +739,7 @@ void drawDisplay(void *tftStruct) {
 
   if (*(dData->EKGSelection)) {
     tft.print("EKG:  ");
-    //tft.print((*(dData->freqBuf))[0]);
+    tft.print((*(dData->freqBuf))[0]);
     tft.println(" Hz ");
   }
   else {
