@@ -1,1 +1,1 @@
-void EKGCapture(void *EKGStruct);
+void EKGProcess(void *EKGStruct);

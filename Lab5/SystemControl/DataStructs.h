@@ -12,6 +12,8 @@ typedef struct {
   char (*bloodPressRawBuf)[40];
   char (*pulseRateRawBuf)[24];
   char (*respirationRateRawBuf)[16];
+  double (*vReal)[256];
+  double (*vImag)[256];
 
   // Measurement seleciton
   Bool *tempSelection;
@@ -32,6 +34,10 @@ typedef struct {
   char (*bloodPressCorrectedBuf)[48];
   char (*pulseRateCorrectedBuf)[24];
   char (*respirationRateCorrectedBuf)[16];
+  double (*vReal)[256];
+  double (*vImag)[256];
+  double (*freqBuf)[16];
+  
   Bool *tempSelection;
   Bool *bpSelection;
   Bool *pulseSelection;
@@ -98,6 +104,7 @@ typedef struct {
   char (*pulseRateCorrectedBuf)[24];
   char (*respirationRateCorrectedBuf)[16];
   char (*batteryState)[3];
+  double (*freqBuf)[16];
 
 
   // Specified by lab spec, more fields to be added

@@ -1,5 +1,6 @@
 #include "DataStructs.h"
 #include "communicationSC.h"
+#include "EKGProcess.h"
 #include <Arduino.h>
 
 
@@ -27,5 +28,7 @@ void computeSC(void *computeStruct) {
 
     // transfer and receive 
     communicationSC(str, computeStruct);
+    Serial.println("Finished compute");
+    //EKGProcess(computeStruct);
 
 }

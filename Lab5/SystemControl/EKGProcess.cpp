@@ -5,8 +5,8 @@
 #include "EKGCapture.h"
 
 
-void EKGCapture(void *EKGStruct) {
-    EKGProData *eData = (EKGProData*) EKGStruct;
+void EKGProcess(void *EKGStruct) {
+    ComputeData *eData = (ComputeData*) EKGStruct;
 
     arduinoFFT fft = arduinoFFT();
 
@@ -16,8 +16,8 @@ void EKGCapture(void *EKGStruct) {
 
     double peak = fft.MajorPeak(*(eData->vReal), SAMPLES, FS);
 
-    for (int i = 16; i > 0; i--) {
-        (*(eData->freqBuf))[i] = (*(eData->freqBuf))[i - 1];
-    }
+    //for (int i = 16; i > 0; i--) {
+      //  (*(eData->freqBuf))[i] = (*(eData->freqBuf))[i - 1];
+    //}
     (*(eData->freqBuf))[0] = peak;
 }

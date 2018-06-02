@@ -67,6 +67,10 @@ char respirationRateRawBuf[16] = {'0','0','0','0','0','0','0','0',
 
 char batteryState[3] = {'0','0','0'};
 
+double vReal[256];
+double vImag[256];
+double freqBuf[16];
+
 Bool pulseWarning = FALSE;
 Bool pulseAlarm = FALSE;
 Bool tempWarning = FALSE;
@@ -120,10 +124,12 @@ ComputeData cData;
 TFTData dData;
 WarningAlarmData wData;
 StatusData stData;
+EKGCapData ecData;
+EKGProData epData;
 
 void setup(void) {
     Serial1.begin(9600);
-    Serial.begin(9600);
+    //Serial.begin(9600);
     // Add variables to measure struct
     mData.globalTime = &globalTime;
     mData.measureInterval = &measureInterval;
@@ -133,6 +139,7 @@ void setup(void) {
     mData.pulseRateRawBuf = &pulseRateRawBuf;
     mData.temperatureRawBuf = &temperatureRawBuf;
     mData.respirationRateRawBuf = &respirationRateRawBuf;
+    
     
     // measure selections
     mData.tempSelection = &tempSelection;
@@ -211,8 +218,14 @@ void setup(void) {
     wData.bloodPressRawBuf = &bloodPressRawBuf;
     wData.pulseRateRawBuf = &pulseRateRawBuf;
     wData.temperatureRawBuf = &temperatureRawBuf;
-    mData.respirationRateRawBuf = &respirationRateRawBuf;
-
+    /*
+     * Is mData.respirationRateRawBuf = &respirationRateRawBuf;
+     * supposed to be here??
+     */
+        wData.respirationRateRawBuf = &respirationRateRawBuf;
+    /*
+     * Should it be wData.respirationRateRawBuf = &respirationRateRawBuf;?
+    */
     wData.bloodPressCorrectedBuf = &bloodPressCorrectedBuf;
     wData.pulseRateCorrectedBuf = &pulseRateCorrectedBuf;
     wData.tempCorrectedBuf = &tempCorrectedBuf;
@@ -237,6 +250,14 @@ void setup(void) {
     wData.respAlarmAcknowledge = &respAlarmAcknowledge;
     wData.respAlarmTimer = &respAlarmTimer;
 
+    ecData.vReal = &vReal;
+    ecData.vImag = &vImag;
+
+    epData.vReal = &vReal;
+    epData.vImag = &vImag;
+    epData.freqBuf = &freqBuf;
+
+    
     // Add data to status struct
     stData.globalTime = &globalTime;
     stData.statusInterval = &statusInterval;

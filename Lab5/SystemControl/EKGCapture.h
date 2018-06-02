@@ -2,4 +2,4 @@
 #define FS 10000
 #define SAMPLES 256
 
-void EKGCapure(void *EKGStruct);
+void EKGCapture(void *EKGStruct); 

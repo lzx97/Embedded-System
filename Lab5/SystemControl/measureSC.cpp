@@ -1,8 +1,9 @@
 #include "DataStructs.h"
-#include "measureSC.h";
+#include "measureSC.h"
 #include "communicationSC.h"
 #include "Bool.h"
 #include <Arduino.h>
+#include "EKGCapture.h"
 
 //int globalCounter;
 
@@ -17,7 +18,7 @@ void measurerSC(void *measureStruct) {
     if ((*(mData->globalTime) % (*(mData->measureInterval))) != 0){
         return;
     }
-
+    
     // create the command string to be sent to the PS
     char str[13];
     str[0] = 'M';
@@ -35,6 +36,9 @@ void measurerSC(void *measureStruct) {
     str[12] = '>';
 
     Serial.println(str);
+    
     communicationSC(str, measureStruct);
+    
     Serial.println("Done with communication - measure");
+    //EKGCapture(measureStruct);
 }
