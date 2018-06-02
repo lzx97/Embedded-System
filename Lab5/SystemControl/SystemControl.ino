@@ -12,6 +12,10 @@ extern "C" {
 #include "TFTKeypad.h"
 #include "batteryStatusSC.h"
 #include "measureSC.h"
+#include <arduinoFFT.h>
+#include <math.h>
+
+
 
 TCB* head;
 TCB* tail;
@@ -275,7 +279,22 @@ void setup(void) {
     setupDisplay(&tftTCB);
     Serial.println("End of setup"); 
     delay(100);
-    
+
+
+    /*
+    while (1) {
+        if (Serial.available() > 0) {
+            char inbyte = Serial.read();
+            if (inbyte == 'I') {
+                break;
+            }
+        }
+    }
+
+    Serial.println("EE 474 Medical Monitoring System");
+    Serial.println("Patient: someone");
+    Serial.println("Doctors: Chris, Hideaki, Zixiang");
+    */
 }
 
 void loop(void) {
@@ -375,6 +394,7 @@ void serialEvent() {
     while (Serial.available() > 0) {
         char inbyte = Serial.read();
         if (inbyte == 'P') {
+            Serial.print("Paused");
             while (inbyte != 'S') {
                 if (Serial.available() > 0) {
                     inbyte = Serial.read();
