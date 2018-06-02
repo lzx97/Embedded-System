@@ -429,7 +429,7 @@ void serialEvent() {
             // schecule measure
         }
         else if (inbyte == 'D') {
-            displayOff != displayOff;
+            displayOff = (displayOff) ? FALSE : TRUE;
         }
         else if (inbyte == 'M') {
             // print all measure data

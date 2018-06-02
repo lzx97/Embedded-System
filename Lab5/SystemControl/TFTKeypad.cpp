@@ -243,7 +243,9 @@ void displayLoop(void *tftStruct) {
   }
   while (millis() < (*(dData->timeNow))  + 1000) {
     TFTData *dData = (TFTData*) tftStruct;
-
+    if (*(dData->displayOff)){
+        tft.fillScreen(BLACK);
+    } else {
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();
     digitalWrite(13, LOW);
@@ -402,6 +404,7 @@ void displayLoop(void *tftStruct) {
     flashAlarms(tftStruct);
 
    }
+  }
   }
 }
 
