@@ -71,7 +71,7 @@ int mode = 0; // 0 = Default, 1 = Menu, 2=Annunciate
 #define MENU_BUTTON_X 58
 #define MENU_BUTTON_Y 165
 #define MENU_BUTTON_W 115
-#define MENU_BUTTON_H 80
+#define MENU_BUTTON_H 50
 #define MENU_BUTTON_SPACING_X 8
 #define MENU_BUTTON_SPACING_Y 12
 #define MENU_BUTTON_TEXTSIZE 2.8
@@ -104,16 +104,16 @@ Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 Elegoo_GFX_Button buttons[4];
-Elegoo_GFX_Button menubuttons[8];
+Elegoo_GFX_Button menubuttons[10];
 Elegoo_GFX_Button acknbuttons[1];
 /* create the buttons */
 // buttonlabels[num_buttons][length of array]
 char buttonlabels[4][20] = {"Menu", "Annunc.", "Display", "Exp1"};
 uint16_t buttoncolors[4] = {ILI9341_NAVY, ILI9341_NAVY, ILI9341_NAVY, ILI9341_NAVY};
 
-char menubuttonlabels[8][20] = {"BP: ON", "Temp: ON", "Pulse: ON", "Resp: ON", "BP: OFF", "Temp: OFF", "Pulse:OFF", "Resp: OFF"};
-uint16_t menubuttoncolors[8] = {ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY,
-                             ILI9341_DARKGREY, ILI9341_DARKGREY,ILI9341_DARKGREY, ILI9341_DARKGREY};
+char menubuttonlabels[10][20] = {"BP: ON", "Temp: ON", "Pulse: ON", "Resp: ON", "EKG: ON", "BP: OFF", "Temp: OFF", "Pulse:OFF", "Resp: OFF", "EKG: OFF"};
+uint16_t menubuttoncolors[10] = {ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY, ILI9341_LIGHTGREY,ILI9341_LIGHTGREY,
+                             ILI9341_DARKGREY, ILI9341_DARKGREY,ILI9341_DARKGREY, ILI9341_DARKGREY,ILI9341_DARKGREY};
 
 char acknbuttonlabels[1][20] = {"Acknowl."};
 uint16_t acknbuttoncolors[1] = {ILI9341_GREEN};
@@ -187,11 +187,13 @@ int bpon;
 int tempon;
 int pulseon;
 int respon;
+int ekgon;
 
 int bpvar;
 int tempvar;
 int pulsevar;
 int respvar;
+int ekgvar;
 
 void drawMenu(void *tftStruct) {
   TFTData *dData = (TFTData*) tftStruct;
@@ -200,13 +202,15 @@ void drawMenu(void *tftStruct) {
   tempon = *(dData->tempSelection);
   pulseon = *(dData->pulseSelection);
   respon = *(dData->respSelection);
+  ekgon = *(dData->EKGSelection);
 
   // create default mode buttons
-  bpvar = ((bpon == 1) ? 0 : 4);
-  tempvar = ((tempon == 1) ? 1 : 5);
-  pulsevar = ((pulseon == 1) ? 2 : 6);
-  respvar = ((respon == 1) ? 3 : 7);
-
+  bpvar = ((bpon == 1) ? 0 : 5);
+  tempvar = ((tempon == 1) ? 1 : 6);
+  pulsevar = ((pulseon == 1) ? 2 : 7);
+  respvar = ((respon == 1) ? 3 : 8);
+  ekgvar = ((ekgon == 1) ? 4 : 9);
+ 
   menubuttons[bpvar].initButton(&tft,  MENU_BUTTON_X,
                  MENU_BUTTON_Y,    // x, y, w, h, outline, fill, text
                   MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[bpvar], ILI9341_WHITE,
@@ -214,7 +218,7 @@ void drawMenu(void *tftStruct) {
   menubuttons[bpvar].drawButton();
 
   menubuttons[tempvar].initButton(&tft,  MENU_BUTTON_X,
-                 MENU_BUTTON_Y+MENU_BUTTON_H+MENU_BUTTON_SPACING_Y,    // x, y, w, h, outline, fill, text
+                 MENU_BUTTON_Y+2*(MENU_BUTTON_H+MENU_BUTTON_SPACING_Y),    // x, y, w, h, outline, fill, text
                   MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[tempvar], ILI9341_WHITE,
                   menubuttonlabels[tempvar], MENU_BUTTON_TEXTSIZE);
   menubuttons[tempvar].drawButton();
@@ -226,10 +230,16 @@ void drawMenu(void *tftStruct) {
   menubuttons[pulsevar].drawButton();
 
   menubuttons[respvar].initButton(&tft,  MENU_BUTTON_X+(MENU_BUTTON_W+MENU_BUTTON_SPACING_X),
-                 MENU_BUTTON_Y+(MENU_BUTTON_H+MENU_BUTTON_SPACING_Y),    // x, y, w, h, outline, fill, text
+                 MENU_BUTTON_Y+2*(MENU_BUTTON_H+MENU_BUTTON_SPACING_Y),    // x, y, w, h, outline, fill, text
                   MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[respvar], ILI9341_WHITE,
                   menubuttonlabels[respvar], MENU_BUTTON_TEXTSIZE);
   menubuttons[respvar].drawButton();
+
+  menubuttons[ekgvar].initButton(&tft,  MENU_BUTTON_X+(MENU_BUTTON_W+MENU_BUTTON_SPACING_X)/2,
+                 MENU_BUTTON_Y+(MENU_BUTTON_H+MENU_BUTTON_SPACING_Y),    // x, y, w, h, outline, fill, text
+                  2*MENU_BUTTON_W, MENU_BUTTON_H, ILI9341_WHITE, menubuttoncolors[ekgvar], ILI9341_WHITE,
+                  menubuttonlabels[ekgvar], MENU_BUTTON_TEXTSIZE);
+  menubuttons[ekgvar].drawButton();
 }
 #define MINPRESSURE 10
 #define MAXPRESSURE 1000
@@ -275,7 +285,7 @@ void displayLoop(void *tftStruct) {
       dy = (unsigned int32_t) p.x;
       dx = (unsigned int32_t) (dx - 6) * 232 / 210;
       dy = (unsigned int32_t) (dy + 5) * 320 / 345;
-      Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
+      //Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
     } else {
       dx = -100;
       dy = -200;
@@ -286,20 +296,20 @@ void displayLoop(void *tftStruct) {
     // go thru all the buttons, checking if they were pressed
     for (uint8_t b = 0; b < 4; b++) {
       if (buttons[b].contains(dx, dy)) {
-        Serial.print("Pressing: "); Serial.println(buttonlabels[b]);
+        //Serial.print("Pressing: "); Serial.println(buttonlabels[b]);
         buttons[b].press(true);  // tell the button it is pressed
-        Serial.print(dx);   Serial.print(", ");  Serial.println(dy);
+        //Serial.print(dx);   Serial.print(", ");  Serial.println(dy);
         *(dData->justPressed) = TRUE;
       } else {
         buttons[b].press(false);  // tell the button it is NOT pressed
       }
     }
     if (mode == 1) {
-      for (uint8_t b = 0; b < 4; b++) {
+      for (uint8_t b = 0; b < 5; b++) {
         if (menubuttons[b].contains(dx, dy)) {
-          Serial.print("Pressing: "); Serial.println(menubuttonlabels[b]);
+          //Serial.print("Pressing: "); Serial.println(menubuttonlabels[b]);
           menubuttons[b].press(true);  // tell the button it is pressed
-          Serial.print(dx);     Serial.print(", ");     Serial.println(dy);
+          //Serial.print(dx);     Serial.print(", ");     Serial.println(dy);
           *(dData->justPressed) = TRUE;
         } else {
           menubuttons[b].press(false);  // tell the button it is NOT pressed
@@ -307,9 +317,9 @@ void displayLoop(void *tftStruct) {
       }
     } else if (mode == 2) {
       if (acknbuttons[0].contains(dx, dy)) {
-        Serial.print("Pressing: "); Serial.println(acknbuttonlabels[0]);
+        //Serial.print("Pressing: "); Serial.println(acknbuttonlabels[0]);
         acknbuttons[0].press(true);  // tell the button it is pressed
-        Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
+        //Serial.print(dx);    Serial.print(", ");    Serial.println(dy);
         *(dData->justPressed) = TRUE;
       } else {
         acknbuttons[0].press(false);  // tell the button it is NOT pressed
@@ -333,7 +343,7 @@ void displayLoop(void *tftStruct) {
       }
     }
     if (mode == 1) {
-      for (uint8_t b = 0; b < 8; b++) {
+      for (uint8_t b = 0; b < 10; b++) {
         if (menubuttons[b].justReleased()) {
           // Serial.print("Released: "); Serial.println(b);
           menubuttons[b].drawButton();  // draw normal
@@ -342,20 +352,23 @@ void displayLoop(void *tftStruct) {
         if (menubuttons[b].justPressed()) {
           menubuttons[b].press(false);
           menubuttons[b].drawButton(true);  // draw invert!
-          Serial.print("This is the value of b: "); Serial.println(b);
-          if (b == 0 || b == 4) {
+          //Serial.print("This is the value of b: "); Serial.println(b);
+          if (b == 0 || b == 5) {
             bpon = ((bpon == 0) ? 1 : 0);
-          } else if (b == 1 || b == 5) {
+          } else if (b == 1 || b == 6) {
             tempon = ((tempon == 0) ? 1 : 0);
-          } else if (b == 2 || b == 6) {
+          } else if (b == 2 || b == 7) {
             pulseon = ((pulseon == 0) ? 1 : 0);
-          } else if (b == 3 ||b == 7) {
+          } else if (b == 3 ||b == 8) {
             respon = ((respon == 0) ? 1 : 0);
+          } else if (b ==4 || b == 9) {
+            ekgon = ((ekgon == 0) ? 1 : 0);
           }
           *(dData->bpSelection) = bpon;
           *(dData->tempSelection) = tempon;
           *(dData->pulseSelection) = pulseon;
           *(dData->respSelection) = respon;
+          *(dData->EKGSelection) = ekgon;
 
           mode = 1; // 0 = Default, 1 = Menu, 2=Annunciate
           delay(100);
@@ -530,7 +543,7 @@ void drawAnnunciate(void *tftStruct) {
 void flashAlarms(void *tftStruct){
     TFTData *dData = (TFTData*) tftStruct;
     tft.setCursor(0, 150);
-    Serial.println("We are in Flash");
+    //Serial.println("We are in Flash");
     // Flash systolic
     /*if(*(dData->sysWarning) && *(dData->bpSelection)){
         if(millis() - *(dData->lastSysFlash) > 250){

@@ -35,10 +35,10 @@ void measurerSC(void *measureStruct) {
     str[11] = 'e';
     str[12] = '>';
 
-    Serial.println(str);
+    //Serial.println(str);
     
     communicationSC(str, measureStruct);
     
-    Serial.println("Done with communication - measure");
+    //Serial.println("Done with communication - measure");
     EKGCapture(measureStruct);
 }

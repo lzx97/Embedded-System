@@ -301,7 +301,7 @@ void setup(void) {
     tail = &tftTCB;
 
     setupDisplay(&tftTCB);
-    Serial.println("End of setup"); 
+    //Serial.println("End of setup"); 
     delay(100);
 
 
@@ -328,12 +328,12 @@ void loop(void) {
     TCB* oldcurr;
     while (curr != tail){
         //Serial.println("Task begun");delay(50);
-         Serial.println("Inside task loop");
+         //Serial.println("Inside task loop");
         (*(curr->taskPtr))(curr->taskDataPtr);
         if ((curr == &MeasureTCB) && (globalTime % measureInterval == 0)){
-            Serial.println("adding compute");
+            //Serial.println("adding compute");
             insertNode(&ComputeTCB, &MeasureTCB, head, tail);
-            Serial.println("compute added");
+            //Serial.println("compute added");
         }
         oldcurr = curr;
         curr = curr->next;
@@ -345,7 +345,7 @@ void loop(void) {
     // While loop ends before tail is executed
     // So we call it one last time to run through everything
     (*(curr->taskPtr))(curr->taskDataPtr);
-    Serial.println("Done with loop"); delay(50);
+    //Serial.println("Done with loop"); delay(50);
     // Delay one second
     globalTime++;
 }
@@ -418,29 +418,83 @@ void serialEvent() {
     while (Serial.available() > 0) {
         char inbyte = Serial.read();
         if (inbyte == 'P') {
-            Serial.print("Paused");
+            Serial.println("Paused");
             while (inbyte != 'S') {
                 if (Serial.available() > 0) {
                     inbyte = Serial.read();
                 }
             }
+            Serial.println("Resumed");
         }
+        /*
         else if (inbyte == 'S') {
             // schecule measure
         }
+        */
         else if (inbyte == 'D') {
             displayOff = (displayOff) ? FALSE : TRUE;
+            if (displayOff){
+                Serial.println("Display switched off");
+            } else {
+                Serial.println("Display switched on");
+            }
         }
         else if (inbyte == 'M') {
             // print all measure data
             
+            Serial.println("Printing latest measured data");
+            Serial.print("Blood pressure: ");  Serial.print(bloodPressRawBuf[0]);Serial.print(bloodPressRawBuf[1]); Serial.print(bloodPressRawBuf[2]);
+            Serial.print (" / "); Serial.print(bloodPressRawBuf[24]); Serial.println(bloodPressRawBuf[25]);
+            Serial.print("Body temperature: "); Serial.print(temperatureRawBuf[0]); Serial.println(temperatureRawBuf[1]);
+            Serial.print("Pulse rate: "); Serial.print(pulseRateRawBuf[0]);Serial.print(pulseRateRawBuf[1]);Serial.println(pulseRateRawBuf[2]);
+            Serial.print("Respiratory rate: "); Serial.print(respirationRateRawBuf[0]); Serial.println(respirationRateRawBuf[1]);
+            Serial.print("EKG rate: "); Serial.println(freqBuf[0]);
+            Serial.println("All the latest measured data printed");
+            
         }
         else if (inbyte == 'W') {
-            // print all waning-alarm data
 
+            // print all warning-alarm data
+            Serial.println("\nPrinting latest warning/alarm data");
+            Serial.print("Blood pressure: ");  Serial.print(bloodPressCorrectedBuf[0]);Serial.print(bloodPressCorrectedBuf[1]);Serial.print(bloodPressCorrectedBuf[2]);
+            Serial.print (" / "); Serial.print(bloodPressCorrectedBuf[24]); Serial.print(bloodPressCorrectedBuf[25]); Serial.print(bloodPressCorrectedBuf[26]);
+            if (sysAlarm) {
+              Serial.print(" ALARM: Systolic out of range ");
+            } else if (sysWarning || diasWarning) {
+              Serial.print(" WARNING: ");
+              if (sysWarning && diasWarning){
+                Serial.print("Systolic & Diastolic out of range");
+              } else if(sysWarning){
+                Serial.print("Systolic out of range");
+              } else {
+                Serial.print("Diastolic out of range");
+              }
+            }
+            Serial.println("");
+            Serial.print("Body temperature: "); Serial.print(tempCorrectedBuf[0]); Serial.print(tempCorrectedBuf[1]);Serial.print(tempCorrectedBuf[2]);Serial.print(tempCorrectedBuf[3]);
+            if (tempAlarm){
+              Serial.print(" ALARM: Temperature out of range ");
+            } else if (tempWarning) {
+              Serial.print(" Warning: Temperature out of range ");
+            }
+            Serial.println("");
+            Serial.print("Pulse rate: "); Serial.print(pulseRateCorrectedBuf[0]);Serial.print(pulseRateCorrectedBuf[1]);Serial.print(pulseRateCorrectedBuf[2]);
+            if (pulseAlarm){
+              Serial.print(" ALARM: Pulserate out of range ");
+            } else if (pulseWarning) {
+              Serial.print(" Warning: Pulserate out of range ");
+            }
+            Serial.println("");
+            Serial.print("Respiratory rate: "); Serial.print(respirationRateCorrectedBuf[0]); Serial.print(respirationRateCorrectedBuf[1]);
+            if (respAlarm){
+              Serial.print(" ALARM: Respiratory rate out of range");
+            }
+            Serial.println("");
+            Serial.print("EKG rate: "); Serial.println(freqBuf[0]);            
+            Serial.println("All the latest warning/alarm data printed");
         }
         else {
-            Serial.println("Invalide Input");
+            Serial.println("Invalid Input");
         }
     }
 }

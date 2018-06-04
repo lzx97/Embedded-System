@@ -20,6 +20,6 @@ void EKGProcess(void *EKGStruct) {
       //  (*(eData->freqBuf))[i] = (*(eData->freqBuf))[i - 1];
     //}
     (*(eData->freqBuf))[0] = peak;
-    Serial.print("peak ======= ");
-    Serial.println(peak);
+    //Serial.print("peak ======= ");
+    //Serial.println(peak);
 }

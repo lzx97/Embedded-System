@@ -18,12 +18,14 @@ void annunciate(void *warningAlarmStruct) {
 
     float temp = 10*((*(wData->tempCorrectedBuf))[0] - '0') + ((*(wData->tempCorrectedBuf))[1] - '0') +  0.1 * ((*(wData->tempCorrectedBuf)[3])- '0');
     int resp = 10*((*(wData->respirationRateCorrectedBuf))[0] - '0') + ((*(wData->respirationRateCorrectedBuf))[1]- '0');
+    /*
     Serial.print("Batterystate: "); Serial.println(batterystate);
     Serial.print("Sys: "); Serial.println(sys);
     Serial.print("Dias: "); Serial.println(dias);
     Serial.print("Pulse: "); Serial.println(pulse);
     Serial.print("Temp: "); Serial.println(temp);
     Serial.print("Resp: "); Serial.println(resp);
+    */
     // Battery
     *(wData->batteryLow) = ((batterystate < 40) ?  TRUE : FALSE);
     
